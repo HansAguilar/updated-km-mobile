@@ -11,12 +11,14 @@ const Prescription = ({setPrescriptionDetails, navigation}) =>{
     const dispatch = useDispatch();
     const { height } = Dimensions.get("screen");
     const prescription = useSelector((state)=>{ return state.prescription.prescription});
-
-    return prescription && (
+    console.log(prescription);
+    return (
        <>
          <View style={{...styles.containerGray,position:'relative'}}>
             <Title title={"Prescription"} />
-                <ScrollView style={{width:"100%",height:100, paddingHorizontal:20,marginTop:20}}>
+               {
+                prescription && (
+                    <ScrollView style={{width:"100%",height:100, paddingHorizontal:20,marginTop:20}}>
                     {
                         prescription.map((val, idx)=>(
                             <Pressable 
@@ -33,6 +35,8 @@ const Prescription = ({setPrescriptionDetails, navigation}) =>{
                         ))
                     }
                 </ScrollView>
+                )
+               }
         </View>
        </>
     );

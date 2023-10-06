@@ -9,7 +9,6 @@ function Message({setMessageHistory, navigation}) {
 //   console.log(Object.entries(messages).map(([k,v])=>{
 //     console.log(v.length)
 //   }));
-console.log(messages);
 const selectMessage = (key, value) =>{
     setMessageHistory(value);
     navigation.navigate("Message Room", {roomId: key});

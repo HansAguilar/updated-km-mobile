@@ -7,7 +7,10 @@ const reducer = (state={}, action) =>{
         case FETCH_MESSAGE_SUCCESS:
             return { ...state, message:action.payload, loading: false };
         case CREATE_MESSAGE_SUCCESS:
-            return{ ...state, message:{ ...state.message, [action.key]: [...state.message[action.key],action.payload] } , loading:false}
+            return{ 
+                ...state, 
+                message:{ ...state.message, [action.key]: state.message[action.key]?[...state.message[action.key],action.payload] :[action.payload] }, 
+                loading:false}
         case RESPONSE_MESSAGE_SUCCESS:
             return{ ...state, message:{ ...state.message, [action.key]: [...state.message[action.key],action.payload] } , loading:false}
             // return{ ...state, message:{ ...state.message, [action.key]: state.message[action.key]?[...state.message[action.key],action.payload] :[action.payload] }, loading:false}

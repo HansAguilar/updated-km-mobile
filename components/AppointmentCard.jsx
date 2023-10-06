@@ -11,7 +11,7 @@ function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, f
   }
   
   return (
-    <View style={{display:'flex', flexDirection:'column', gap:8, marginBottom:20,}}>
+    <View style={{display:'flex', flexDirection:'column', gap:8, marginBottom:20,width:'100%'}}>
               <Text style={{fontSize:14, fontWeight:'bold', color:'#3f3f46',marginBottom:3}}>{title}</Text>
               {
               dataList && dataList.length >0 ? (

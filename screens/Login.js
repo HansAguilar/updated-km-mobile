@@ -62,8 +62,8 @@ const Login = React.memo(({navigation}) => {
     if (!userData.username || !userData.password) {
       return ToastFunction('error', 'Fill up empty field');
     }
-    const isPatient = patient.filter((val)=>val.username.includes(userData.username));
-    const isDentist = dentist.dentists.filter((val)=>val.username.includes(userData.username));
+    const isPatient = patient?.filter((val)=>val.username.includes(userData.username));
+    const isDentist = dentist?.dentists.filter((val)=>val.username.includes(userData.username));
     if(isPatient.length < 1 && isDentist.length<1){
       return ToastFunction('error', "Account doesn't exist!");
     }

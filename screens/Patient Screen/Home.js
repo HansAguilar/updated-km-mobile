@@ -31,9 +31,10 @@ const Home = React.memo(({navigation,setAppointmentId,setSideNavShow})=>{
 
     
     const currentDate = moment(new Date()).format("LL");
-    const todaysAppointment = appointment.filter((val)=>{  return moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day') && val.status === "APPROVED" || val.status === "PROCESSING" || val.status === "TREATMENT" && val.patient.patientId === patient?.patientId; });
+    const todaysAppointment = appointment.filter((val)=>{  return (moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')) && (val.status === "APPROVED" || val.status === "PROCESSING" || val.status === "TREATMENT") && val.patient.patientId === patient?.patientId; });
+
     const upcomingAppointment = appointment.filter(val=>{ 
-      return currentDate !== moment(val.appointmentDate).format('LL') && moment().isBefore(moment(val.appointmentDate)) && val.patient.patientId === patient?.patientId && val.status === "APPROVED";
+      return (!moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')) && val.patient.patientId === patient?.patientId && (val.status === "PENDING" || val.status === "TREATMENT");
     });
     const viewHandleButton = (value) =>{
       setAppointmentId(value);
