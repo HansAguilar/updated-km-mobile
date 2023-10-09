@@ -1,6 +1,7 @@
 import axios from "axios"
 import { APPROVED_APPOINTMENT_SUCCESS, CREATE_APPOINTMENT_FAILED, CREATE_APPOINTMENT_REQUEST, CREATE_APPOINTMENT_SUCCESS, DELETE_APPOINTMENT_FAILED, DELETE_APPOINTMENT_SUCCESS, FETCH_APPOINTMENT_FAILED, FETCH_APPOINTMENT_REQUEST, FETCH_APPOINTMENT_SUCCESS, RESPONSE_APPOINTMENT_SUCCESS, UPDATE_APPOINTMENT_SUCCESS } from "../ActionType"
 import { APPOINTMENT_URL, SOCKET_LINK } from "../../config/APIRoutes"
+import { fetchAdminPayment } from "../action/PaymentAction";
 import moment from "moment";
 import * as io from "socket.io-client";
 
@@ -33,6 +34,7 @@ export const createAppointment = (data,navigation,ToastFunction,setModal) => {
                 type: CREATE_APPOINTMENT_SUCCESS,
                 payload: response.data
             });
+            dispatch(fetchAdminPayment(response.data.patient.patientId))
             socket.emit("appointment_changes",{value:response.data})
             navigation.navigate("Dashboard");
         } catch (error) {

@@ -1,4 +1,4 @@
-import { CREATE_PAYMENT_FAILED, CREATE_PAYMENT_SUCCESS, FETCH_PAYMENT_FAILED, FETCH_PAYMENT_REQUEST, FETCH_PAYMENT_SUCCESS } from "../ActionType"
+import { CREATE_PAYMENT_FAILED, CREATE_PAYMENT_SUCCESS, FETCH_PAYMENT_FAILED, FETCH_PAYMENT_REQUEST, FETCH_PAYMENT_SUCCESS, UPDATE_PAYMENT_SUCCESS } from "../ActionType"
 
 const initialState = {
     loading:false,
@@ -12,6 +12,11 @@ const reducer = (state={}, action)=>{
             return {...state, loading:true};
         case FETCH_PAYMENT_SUCCESS:
             return {...state, payment:action.payload, loading:false};
+        case UPDATE_PAYMENT_SUCCESS: 
+            return{
+                ...state, 
+                payment: state.payment.map((val)=>val.paymentId === action.payload.paymentId ? action.payload: val)
+            }
         case CREATE_PAYMENT_SUCCESS :
             return {
                 ...state, 
