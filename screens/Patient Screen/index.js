@@ -21,6 +21,7 @@ import { fetchPayment,fetchAdminPayment,adminUpdatePayment } from '../../redux/a
 import { fetchInstallmentByPatient } from '../../redux/action/InstallmentAction';
 import { fetchSchedule } from '../../redux/action/ScheduleAction';
 import { fetchPrescription } from '../../redux/action/PrescriptionAction';
+import { fetchResponseMessage } from "../../redux/action/MessageAction";
 import Payment from './Payment';
 import Drawer from '../../components/CustomDrawer';
 import Message from './Message/index';
@@ -28,6 +29,7 @@ import History from './History';
 import ViewDetails from './ViewDetails';
 import Prescription from './Prescription';
 import PrescriptionDetails from './PrescriptionDetails';
+import UpdateAppointment from './UpdateAppointment';
 import * as io from "socket.io-client";
 import { log } from 'react-native-reanimated';
 
@@ -67,15 +69,15 @@ const Main = React.memo(({navigation})=> {
     dispatch(fetchPatient(token));
   };
   
-  const fetchAppointmentData = () => {
-    if (patient && patient.patient) {
-      dispatch(fetchAppointment(patient.patient.patientId));
-      dispatch(fetchPatientMessage(patient.patient.patientId));
-      dispatch(fetchPayment(patient.patient.patientId));
-      dispatch(fetchInstallmentByPatient(patient.patient.patientId));
-      dispatch(fetchPrescription(patient.patient.patientId))
-      dispatch(fetchSchedule());
-      dispatch(fetchAppointmentFee());
+  const fetchAppointmentData = async() => {
+    if (patient && patient.patient && patient.patient.patientId) {
+      await dispatch(fetchAppointment(patient.patient.patientId));
+      await dispatch(fetchPatientMessage(patient.patient.patientId));
+      await dispatch(fetchPayment(patient.patient.patientId));
+      await dispatch(fetchInstallmentByPatient(patient.patient.patientId));
+      await dispatch(fetchPrescription(patient.patient.patientId))
+      await dispatch(fetchSchedule());
+      await dispatch(fetchAppointmentFee());
     }
   };
 
@@ -85,11 +87,11 @@ const Main = React.memo(({navigation})=> {
   
   useEffect(() => {
     fetchAppointmentData();
-  }, [patient,dispatch]);
+  }, [patient]);
 
   useEffect(()=>{
     socket.on("response_changes",(data)=>{
-      dispatch(fetchChanges(data.value));
+      dispatch(adminChanges(data.value));
       dispatch(fetchAdminPayment(patient?.patient?.patientId));
     })
     socket.on("response_admin_changes",(data)=>{
@@ -101,6 +103,13 @@ const Main = React.memo(({navigation})=> {
       dispatch(adminUpdatePayment(data.value));
     })
 
+    // socket.on("received_by_patient",(data)=>{
+    //    console.log(data.value.receiverId.patientId);
+    //   dispatch(fetchResponseMessage(patient?.patient?.patientId))
+    //   // if(patient?.patient?.patientId===data.value.receiverId.patientId){
+    //   //   dispatch(fetchResponseMessage(data.key, data.value))
+    //   // }
+    // })
     return ()=>{
       socket.off();
     }
@@ -143,6 +152,9 @@ const Main = React.memo(({navigation})=> {
                 </Stack.Screen>
                 <Stack.Screen name='Prescription Details' >
                     {props=><PrescriptionDetails prescriptionDetails={prescriptionDetails} {  ...props}/>}
+                </Stack.Screen>
+                <Stack.Screen name='Update Schedule' >
+                    {props=><UpdateAppointment {  ...props}/>}
                 </Stack.Screen>
         
             </Stack.Navigator>

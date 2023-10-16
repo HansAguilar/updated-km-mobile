@@ -11,6 +11,7 @@ import messageReducer from '../reducer/MessageReducer';
 import appointmentFeeReducer from '../reducer/AppointmentFeeReducer';
 import scheduleReducer from '../reducer/ScheduleReducer';
 import prescriptionReducer from '../reducer/PrescriptionReducer';
+import loginReducer from '../reducer/LoginReducer';
 
 import thunk from 'redux-thunk';
 
@@ -28,6 +29,7 @@ export default configureStore({
     fee: appointmentFeeReducer,
     schedule:scheduleReducer,
     prescription: prescriptionReducer,
+    login:loginReducer,
   },
   middleware:[thunk]
 });

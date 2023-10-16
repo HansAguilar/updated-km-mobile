@@ -13,6 +13,7 @@ import { fetchDentists } from '../../redux/action/DentistAction';
 import {cancelAppointment} from '../../redux/action/AppointmentAction';
 import * as io from "socket.io-client";
 import { SOCKET_LINK } from '../../config/APIRoutes';
+import UpdateModal from '../../components/UpdateModal';
 
 
 const socket = io.connect(SOCKET_LINK)
@@ -28,22 +29,34 @@ const Home = React.memo(({navigation,setAppointmentId,setSideNavShow})=>{
       id:"",
       isShow:false
     }); 
-
+    const [updateSchedule, setUpdateSchedule] = useState({
+      data:null,
+      isShow:false
+    }); 
     
     const currentDate = moment(new Date()).format("LL");
-    const todaysAppointment = appointment.filter((val)=>{  return (moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')) && (val.status === "APPROVED" || val.status === "PROCESSING" || val.status === "TREATMENT") && val.patient.patientId === patient?.patientId; });
+    const filteredTodaysAppointment = appointment.slice();
+    const todaysAppointment = filteredTodaysAppointment.filter((val)=>{  return (moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')) && (val.status === "APPROVED" || val.status === "PROCESSING" || val.status === "TREATMENT") && val.patient.patientId === patient?.patientId; });
 
-    const upcomingAppointment = appointment.filter(val=>{ 
-      return (!moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')) && val.patient.patientId === patient?.patientId && (val.status === "PENDING" || val.status === "TREATMENT");
-    });
+    const upcomingFilteredList = appointment.slice();
+    const upcomingAppointment = upcomingFilteredList.filter(val=>{ 
+      return (!moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')) && val.patient.patientId === patient?.patientId && (val.status === "PENDING" || val.status === "TREATMENT"|| val.status === "APPROVED")
+    })
+    .map((val)=>{
+      return {
+        ...val,
+        typeAppointment: "upcoming"
+      }
+    });;
+
     const viewHandleButton = (value) =>{
       setAppointmentId(value);
       navigation.navigate("Summary")
     };
 
-    const pendingAppointment = appointment.filter((val)=>{
-        return val.patient.patientId === patient?.patientId && val.status === "PENDING"
-    }).sort((a, b) => moment(a.appointmentDate).isAfter(b.appointmentDate) ? 1 : -1)
+    // const pendingAppointment = appointment.filter((val)=>{
+    //     return val.patient.patientId === patient?.patientId && val.status === "PENDING"
+    // }).sort((a, b) => moment(a.appointmentDate).isAfter(b.appointmentDate) ? 1 : -1)
 
     const handleBackPress = () => {
       // Disable back button functionality
@@ -62,10 +75,6 @@ const Home = React.memo(({navigation,setAppointmentId,setSideNavShow})=>{
     },[]);
 
     const announcementImage = announcement?.map((val)=>{return val.picture;});
-
-    const sendNotif = () =>{
-      socket.emit("send_notification",{message:"hello"});
-    }
 
     const renderItem = ({ item }) => (
       <View style={{ padding: 10,marginRight:10, display:'flex', flexDirection:'row', justifyContent:'flex-start',alignItems:'center', columnGap:5,backgroundColor:"#0891b2", borderRadius:10, ...styles.shadow}}>
@@ -103,6 +112,7 @@ const Home = React.memo(({navigation,setAppointmentId,setSideNavShow})=>{
     return (patient && appointment && announcement && services && dentists ) && (
         <>
         {modal.isShow && <Modal />}
+        {updateSchedule.isShow && (<UpdateModal data={updateSchedule} setData={setUpdateSchedule} />)}
         <View style={{ ...styles.containerGray, height: height, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
 
           <View style={{ width: '100%', backgroundColor: '#155e75', height: 30 }}></View>
@@ -153,9 +163,11 @@ const Home = React.memo(({navigation,setAppointmentId,setSideNavShow})=>{
          
          <AppointmentCard title="Today's Appointment" dataList={todaysAppointment} bgColor={'#fff'} borderColor={"#06b6d4"} fontColor={'#10b981'} subColor={'#06b6d4'} showDate={true} viewEvent={viewHandleButton} />
 
-          <AppointmentCard title="Upcoming Appointment" dataList={upcomingAppointment} bgColor={'#fff'} borderColor={"#06b6d4"} fontColor={'#10b981'} subColor={'#06b6d4'} showDate={true} viewEvent={viewHandleButton} setModal={setModalShow} modal={modal}/>
+          <AppointmentCard title="Upcoming Appointment" dataList={upcomingAppointment} bgColor={'#fff'} borderColor={"#06b6d4"} fontColor={'#10b981'} subColor={'#06b6d4'} showDate={true} viewEvent={viewHandleButton} setModal={setModalShow} modal={modal} navigate={navigation} update={updateSchedule} setUpdateSchedule={setUpdateSchedule} />
 
-          <AppointmentCard title="Pending Appointment" dataList={pendingAppointment} borderColor={"#f59e0b"} bgColor={'#fff'}fontColor={'#10b981'} subColor={'#06b6d4'} showDate={true} viewEvent={viewHandleButton} setModal={setModalShow} modal={modal}/>
+          {/* <AppointmentCard title="Pending Appointment" dataList={pendingAppointment} borderColor={"#f59e0b"} bgColor={'#fff'}fontColor={'#10b981'} subColor={'#06b6d4'} showDate={true} viewEvent={viewHandleButton} setModal={setModalShow} modal={modal}/> */}
+
+          <View style={{height:150}}></View>
          </View>
          </ScrollView>
         </View>
@@ -164,43 +176,3 @@ const Home = React.memo(({navigation,setAppointmentId,setSideNavShow})=>{
 })
 
 export default Home
-
-
-
-
-
-
-
-
-          {/* <View style={{position: 'absolute', top: 0,zIndex: 50, width: width, height: height / 9, borderBottomRightRadius: 100,overflow: 'hidden',}}>
-            <ImageBackground source={require('../../assets/images/morning.png')} style={{flex: 1,resizeMode: 'cover',}}>
-              <Text>Hello</Text>
-            </ImageBackground>
-            <View style={{...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}></View>
-            </View> */}
-          
-           {/* <View style={{width:'100%', height:height/2, }}>
-            <ImageBackground source={require('../../assets/images/bg-morning.jpg')} style={{flex: 1,resizeMode: 'cover',}}></ImageBackground>
-            <View style={{...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(14,116,144,0.6)', flex:1, justifyContent:'center', alignItems:'center', flexDirection:'column', rowGap:8}}>
-              <Image source={{uri:patient.profile}} style={{width:80, height:80, borderRadius:100}}/>
-              <Text style={{color:'#bae6fd', fontSize:14}}>Good Morning</Text>
-              <Text style={{color:'#fff', fontSize:18, letterSpacing:2, fontWeight:'bold'}}>{patient.firstname}</Text>
-            </View>
-            
-          </View> 
-          
-          <ScrollView style={{backgroundColor:'#fafafa', width:'100%', height:(height/2.3), borderTopLeftRadius:30, borderTopRightRadius:30, position:'absolute', bottom:0, paddingHorizontal:15, paddingVertical:20, zIndex:50, display:'flex', flexDirection:'column', gap:10, paddingBottom:70}}>
-            <AppointmentCard title="Today's Appointment" dataList={todaysAppointment} bgColor={'#ccfbf1'}fontColor={'#10b981'} subColor={'#06b6d4'} viewEvent={viewHandleButton} />
-            <AppointmentCard title='Upcoming Appointment' dataList={upcomingAppointment} bgColor={'#fef3c7'} fontColor={'#f59e0b'} subColor={'#f59e0b'} showDate={true} viewEvent={viewHandleButton}  />
-          </ScrollView> */}
-        
-
-
-
-          {/* <View style={{width:'100%', height:height/2.5, backgroundColor:'#06b6d4', display:'flex', justifyContent:'center', alignItems:'center', gap:15}}>
-            <Image source={{uri:patient.profile}} style={{width:120, height:120, borderRadius:300}} />
-            <View>
-            <Text style={{color:'#fff', fontSize:20, fontWeight:'bold'}}>Hello, {patient.firstname}</Text>
-            </View>
-            <Button title='Logout' onPress={logoutButton} />
-          </View> */}

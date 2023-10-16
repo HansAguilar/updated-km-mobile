@@ -80,7 +80,7 @@ export const adminChanges = (data)=>{
     return async dispatch=>{
         try {
             dispatch({
-                type: CREATE_APPOINTMENT_SUCCESS,
+                type: UPDATE_APPOINTMENT_SUCCESS,
                 payload:data
             })
         } catch (error) {
@@ -110,6 +110,21 @@ export const approvedAppointment = (id) =>{
             const response = await axios.put(`${APPOINTMENT_URL}/status/done/${id}`);
             dispatch({
                 type: APPROVED_APPOINTMENT_SUCCESS,
+                payload: response.data
+            });
+            socket.emit("appointment_changes",{value:response.data});
+        } catch (error) {
+            
+        }
+    }
+}
+
+export const updateAppointment = (id,data) =>{
+    return async dispatch=>{
+        try {
+            const response = await axios.put(`${APPOINTMENT_URL}/update/${id}`,data);
+            dispatch({
+                type: UPDATE_APPOINTMENT_SUCCESS,
                 payload: response.data
             });
             socket.emit("appointment_changes",{value:response.data});

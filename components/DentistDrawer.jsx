@@ -3,7 +3,7 @@ import { View, Text,Pressable,Image, } from 'react-native';
 import { styles } from '../style/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logoutDentist } from '../redux/action/DentistAction';
+import { logOutAccount } from '../redux/action/LoginAction';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 
 export default function CustomDrawer({navigation, isSideNavShow, setSideNavShow}) {
@@ -24,7 +24,7 @@ export default function CustomDrawer({navigation, isSideNavShow, setSideNavShow}
 
   const logoutButton = async() =>{
     setSideNavShow(false);
-    dispatch(logoutDentist());
+    dispatch(logOutAccount());
     AsyncStorage.removeItem("token");
     navigation("Home")
   }

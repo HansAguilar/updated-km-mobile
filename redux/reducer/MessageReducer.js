@@ -12,7 +12,11 @@ const reducer = (state={}, action) =>{
                 message:{ ...state.message, [action.key]: state.message[action.key]?[...state.message[action.key],action.payload] :[action.payload] }, 
                 loading:false}
         case RESPONSE_MESSAGE_SUCCESS:
-            return{ ...state, message:{ ...state.message, [action.key]: [...state.message[action.key],action.payload] } , loading:false}
+            return {
+                ...state,
+                message:{ ...state.message, [action.key]: state.message[action.key]?[...state.message[action.key],action.payload] :[action.payload] },
+                loading:false,
+              };
             // return{ ...state, message:{ ...state.message, [action.key]: state.message[action.key]?[...state.message[action.key],action.payload] :[action.payload] }, loading:false}
         case FETCH_MESSAGE_FAILED:
             return { ...state, error: action.error, loading: false };

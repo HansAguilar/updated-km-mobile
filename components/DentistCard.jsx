@@ -28,15 +28,19 @@ function DentistCard({header, data,setModal,setTreatmentData}) {
                                {
                                 (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && (
                                     <View style={{display:'flex',flexDirection:'row', gap:8}}>
-                                    {/* {
-                                        val.status === "PROCESSING" && (
-                                            <> */}
-                                            <Pressable style={{padding:10,backgroundColor:"#10b981",borderRadius:100}} onPress={()=>{
-                                                setTreatmentData(val);
-                                                setModal(true);
-                                            }}>
-                                                <Octicons name='checklist' size={20} color={"#fff"} />
-                                            </Pressable>
+                                            
+                                            {
+                                                val.status === "PROCESSING" &&(
+                                                    <Pressable style={{padding:10,backgroundColor:"#10b981",borderRadius:100}} onPress={()=>{
+                                                        setTreatmentData(val);
+                                                        setModal(true);
+                                                    }}>
+                                                        <Octicons name='checklist' size={20} color={"#fff"} />
+                                                    </Pressable>
+                                                ) 
+                                            }
+
+
                                             <Pressable style={{padding:10,backgroundColor:"#06b6d4",borderRadius:100}} onPress={()=>dispatch(approvedAppointment(val.appointmentId))}>
                                                 <MaterialIcons name='done' size={20} color={"#fff"} />
                                             </Pressable>

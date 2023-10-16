@@ -11,7 +11,7 @@ import ToastFunction from '../../../config/toastConfig';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => {
-  const { appointment } = useSelector((state) => state.appointment);
+  const appointment = useSelector((state)=>{return state.appointment.appointment.filter((val)=>val.status==="PENDING"||val.status==="APPROVED"|| val.status === "TREATMENT")}); 
   const schedule = useSelector((state) => state.schedule.schedule);
   const dateRef = useRef("");
   const [showPicker, setShowPicker] = useState(false);

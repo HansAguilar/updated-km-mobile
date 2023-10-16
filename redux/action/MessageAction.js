@@ -45,13 +45,20 @@ export const createMessage = (roomKey, data) =>{
     }
 }
 
-export const fetchResponseMessage = (roomKey, data) =>{
+export const fetchResponseMessage = (patientId) =>{
     return async dispatch =>{
         try {
+            const response = await axios.get(`${MESSAGE_URL}/${patientId}`);
+            const patientMessage = { };
+            for(const [roomId, messageData] of Object.entries(response.data)){
+                const filteredMessage = messageData.filter((patient)=>patient.receiverId.patientId === patientId)
+                if(filteredMessage.length>0){
+                    patientMessage[roomId] = filteredMessage;
+                }
+            }
             dispatch({
-                type:RESPONSE_MESSAGE_SUCCESS,
-                key:roomKey,
-                payload: data
+                type: FETCH_MESSAGE_SUCCESS,
+                payload: patientMessage
             })
         } catch (error) {
             

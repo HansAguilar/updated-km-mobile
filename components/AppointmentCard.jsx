@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Image, TouchableHighlight, Text, Dimensions } from 'react-native';
 import moment from 'moment/moment';
 import { styles } from '../style/styles';
-function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, fontColor, showDate, viewEvent,setModal,modal}) {
+function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, fontColor, showDate, viewEvent,setModal,modal,navigate,update,setUpdateSchedule}) {
 
   function select(date){
     // moment(val.appointmentDate).subtract(1, 'day').format("LL") === moment().format("LL")
@@ -26,7 +26,15 @@ function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, f
                             <Text style={{fontSize:10, color:subColor}}>{moment(val.timeStart, 'HH:mm:ss').format('h:mm A')} - {moment(val.timeEnd, 'HH:mm:ss').format('h:mm: A')}</Text>
                             
                           </View>
+                          <View style={{display:"flex", flexWrap:"wrap"}}>
                           <TouchableHighlight style={{backgroundColor:subColor, paddingHorizontal:10, paddingVertical:5, borderRadius:5,marginRight:4,}} onPress={()=>viewEvent(val.appointmentId)} ><Text style={{color:'#fff', fontSize:12}}>View</Text></TouchableHighlight>
+                          {
+                            val.typeAppointment==="upcoming" && (
+                              <TouchableHighlight style={{backgroundColor:subColor, paddingHorizontal:10, paddingVertical:5, borderRadius:5,marginRight:4,}} onPress={()=>
+                                setUpdateSchedule({...update, data:val, isShow:true})
+                              } ><Text style={{color:'#fff', fontSize:12}}>Update</Text></TouchableHighlight>
+                            )  
+                          }
                          {
                            (moment().format("LL") !== moment(val.appointmentDate).format("LL") &&  moment(val.appointmentDate).subtract(1, 'day').format("LL") !== moment().format("LL")) && (
                             <TouchableHighlight style={{backgroundColor:"#ef4444", paddingHorizontal:10, paddingVertical:5, borderRadius:5}} onPress={()=>
@@ -34,6 +42,8 @@ function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, f
                           } ><Text style={{color:'#fff', fontSize:12}}>Cancel</Text></TouchableHighlight>
                           )
                          }
+                          </View>
+
                         </View>
                       ))
                     } 
