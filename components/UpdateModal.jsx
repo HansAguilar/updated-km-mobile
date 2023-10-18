@@ -6,6 +6,7 @@ import AntIcon from "react-native-vector-icons/AntDesign";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { updateAppointment } from "../redux/action/AppointmentAction";
+import { fetchAdminPayment } from "../redux/action/PaymentAction";
 import toastFunction from "../config/toastConfig";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
@@ -166,9 +167,22 @@ function UpdateModal({data, setData}) {
       }
 
       const timeSelectedButton = () =>{
-
+        const patientSameDayAppointment = appointment.filter((val) => {
+          const appointmentMoment = moment(val.appointmentDate);
+          const inputMoment = moment(inputDetails.date);
+          return (
+            val.patient.patientId === inputDetails.patientId &&
+            val.appointmentId !== data.data.appointmentId &&
+            (appointmentMoment.month() === inputMoment.month() &&
+            appointmentMoment.date() === inputMoment.date())
+          );
+        });
+        
+        if (patientSameDayAppointment.length > 0) {
+          return toastFunction("error", "You have an existing appointment!");
+        }
         if(!inputDetails.dentistId|| !inputDetails.dentist){
-          toastFunction("error", "Fill up empty field!")
+          return toastFunction("error", "Fill up empty field!")
         }
         const end = calculateTotalTime(inputDetails.timeStart);
         const totalTimeDuration = moment('00:00:00', 'HH:mm:ss');
@@ -179,9 +193,6 @@ function UpdateModal({data, setData}) {
             && moment(val.appointmentDate).isSame(moment(inputDetails.date), "day")
             && val.patient.patientId === data.data.patient.patientId;
         });
-        if(filteredAppointment.length>0){
-          return toastFunction("error", "You have an existing appointment to this date!")
-        }
     
         while (start.isBefore(moment(end, "HH:mm:ss").add(30, 'minutes'))) {
           const startTime = start.format('HH:mm:ss');
@@ -213,6 +224,7 @@ function UpdateModal({data, setData}) {
         })
         
         dispatch(updateAppointment(data.data.appointmentId, inputDetails));
+        dispatch(fetchAdminPayment(inputDetails.patientId));
         setData({...data, isShow:false});
       }
 

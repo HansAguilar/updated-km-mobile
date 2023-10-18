@@ -36,7 +36,7 @@ function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, f
                             )  
                           }
                          {
-                           (moment().format("LL") !== moment(val.appointmentDate).format("LL") &&  moment(val.appointmentDate).subtract(1, 'day').format("LL") !== moment().format("LL")) && (
+                           (moment().format("LL") !== moment(val.appointmentDate).format("LL") &&  moment(val.appointmentDate).subtract(1, 'day').format("LL") !== moment().format("LL") && (val.status !== "TREATMENT")) && (
                             <TouchableHighlight style={{backgroundColor:"#ef4444", paddingHorizontal:10, paddingVertical:5, borderRadius:5}} onPress={()=>
                               setModal({...modal, id:val.appointmentId, isShow:true,})
                           } ><Text style={{color:'#fff', fontSize:12}}>Cancel</Text></TouchableHighlight>

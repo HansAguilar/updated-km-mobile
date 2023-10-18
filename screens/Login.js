@@ -48,7 +48,6 @@ const Login = React.memo(({navigation}) => {
     if (!userData.username || !userData.password) {
       return ToastFunction('error', 'Fill up empty field');
     }
-    // await dispatch(logOutAccount())
     await dispatch(loginAdmin(userData));
   };
   return (

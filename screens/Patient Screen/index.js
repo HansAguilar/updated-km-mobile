@@ -21,7 +21,7 @@ import { fetchPayment,fetchAdminPayment,adminUpdatePayment } from '../../redux/a
 import { fetchInstallmentByPatient } from '../../redux/action/InstallmentAction';
 import { fetchSchedule } from '../../redux/action/ScheduleAction';
 import { fetchPrescription } from '../../redux/action/PrescriptionAction';
-import { fetchResponseMessage } from "../../redux/action/MessageAction";
+import { fetchResponseMessage,createMessage } from "../../redux/action/MessageAction";
 import Payment from './Payment';
 import Drawer from '../../components/CustomDrawer';
 import Message from './Message/index';
@@ -63,21 +63,26 @@ const Main = React.memo(({navigation})=> {
   const patient = useSelector((state)=>{return state.patient});
   const appointment = useSelector((state)=>{return state.appointment});
   const messages = useSelector((state)=>{return state.messages});
+  const [patientLogin, setPatientLogin] = useState("");
   
   const fetchPatientData = async () => {
     const token = await AsyncStorage.getItem('token');
-    dispatch(fetchPatient(token));
+    await dispatch(fetchPatient(token));
   };
   
   const fetchAppointmentData = async() => {
-    if (patient && patient.patient && patient.patient.patientId) {
-      await dispatch(fetchAppointment(patient.patient.patientId));
-      await dispatch(fetchPatientMessage(patient.patient.patientId));
-      await dispatch(fetchPayment(patient.patient.patientId));
-      await dispatch(fetchInstallmentByPatient(patient.patient.patientId));
-      await dispatch(fetchPrescription(patient.patient.patientId))
-      await dispatch(fetchSchedule());
-      await dispatch(fetchAppointmentFee());
+    try {
+      if (patient && patient.patient && patient.patient.patientId) {
+        await dispatch(fetchAppointment(patient.patient.patientId));
+        await dispatch(fetchPatientMessage(patient.patient.patientId));
+        await dispatch(fetchPayment(patient.patient.patientId));
+        await dispatch(fetchInstallmentByPatient(patient.patient.patientId));
+        await dispatch(fetchPrescription(patient.patient.patientId))
+        await dispatch(fetchSchedule());
+        await dispatch(fetchAppointmentFee());
+      }
+    } catch (error) {
+      console.error("Error fetching appointment data:", error);
     }
   };
 
@@ -87,29 +92,34 @@ const Main = React.memo(({navigation})=> {
   
   useEffect(() => {
     fetchAppointmentData();
+    setPatientLogin(patient?.patient?.patientId || "");
   }, [patient]);
 
   useEffect(()=>{
     socket.on("response_changes",(data)=>{
-      dispatch(adminChanges(data.value));
-      dispatch(fetchAdminPayment(patient?.patient?.patientId));
+      if (patient && patient.patient && patient.patient.patientId) {
+        dispatch(adminChanges(data.value));
+        dispatch(fetchAdminPayment(patient?.patient?.patientId));
+      }
     })
     socket.on("response_admin_changes",(data)=>{
-      dispatch(adminChanges(data.value));
-      dispatch(fetchAdminPayment(patient?.patient?.patientId));
+      if (patient && patient.patient && patient.patient.patientId) {
+        dispatch(adminChanges(data.value));
+        dispatch(fetchAdminPayment(patient?.patient?.patientId));
+      }
     })
 
     socket.on("admin_response_payment_changes",(data)=>{
       dispatch(adminUpdatePayment(data.value));
     })
 
-    // socket.on("received_by_patient",(data)=>{
-    //    console.log(data.value.receiverId.patientId);
-    //   dispatch(fetchResponseMessage(patient?.patient?.patientId))
-    //   // if(patient?.patient?.patientId===data.value.receiverId.patientId){
-    //   //   dispatch(fetchResponseMessage(data.key, data.value))
-    //   // }
-    // })
+    socket.on("received_by_patient", (data) => {
+      console.log("start", patientLogin);
+      if (patient && patient.patient && patient.patient.patientId === data.value.receiverId.patientId) {
+        console.log("test");
+        dispatch(fetchResponseMessage(data.key, data.value));
+      }
+    });
     return ()=>{
       socket.off();
     }

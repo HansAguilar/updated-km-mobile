@@ -2,6 +2,7 @@ import axios from "axios";
 import { CREATE_MESSAGE_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, RESPONSE_MESSAGE_SUCCESS } from "../ActionType"
 import { MESSAGE_URL, SOCKET_LINK } from "../../config/APIRoutes";
 import * as io from "socket.io-client";
+import { useSelector } from "react-redux";
 
 const socket = io.connect(SOCKET_LINK);
 export const fetchPatientMessage = (patientId) =>{
@@ -45,20 +46,13 @@ export const createMessage = (roomKey, data) =>{
     }
 }
 
-export const fetchResponseMessage = (patientId) =>{
+export const fetchResponseMessage = (roomKey, data) =>{
     return async dispatch =>{
         try {
-            const response = await axios.get(`${MESSAGE_URL}/${patientId}`);
-            const patientMessage = { };
-            for(const [roomId, messageData] of Object.entries(response.data)){
-                const filteredMessage = messageData.filter((patient)=>patient.receiverId.patientId === patientId)
-                if(filteredMessage.length>0){
-                    patientMessage[roomId] = filteredMessage;
-                }
-            }
             dispatch({
-                type: FETCH_MESSAGE_SUCCESS,
-                payload: patientMessage
+                type:CREATE_MESSAGE_SUCCESS,
+                key:roomKey,
+                payload: data
             })
         } catch (error) {
             
