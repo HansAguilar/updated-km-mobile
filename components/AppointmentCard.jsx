@@ -26,23 +26,26 @@ function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, f
                             <Text style={{fontSize:10, color:subColor}}>{moment(val.timeStart, 'HH:mm:ss').format('h:mm A')} - {moment(val.timeEnd, 'HH:mm:ss').format('h:mm: A')}</Text>
                             
                           </View>
-                          <View style={{display:"flex", flexWrap:"wrap"}}>
-                          <TouchableHighlight style={{backgroundColor:subColor, paddingHorizontal:10, paddingVertical:5, borderRadius:5,marginRight:4,}} onPress={()=>viewEvent(val.appointmentId)} ><Text style={{color:'#fff', fontSize:12}}>View</Text></TouchableHighlight>
-                          {
-                            val.typeAppointment==="upcoming" && (
-                              <TouchableHighlight style={{backgroundColor:subColor, paddingHorizontal:10, paddingVertical:5, borderRadius:5,marginRight:4,}} onPress={()=>
-                                setUpdateSchedule({...update, data:val, isShow:true})
-                              } ><Text style={{color:'#fff', fontSize:12}}>Update</Text></TouchableHighlight>
-                            )  
-                          }
-                         {
-                           (moment().format("LL") !== moment(val.appointmentDate).format("LL") &&  moment(val.appointmentDate).subtract(1, 'day').format("LL") !== moment().format("LL") && (val.status !== "TREATMENT")) && (
-                            <TouchableHighlight style={{backgroundColor:"#ef4444", paddingHorizontal:10, paddingVertical:5, borderRadius:5}} onPress={()=>
-                              setModal({...modal, id:val.appointmentId, isShow:true,})
-                          } ><Text style={{color:'#fff', fontSize:12}}>Cancel</Text></TouchableHighlight>
-                          )
-                         }
-                          </View>
+                          <View style={cardStyles.buttonContainer}>
+                              <TouchableHighlight style={cardStyles.buttonView} onPress={() => viewEvent(val.appointmentId)}>
+                                <Text style={cardStyles.buttonText}>View</Text>
+                              </TouchableHighlight>
+                              {val.typeAppointment === "upcoming" && (
+                                <TouchableHighlight style={cardStyles.button} onPress={() =>
+                                  setUpdateSchedule({ ...update, data: val, isShow: true })
+                                }>
+                                  <Text style={cardStyles.buttonText}>Update</Text>
+                                </TouchableHighlight>
+                              )}
+                              {moment().format("LL") !== moment(val.appointmentDate).format("LL") && moment(val.appointmentDate).subtract(1, 'day').format("LL") !== moment().format("LL") && (val.status !== "TREATMENT") && (
+                                <TouchableHighlight style={cardStyles.cancelButton} onPress={() =>
+                                  setModal({ ...modal, id: val.appointmentId, isShow: true })
+                                }>
+                                  <Text style={cardStyles.buttonText}>Cancel</Text>
+                                </TouchableHighlight>
+                              )}
+                            </View>
+
 
                         </View>
                       ))
@@ -62,3 +65,44 @@ function AppointmentCard({title, dataList,type, bgColor,borderColor, subColor, f
 }
 
 export default AppointmentCard
+
+const cardStyles = {
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  button: {
+    width: 100, // Set a fixed width for the buttons
+    backgroundColor: '#0284c7',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginVertical: 5, // Add marginVertical for spacing between buttons
+  },
+  buttonView: {
+    width: 100, // Set a fixed width for the buttons
+    backgroundColor: 'gray',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginVertical: 5, // Add marginVertical for spacing between buttons
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center', // Center the text within the button
+  },
+  cancelButton: {
+    width: 100, // Set a fixed width for the buttons
+    backgroundColor: "#ef4444",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginVertical: 5, // Add marginVertical for spacing between buttons
+  },
+};
+
