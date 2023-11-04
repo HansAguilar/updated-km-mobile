@@ -1,5 +1,5 @@
-import React,{useState, useEffect} from 'react';
-import { View, Image, StyleSheet, Text, Dimensions, text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, SafeAreaView, Text, ImageBackground } from 'react-native';
 import { styles } from '../style/styles';
 import Button from '../components/Button';
 import InputText from '../components/InputText';
@@ -10,12 +10,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginPatientAccount } from '../redux/action/PatientVerification';
 import { loginAdmin, logOutAccount } from '../redux/action/LoginAction';
-import { dentistLogin,fetchDentists } from '../redux/action/DentistAction';
-import Loader from '../components/Loader';
+import { dentistLogin, fetchDentists } from '../redux/action/DentistAction';
 
-const Login = React.memo(({navigation}) => {
+const Login = React.memo(({ navigation }) => {
   const navigate = useNavigation();
-  const { account, error } = useSelector((state)=>state.login)
+  const { account, error } = useSelector((state) => state.login)
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     username: '',
@@ -27,78 +26,88 @@ const Login = React.memo(({navigation}) => {
     setUserData({ ...userData, [name]: value });
   };
 
-  const checkIfValidAccount = async() =>{
-      await AsyncStorage.setItem('token', account.token);
-      setUserData({ username: '', password: '' })
-      navigation.navigate(`${account.accountType}`);
+  const checkIfValidAccount = async () => {
+    await AsyncStorage.setItem('token', account.token);
+    setUserData({ username: '', password: '' })
+    navigation.navigate(`${account.accountType}`);
   }
-  useEffect(()=>{
-    if(account){
+  useEffect(() => {
+    if (account) {
       checkIfValidAccount();
     }
-  },[account]);
-  useEffect(()=>{
-    if(error){
+  }, [account]);
+  useEffect(() => {
+    if (error) {
       ToastFunction("error", error);
     }
-  },[error]);
-  
+  }, [error]);
 
-  const loginButtonHandler = async() => {
+
+  const loginButtonHandler = async () => {
     if (!userData.username || !userData.password) {
       return ToastFunction('error', 'Fill up empty field');
     }
     await dispatch(loginAdmin(userData));
   };
+
   return (
-      <View style={styles.containerWhite}>
-      <Toast />
-      <View style={styles.subContainer}>
-        <Image
-          source={require('../assets/images/logo.jpg')}
-          style={styles.bannerImage}
-          resizeMode="contain"
-        />
-        <View style={{ ...styles.inputContainer, marginBottom: 60 }}>
-          <InputText
-            onChangeText={onChangeText}
-            name="username"
-            value={userData.username}
-            placeholder="Username"
-          />
-          <InputText
-            onChangeText={onChangeText}
-            name="password"
-            value={userData.password}
-            placeholder="Password"
-            isSecure={isSecure}
-            iconName={isSecure ? 'eye-with-line' : 'eye'}
-            iconFunction={() => setSecure((prev) => !prev)}
-            iconColor="#4b5563"
-          />
-          <Text
-            style={{ textAlign: 'right', fontSize: 14, color: '#06b6d4', marginTop: 5 }}
-          >
-            Forgot password?
-          </Text>
-        </View>
-        <Button
-          title="Login"
-          bgColor="#06b6d4"
-          textColor="#fff"
-          onPress={loginButtonHandler}
-        />
-        <Text style={{ textAlign: 'center', fontSize: 14, marginTop: 10 }}>
-          Don't have an account?{' '}
-          <Text
-            style={{ fontWeight: 'bold', color: '#06b6d4' }}
-            onPress={() => navigation.navigate('Signup')}
-          >
-            Sign up
-          </Text>
-        </Text>
-      </View>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../assets/images/blob.png')} style={styles.image}>
+        <Toast />
+
+        <View style={styles.containerWhite}>
+          <Text style={{ textAlign: 'left', fontSize: 30, fontWeight: '500', marginRight: 'auto', color: '#2b2b2b' }}>Sign In</Text>
+
+          <View style={styles.subContainer}>
+
+            <View style={{ ...styles.inputContainer, marginBottom: 60 }}>
+              <View style={{ borderWidth: 2, borderColor: '#CCCCCC', borderRadius: 8 }}>
+                <InputText
+                  onChangeText={onChangeText}
+                  name="username"
+                  value={userData.username}
+                  placeholder="Username"
+                />
+              </View>
+
+              <View style={{ borderWidth: 2, borderColor: '#CCCCCC', borderRadius: 8 }}>
+                <InputText
+                  onChangeText={onChangeText}
+                  name="password"
+                  value={userData.password}
+                  placeholder="Password"
+                  isSecure={isSecure}
+                  iconName={isSecure ? 'eye-with-line' : 'eye'}
+                  iconFunction={() => setSecure((prev) => !prev)}
+                  iconColor="#CCCCCC"
+                />
+              </View>
+
+              <Text
+                style={{ textAlign: 'right', fontSize: 14, color: '#CCCCCC', marginTop: 5 }}
+              >
+                Forgot password?
+              </Text>
+            </View>
+            <Button
+              title="Login"
+              bgColor="#06b6d4"
+              textColor="#fff"
+              onPress={loginButtonHandler}
+            />
+
+            <Text style={{ textAlign: 'center', fontSize: 14, marginTop: 10 }}>
+              Don't have an account?{' '}
+              <Text style={{ fontWeight: 'bold', color: '#06b6d4' }} onPress={() => navigation.navigate('Signup')}>
+                Sign up
+              </Text>
+            </Text>
+
+          </View>
+        </View >
+      </ImageBackground>
+    </SafeAreaView>
+
   )
 })
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Image, Pressable } from 'react-native';
+import { View, Text, Image, Pressable, SafeAreaView, ScrollView, ImageBackground } from 'react-native';
 import Header from '../../components/Header';
 import InputText from '../../components/InputText';
 import Button from '../../components/Button';
@@ -19,87 +19,112 @@ function SecondStep({ navigation, details, setDetails, onChangeText }) {
     setShowPicker(!showPicker);
   };
 
-  const onChangeDate = ({type}, selectedDate) =>{
-    if(type=="set"){
+  const onChangeDate = ({ type }, selectedDate) => {
+    if (type == "set") {
       const currentDate = selectedDate;
       setDetails({
         ...details,
-        ["birthday"]:currentDate
+        ["birthday"]: currentDate
       })
-      birthday.current=`${moment(currentDate).format("LL")}`;
+      birthday.current = `${moment(currentDate).format("LL")}`;
 
-      if (Platform.OS === "android"){
+      if (Platform.OS === "android") {
         toggleDatepicker();
         setDetails({
           ...details,
-          ["birthday"]:currentDate
+          ["birthday"]: currentDate
         })
-        birthday.current=`${moment(currentDate).format("LL")}`;
+        birthday.current = `${moment(currentDate).format("LL")}`;
       }
-    } 
-    else{
+    }
+    else {
       toggleDatepicker();
     }
   }
 
-  const checkIfEmailExist = async()=>{
+  const checkIfEmailExist = async () => {
     try {
       const response = await axios.post(`${PATIENT_URL}/checkEmail/${details.email}`);
-      if(response.data){
+      console.log(response);
+
+      if (response.data) {
         navigation.navigate("Step 3")
       }
     } catch (error) {
+      console.log(error);
       ToastFunction("error", error.response.data.message);
     }
   }
-  const onSubmitButton = () =>{
-    if(!details.address || !details.birthday || !details.email) return ToastFunction("error", "Fill empty field!");
-    checkIfEmailExist();
+
+  const onSubmitButton = async () => {
+    console.log(details.email);
+    if (!details.address || !details.birthday || !details.email) return ToastFunction("error", "Fill empty field!");
+    try {
+      const response = await axios.post(`${PATIENT_URL}/checkEmail/${details.email}`);
+      console.log(response);
+
+      if (response.data) {
+        navigation.navigate("Step 3")
+      }
+    } catch (error) {
+      console.log(error);
+      ToastFunction("error", error.response.data.message);
+    }
   }
+
   return (
-    <View style={styles.containerBlue}>
-      <Toast />
-      <View style={{ ...styles.subContainer, rowGap: 15, marginTop: 0 }}>
-        {/* Header */}
-        <View style={{ marginBottom: 15 }}>
-          <Header color="white" />
-          <Text style={{ color: "#fff", fontSize: 16 }}>Required information to account creation</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../../assets/images/blob.png')} style={styles.image}>
+        <ScrollView>
+          <Toast />
 
-        {/* Image */}
-        <Image source={require('../../assets/images/rg1.png')} style={{ width: 250, height: 260 }} />
+          <View style={{ ...styles.containerWhite, zIndex: -1 }}>
+            <View style={{ marginBottom: 12, marginRight: 'auto' }}>
+              <Header />
+              <Text style={{ color: "#2b2b2b", fontSize: 16, }} >Required information to account creation</Text>
+            </View>
 
-        {/* Input fields */}
-        <InputText onChangeText={onChangeText} value={details.address} name="address" placeholder="Address" />
+            <Image source={require('../../assets/images/rg1.png')} style={{ width: 250, height: 260, }} />
 
-          {
-            showPicker&&(
-              <DateTimePicker 
-                mode="date"
-                display='spinner'
-                value={details.birthday}
-                onChange={onChangeDate}
-              />
-            )
-          }
-          {
-            !showPicker&&(
-              <Pressable
-              style={{width:'100%'}}
-              onPress={toggleDatepicker}
-            >
-              <InputText onChangeText={onChangeText}  value={birthday.current} placeholder={"Birthday"} isEditable={false} />
-            </Pressable>
-            )
-          }
+            <View style={{ flexDirection: 'column', gap: 10, width: '100%' }}>
+              <View style={{ borderWidth: 2, borderColor: '#CCCCCC', borderRadius: 8, height: 50, width: '100%' }}>
+                <InputText onChangeText={onChangeText} value={details.address} name="address" placeholder="Address" />
+              </View>
 
-        <InputText onChangeText={onChangeText} value={details.email} name="email" placeholder="Email" />
+              <View style={{ borderWidth: 2, borderColor: '#CCCCCC', borderRadius: 8, height: 50, width: '100%' }}>
+                {
+                  showPicker && (
+                    <DateTimePicker
+                      mode="date"
+                      display='spinner'
+                      value={details.birthday}
+                      onChange={onChangeDate}
+                    />
+                  )
+                }
+                {
+                  !showPicker && (
+                    <Pressable
+                      style={{ width: '100%' }}
+                      onPress={toggleDatepicker}
+                    >
+                      <InputText onChangeText={onChangeText} value={birthday.current} placeholder={"Birthday"} isEditable={false} />
+                    </Pressable>
+                  )
+                }
+              </View>
 
-        {/* Button */}
-        <View style={{ marginTop: 0 }}></View>
-        <Button onPress={onSubmitButton} title="Next" bgColor="#0891b2" textColor="#fff" />
-      </View>
-    </View>
+              <View style={{ borderWidth: 2, borderColor: '#CCCCCC', borderRadius: 8, height: 50, width: '100%' }}>
+                <InputText onChangeText={onChangeText} value={details.email} name="email" placeholder="Email" />
+              </View>
+            </View>
+
+            <Button onPress={onSubmitButton} title={"Next"} bgColor={"#06b6d4"} textColor={"#fff"} />
+          </View>
+        </ScrollView>
+
+      </ImageBackground>
+    </SafeAreaView >
   );
 }
 
