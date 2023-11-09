@@ -4,7 +4,9 @@ import { styles } from '../style/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logOutAccount } from '../redux/action/LoginAction';
+import { logoutPatientAccount } from '../redux/action/PatientAction';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
+import { AppRegistry } from 'react-native';
 
 export default function CustomDrawer({navigation, isSideNavShow, setSideNavShow}) {
   const {patient} = useSelector((state)=>{return state.patient});
@@ -32,8 +34,10 @@ export default function CustomDrawer({navigation, isSideNavShow, setSideNavShow}
 
   const logoutButton = async() =>{
     setSideNavShow(false);
+    dispatch(logoutPatientAccount())
     dispatch(logOutAccount());
-    AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("token");
+    // AppRegistry.unmountApplicationComponentAtRootTag();
     navigation("Home")
   }
   return isSideNavShow && (
