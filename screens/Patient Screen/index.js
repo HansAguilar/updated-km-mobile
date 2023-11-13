@@ -14,14 +14,13 @@ import AppointmentDetails from './AppointmentDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPatient } from '../../redux/action/PatientAction';
 import Loader from '../../components/Loader';
-import { fetchAppointment, fetchChanges, adminChanges } from '../../redux/action/AppointmentAction';
+import { fetchAppointment, fetchChanges, adminChanges, createAppointmentByAdmin,deleteByAdmin } from '../../redux/action/AppointmentAction';
 import { fetchAppointmentFee } from '../../redux/action/AppointmentFeeAction';
 import { fetchPatientMessage, sendByAdminMessage, fetchNewPatientMessage } from '../../redux/action/MessageAction';
-import { fetchPayment, fetchAdminPayment, adminUpdatePayment } from '../../redux/action/PaymentAction';
+import { fetchPayment, fetchAdminPayment, adminUpdatePayment,adminCancelledPayment,adminDeletePayment } from '../../redux/action/PaymentAction';
 import { fetchInstallmentByPatient } from '../../redux/action/InstallmentAction';
 import { fetchSchedule } from '../../redux/action/ScheduleAction';
 import { fetchPrescription } from '../../redux/action/PrescriptionAction';
-import { fetchResponseMessage, createMessage } from "../../redux/action/MessageAction";
 import Payment from './Payment';
 import Drawer from '../../components/CustomDrawer';
 import Message from './Message/index';
@@ -68,7 +67,7 @@ const Main = React.memo(({ navigation }) => {
 
   const fetchPatientData = async () => {
     const token = await AsyncStorage.getItem('token');
-    await dispatch(fetchPatient(token,patientLogin));
+    dispatch(fetchPatient(token,patientLogin));
   };
 
   
@@ -95,14 +94,35 @@ const Main = React.memo(({ navigation }) => {
   }, [patientLogin.current]);
 
   useEffect(() => {
+   
+    //FOR APPROVAL OF APPOINTMENT
     socket.on("response_changes", (data) => {
-        dispatch(adminChanges(data.value));
-        dispatch(fetchAdminPayment(patientLogin.current));
+        const parseData = JSON.parse(data);
+        dispatch(adminChanges(parseData.value));
+        dispatch(fetchAdminPayment(parseData.value));
     })
+    // ADMIN CREATION APPOINTMENT
+    socket.on("response_admin_appointment_create", (data) => {
+      dispatch(createAppointmentByAdmin(data.value));
+    })
+    // FOR CANCEL APPOINTMENT
+    socket.on("response_cancel_by_admin", (data) => {
+      dispatch(adminChanges(data.value));
+      dispatch(adminCancelledPayment(data.value));
+    })
+  // FOR UPDATE APPOINTMENT
     socket.on("response_admin_changes", (data) => {
-        dispatch(adminChanges(data.value));
-        dispatch(fetchAdminPayment(patientLogin.current));
+        const parseData = JSON.parse(data);
+        dispatch(adminChanges(parseData.value));
+        dispatch(fetchAdminPayment(parseData.value));
     })
+    // DELETE APPOINTMENT
+    socket.on("response_delete", (data) => {
+      const parseData = JSON.parse(data);
+      dispatch(deleteByAdmin(parseData.value));
+      dispatch(adminDeletePayment(parseData.value));
+  })
+
     socket.on("admin_response_payment_changes", (data) => {
       dispatch(adminUpdatePayment(data.value));
     })
