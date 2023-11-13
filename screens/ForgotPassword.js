@@ -49,8 +49,8 @@ const ForgotPassword = () => {
 						:
 						<View style={{ marginVertical: 10 }}>
 							<Text style={{ fontWeight: '400', fontSize: 15, textAlign: 'center', color: '#cccccc' }}>
-								Didn't get the code?
-								<Text style={{ fontWeight: '400', fontSize: 15, textAlign: 'center', color: '#06b6d4' }}>Resend</Text>
+								Didn't receive the code?
+								<Text style={{ fontWeight: '400', fontSize: 15, textAlign: 'center', color: '#06b6d4' }}> Resend</Text>
 							</Text>
 						</View>
 				}

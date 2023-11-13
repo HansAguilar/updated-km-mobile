@@ -1,4 +1,4 @@
-const PORT = `192.168.9.1`;
+const PORT = `192.168.1.5`;
 
 export const PATIENT_URL = `http://${PORT}:8080/api/v1/patient`; 
 export const LOGIN_URL = `http://${PORT}:8080/api/v1/login`; 

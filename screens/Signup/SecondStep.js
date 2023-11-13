@@ -61,7 +61,6 @@ function SecondStep({ navigation, details, setDetails, onChangeText }) {
     if (!details.address || !details.birthday || !details.email) return ToastFunction("error", "Fill empty field!");
     try {
       const response = await axios.post(`${PATIENT_URL}/checkEmail/${details.email}`);
-      console.log(response);
 
       if (response.data) {
         navigation.navigate("Step 3")

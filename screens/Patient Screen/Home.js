@@ -134,7 +134,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
 
   const Modal = React.memo(() => {
-    
+
     return (
       <View
         style={{
@@ -195,7 +195,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
   return patient && appointment && announcement && services && dentists ? (
     <>
-      {modal.isShow && <Modal  />}
+      {modal.isShow && <Modal />}
       {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}
       <View style={{ ...styles.containerGray, height: height, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
         <View style={{ width: '100%', backgroundColor: '#155e75', height: 30 }}></View>
@@ -212,25 +212,31 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
             justifyContent: 'space-between',
           }}
         >
+
           {/* Left Side*/}
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <Pressable onPress={() => setSideNavShow(true)}>
-              <EntypoIcon name="menu" size={25} color="#fff" />
+              <EntypoIcon name="menu" size={30} color="#fff" />
             </Pressable>
+
             <View style={{ marginLeft: 10, display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-              <Image source={{ uri: patient.profile }} style={{ width: 35, height: 35, borderRadius: 100 }} />
-              <View style={{ display: 'flex', flexDirection: 'column' }}>
-                <Text style={{ fontSize: 9 }}>Your name</Text>
-                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12 }}>{patient.firstname}</Text>
+              {/* <Image source={{ uri: patient.profile }} style={{ width: 35, height: 35, borderRadius: 100 }} /> */}
+              <View style={{ gap: 2, flexDirection: 'row' }}>
+                <Text style={{ color: '#fff', fontSize: 15 }}>Hello, </Text>
+                <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>{patient.firstname}</Text>
               </View>
             </View>
           </View>
+
+
           {/* Right Side */}
           <View style={{ height: 'auto', width: 'auto', padding: 5, position: 'relative' }}>
             <Ionicons name="notifications" color="#fff" size={25} />
-            <Text style={{ backgroundColor: '#71717a', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }}>1</Text>
+            <Text style={{ backgroundColor: '#e62e00', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }}>1</Text>
           </View>
+
         </View>
+        
         {/* Body */}
         <View
           style={{

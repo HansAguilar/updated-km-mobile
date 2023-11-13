@@ -13,6 +13,7 @@ function FourthStep({ navigation, details, onChangeText }) {
   const checkPhoneNumberExist = async () => {
     try {
       const response = await axios.post(`${PATIENT_URL}/checkContactNumber/${details.contactNumber}`)
+
       if (response.data) {
         navigation.navigate("Step 5");
       }
