@@ -23,7 +23,7 @@ function index({dispatch}) {
     date: new Date(),
     timeStart: '',
     timeEnd: '',
-    totalAmount: fee.status==="AVAILABLE"?fee.price:0.00,
+    totalAmount: fee?.status==="AVAILABLE"?fee?.price:0.00,
     timeSubmitted: '',
     method: '', 
     type: '',

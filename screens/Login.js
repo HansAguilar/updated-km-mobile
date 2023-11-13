@@ -8,13 +8,10 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginPatientAccount } from '../redux/action/PatientVerification';
 import { loginAdmin, logOutAccount } from '../redux/action/LoginAction';
-import { dentistLogin, fetchDentists } from '../redux/action/DentistAction';
 
 const Login = React.memo(({ navigation }) => {
-  const navigate = useNavigation();
-  const { account, error } = useSelector((state) => state.login)
+  const { account, error } = useSelector((state)=>state.login)
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     username: '',
@@ -26,24 +23,24 @@ const Login = React.memo(({ navigation }) => {
     setUserData({ ...userData, [name]: value });
   };
 
-  const checkIfValidAccount = async () => {
-    await AsyncStorage.setItem('token', account.token);
-    setUserData({ username: '', password: '' })
-    navigation.navigate(`${account.accountType}`);
+  const checkIfValidAccount = async() =>{
+      await AsyncStorage.setItem('token', account.token);
+      setUserData({ username: '', password: '' })
+      navigation.navigate(`${account.accountType}`);
   }
-  useEffect(() => {
-    if (account) {
+  useEffect(()=>{
+    if(account){
       checkIfValidAccount();
     }
-  }, [account]);
-  useEffect(() => {
-    if (error) {
+  },[account]);
+  useEffect(()=>{
+    if(error){
       ToastFunction("error", error);
     }
-  }, [error]);
+  },[error]);
+  
 
-
-  const loginButtonHandler = async () => {
+  const loginButtonHandler = async() => {
     if (!userData.username || !userData.password) {
       return ToastFunction('error', 'Fill up empty field');
     }

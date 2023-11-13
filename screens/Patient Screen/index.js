@@ -14,14 +14,13 @@ import AppointmentDetails from './AppointmentDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPatient } from '../../redux/action/PatientAction';
 import Loader from '../../components/Loader';
-import { fetchAppointment, fetchChanges, adminChanges } from '../../redux/action/AppointmentAction';
+import { fetchAppointment, fetchChanges, adminChanges, createAppointmentByAdmin,deleteByAdmin } from '../../redux/action/AppointmentAction';
 import { fetchAppointmentFee } from '../../redux/action/AppointmentFeeAction';
-import { fetchPatientMessage } from '../../redux/action/MessageAction';
-import { fetchPayment, fetchAdminPayment, adminUpdatePayment } from '../../redux/action/PaymentAction';
+import { fetchPatientMessage, sendByAdminMessage, fetchNewPatientMessage } from '../../redux/action/MessageAction';
+import { fetchPayment, fetchAdminPayment, adminUpdatePayment,adminCancelledPayment,adminDeletePayment } from '../../redux/action/PaymentAction';
 import { fetchInstallmentByPatient } from '../../redux/action/InstallmentAction';
 import { fetchSchedule } from '../../redux/action/ScheduleAction';
 import { fetchPrescription } from '../../redux/action/PrescriptionAction';
-import { fetchResponseMessage, createMessage } from "../../redux/action/MessageAction";
 import Payment from './Payment';
 import Drawer from '../../components/CustomDrawer';
 import Message from './Message/index';
@@ -30,10 +29,10 @@ import ViewDetails from './ViewDetails';
 import Prescription from './Prescription';
 import PrescriptionDetails from './PrescriptionDetails';
 import UpdateAppointment from './UpdateAppointment';
-import * as io from "socket.io-client";
-import { log } from 'react-native-reanimated';
+import {io} from "socket.io-client";
+import { useRef } from 'react';
 
-const socket = io.connect(SOCKET_LINK);
+const socket = io(SOCKET_LINK);
 const navLinks = [
   {
     icon: "home-outline",
@@ -61,26 +60,26 @@ const Main = React.memo(({ navigation }) => {
   const [isSideNavShow, setSideNavShow] = useState(false);
   const [appointmentId, setAppointmentId] = useState("");
   const patient = useSelector((state) => { return state.patient });
+  const patientId = useSelector((state) => { return state.patient.patient });
   const appointment = useSelector((state) => { return state.appointment });
   const messages = useSelector((state) => { return state.messages });
-  const [patientLogin, setPatientLogin] = useState("");
+  const patientLogin = useRef("");
 
   const fetchPatientData = async () => {
     const token = await AsyncStorage.getItem('token');
-    await dispatch(fetchPatient(token));
+    dispatch(fetchPatient(token,patientLogin));
   };
 
+  
   const fetchAppointmentData = async () => {
     try {
-      if (patient && patient.patient && patient.patient.patientId) {
-        await dispatch(fetchAppointment(patient.patient.patientId));
-        await dispatch(fetchPatientMessage(patient.patient.patientId));
-        await dispatch(fetchPayment(patient.patient.patientId));
-        await dispatch(fetchInstallmentByPatient(patient.patient.patientId));
-        await dispatch(fetchPrescription(patient.patient.patientId))
+        await dispatch(fetchAppointment(patientLogin.current));
+        await dispatch(fetchPatientMessage(patientLogin.current));
+        await dispatch(fetchPayment(patientLogin.current));
+        await dispatch(fetchInstallmentByPatient(patientLogin.current));
+        await dispatch(fetchPrescription(patientLogin.current))
         await dispatch(fetchSchedule());
         await dispatch(fetchAppointmentFee());
-      }
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
@@ -91,42 +90,57 @@ const Main = React.memo(({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    fetchAppointmentData();
-    setPatientLogin(patient?.patient?.patientId || "");
-  }, [patient]);
+      fetchAppointmentData();
+  }, [patientLogin.current]);
 
   useEffect(() => {
+   
+    //FOR APPROVAL OF APPOINTMENT
     socket.on("response_changes", (data) => {
-      if (patient && patient.patient && patient.patient.patientId) {
-        dispatch(adminChanges(data.value));
-        dispatch(fetchAdminPayment(patient?.patient?.patientId));
-      }
+        const parseData = JSON.parse(data);
+        dispatch(adminChanges(parseData.value));
+        dispatch(fetchAdminPayment(parseData.value));
     })
+    // ADMIN CREATION APPOINTMENT
+    socket.on("response_admin_appointment_create", (data) => {
+      dispatch(createAppointmentByAdmin(data.value));
+    })
+    // FOR CANCEL APPOINTMENT
+    socket.on("response_cancel_by_admin", (data) => {
+      dispatch(adminChanges(data.value));
+      dispatch(adminCancelledPayment(data.value));
+    })
+  // FOR UPDATE APPOINTMENT
     socket.on("response_admin_changes", (data) => {
-      if (patient && patient.patient && patient.patient.patientId) {
-        dispatch(adminChanges(data.value));
-        dispatch(fetchAdminPayment(patient?.patient?.patientId));
-      }
+        const parseData = JSON.parse(data);
+        dispatch(adminChanges(parseData.value));
+        dispatch(fetchAdminPayment(parseData.value));
     })
+    // DELETE APPOINTMENT
+    socket.on("response_delete", (data) => {
+      const parseData = JSON.parse(data);
+      dispatch(deleteByAdmin(parseData.value));
+      dispatch(adminDeletePayment(parseData.value));
+  })
 
     socket.on("admin_response_payment_changes", (data) => {
       dispatch(adminUpdatePayment(data.value));
     })
 
-    socket.on("received_by_patient", (data) => {
-      if (patient && patient?.patient && patient?.patient?.patientId) {
-        if (patient && patient.patient && patient.patient.patientId === data.value.receiverId) {
-          console.log("test");
-          dispatch(fetchResponseMessage(data.key, data.value));
-        }
+    socket.on("create_received_by_patient", (data) => {
+      const socketData = `${data.patient}`
+      if (patientLogin.current === socketData) {
+        const roomKey = `${data.key}`;
+        dispatch(fetchNewPatientMessage(roomKey));
       }
+    });
+    socket.on("received_by_patient", (data) => {
+      dispatch(sendByAdminMessage(data.key, data.value))
     });
     return () => {
       socket.off();
     }
   }, [socket]);
-
-
 
   const navigateToLink = (link) => navigation.navigate(`${link}`);
   return (

@@ -20,7 +20,7 @@ export default function index() {
             headerShown: false
             })}
         >
-            {props=><MessageRoom {...props}/> }
+            {props=><MessageRoom messageHistory={messageHistory} {...props}/> }
         </Stack.Screen>
     </Stack.Navigator>
   )

@@ -11,16 +11,9 @@ export const MessageBox = React.memo(({item})=>{
             flexDirection: 'row',
             alignItems: 'flex-end',
             gap: 5,
-            justifyContent: item.type === 'ADMIN' ? 'flex-end' : 'flex-start',
+            justifyContent: item.type === 'ADMIN' ? 'flex-start' : 'flex-end',
           }}
         >
-          {item.type === 'CLIENT' && (
-            <Image
-              source={{ uri: item.receiverId.profile }}
-              alt='Sender Profile'
-              style={{ width: 30, height: 30, borderRadius: 100 }}
-            />
-          )}
           <View
             style={{
               minWidth: 150,
@@ -29,8 +22,8 @@ export const MessageBox = React.memo(({item})=>{
               paddingVertical: 15,
               borderRadius: 15,
               backgroundColor: item.type === 'ADMIN' ? '#06b6d4' : '#fff',
-              borderBottomLeftRadius: item.type !== 'ADMIN' ? 0 : 15,
-              borderBottomRightRadius: item.type === 'ADMIN' ? 0 : 15,
+              borderBottomLeftRadius: item.type !== 'ADMIN' ? 15 : 0,
+              borderBottomRightRadius: item.type === 'ADMIN' ? 15 : 0,
               color: item.type === 'ADMIN' ? '#fff' : '',
             }}
           >
@@ -40,10 +33,10 @@ export const MessageBox = React.memo(({item})=>{
                 width: '100%',
                 marginBottom: 5,
                 color: item.type === 'ADMIN' ? '#fff' : '#27272a',
-                textAlign: item.type === 'ADMIN' ? 'right' : 'left',
+                textAlign: item.type === 'ADMIN' ? 'left' : 'right',
               }}
             >
-              {moment(item.date).format('LLL')}
+              {moment(item.createdDateAndTime).format('LLL')}
             </Text>
             <Text style={{ color: item.type === 'ADMIN' ? '#fff' : '#27272a' }}>
               {item.messageContent}

@@ -41,7 +41,7 @@ function AppointmentCard({ title, dataList, type, bgColor, borderColor, subColor
                       <TouchableHighlight style={cardStyles.cancelButton} onPress={() =>
                         setModal({ ...modal, id: val.appointmentId, isShow: true })
                       }>
-                        <Text style={cardStyles.buttonText}>Cancel</Text>
+                        <Text style={cardStyles.buttonText}>Delete</Text>
                       </TouchableHighlight>
                     )}
                   </View>

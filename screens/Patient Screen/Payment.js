@@ -18,8 +18,9 @@ const Payment = ({navigation}) =>{
     const dispatch = useDispatch();
     const { height } = Dimensions.get("screen");
     const [page, setPage] = useState("cash")
-    const { loading, payment } = useSelector((state)=>{return state.payment});
     const { patient } = useSelector((state)=>{ return state.patient });
+    const payment  = useSelector((state)=>{return state.payment.payment.filter((val)=>val.patient.patientId===patient.patientId)});
+    
     // const { installment } = useSelector((state)=>{ return state.installment });
     const installment = payment.filter((val)=> val.type==="installment")
     const [selectedPayment, setSelectedPayment] = useState({
@@ -214,7 +215,7 @@ const Payment = ({navigation}) =>{
     const totalAmount = installment.reduce((acc,val)=>{ return acc+=val.totalPayment; },0);
 
 
-    return !loading && payment  &&installment&& (
+    return (
        <>
         { selectedPayment.isActive && <Modal />}
          <View style={{...styles.containerGray,position:'relative'}}>

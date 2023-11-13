@@ -17,10 +17,10 @@ const selectMessage = (key, value) =>{
     <View style={{...styles.containerGray, height:height,}}>
         <ScrollView contentContainerStyle={{padding:10,paddingBottom:20,display:"flex",rowGap:10}}>
         {
-            messages ? Object.entries(messages).map(([k,v])=>(
-                <Pressable key={k} style={{width:"100%", paddingHorizontal:20, paddingVertical:20, backgroundColor:"white",borderRadius:20}} onPress={()=>selectMessage(k,v)}>
-                    <Text style={{fontSize:14, fontWeight:"bold"}}>Admin {v[0].adminId.firstname}</Text>
-                    <Text style={{fontSize:12}}>{v[v.length-1].messageContent}</Text>
+            messages ? messages.map((val,idx)=>(
+                <Pressable key={idx} style={{width:"100%", paddingHorizontal:20, paddingVertical:20, backgroundColor:"white",borderRadius:20}} onPress={()=>selectMessage(val.roomId,val)}>
+                    <Text style={{fontSize:14, fontWeight:"bold"}}>Admin {val.adminId.firstname}</Text>
+                    <Text style={{fontSize:12}}>{val.messageEntityList[val.messageEntityList.length-1].messageContent}</Text>
                 </Pressable>
             ))
             :<Text>No Message</Text>

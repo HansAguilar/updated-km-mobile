@@ -127,7 +127,14 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     </View>
   );
 
+  const deleteButtonAppointment = () => {
+    dispatch(cancelAppointment(modal.id));
+    setModalShow({ ...modal, id: '', isShow: false });
+  }
+
+
   const Modal = React.memo(() => {
+    
     return (
       <View
         style={{
@@ -176,10 +183,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
                 alignItems: 'center',
                 borderRadius: 20,
               }}
-              onPress={() => {
-                dispatch(cancelAppointment(modal.id));
-                setModalShow({ ...modal, id: '', isShow: false });
-              }}
+              onPress={deleteButtonAppointment}
             >
               <Text style={{ color: '#fff' }}>Yes</Text>
             </TouchableHighlight>
@@ -191,7 +195,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
   return patient && appointment && announcement && services && dentists ? (
     <>
-      {modal.isShow && <Modal />}
+      {modal.isShow && <Modal  />}
       {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}
       <View style={{ ...styles.containerGray, height: height, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
         <View style={{ width: '100%', backgroundColor: '#155e75', height: 30 }}></View>

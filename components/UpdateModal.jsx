@@ -84,26 +84,30 @@ function UpdateModal({data, setData}) {
 
       const checkAllAppointment = () =>{
         const newTimeList = [
-            { timeValue: "09:00 Am", timeStart: "09:00:00" },
-            { timeValue: "09:30 Am", timeStart: "09:30:00" },
-            { timeValue: "10:00 Am", timeStart: "10:00:00" },
-            { timeValue: "10:30 Am", timeStart: "10:30:00" },
-            { timeValue: "11:00 Am", timeStart: "11:00:00" },
-            { timeValue: "11:30 Am", timeStart: "11:30:00" },
-            { timeValue: "12:00 Am", timeStart: "12:00:00" },
-            { timeValue: "01:00 Pm", timeStart: "13:00:00" },
-            { timeValue: "01:30 Pm", timeStart: "13:30:00" },
-            { timeValue: "02:00 Pm", timeStart: "14:00:00" },
-            { timeValue: "02:30 Pm", timeStart: "14:30:00" },
-            { timeValue: "03:00 Pm", timeStart: "15:00:00" },
-            { timeValue: "03:30 Pm", timeStart: "15:30:00" },
-            { timeValue: "04:00 Pm", timeStart: "16:00:00" },
-          ];
-          const currentTime  = moment();
-            const newTime = currentTime.add(1,"hour");
-            const newHour = moment(newTime);
-      
-          setTimeStartList(newTimeList);
+          { timeValue: "09:00 Am", timeStart: "09:00:00" },
+          { timeValue: "09:30 Am", timeStart: "09:30:00" },
+          { timeValue: "10:00 Am", timeStart: "10:00:00" },
+          { timeValue: "10:30 Am", timeStart: "10:30:00" },
+          { timeValue: "11:00 Am", timeStart: "11:00:00" },
+          { timeValue: "11:30 Am", timeStart: "11:30:00" },
+          { timeValue: "12:00 Am", timeStart: "12:00:00" },
+          { timeValue: "01:00 Pm", timeStart: "13:00:00" },
+          { timeValue: "01:30 Pm", timeStart: "13:30:00" },
+          { timeValue: "02:00 Pm", timeStart: "14:00:00" },
+          { timeValue: "02:30 Pm", timeStart: "14:30:00" },
+          { timeValue: "03:00 Pm", timeStart: "15:00:00" },
+          { timeValue: "03:30 Pm", timeStart: "15:30:00" },
+          { timeValue: "04:00 Pm", timeStart: "16:00:00" },
+        ];
+    
+        const currentTime = moment();
+        const newTime = currentTime.add(1, "hour");
+        const newHour = moment(newTime);
+    
+        setTimeStartList([...newTimeList]);
+    
+        // const removeCurrentTime = newTimeList.filter((val)=>val.timeStart!==appointment.timeStart && val.timeStart!==appointment.timeEnd)
+        setTimeStartList(newTimeList);
       
           setTimeStartList((prev)=>{
             let updatedSchedList = [...prev];
@@ -115,7 +119,7 @@ function UpdateModal({data, setData}) {
                 let start = timeStartList.findIndex((val)=>val.timeStart===filteredSchedule[x].timeStart);
                 let end = timeStartList.findIndex((val)=>val.timeStart===filteredSchedule[x].timeEnd);
         
-                for(let i = start; i<=end; i++){
+                for(let i = start; i<end; i++){
                   indicesScheduleToRemain.push(i);
                 }
               }
@@ -153,7 +157,7 @@ function UpdateModal({data, setData}) {
                 const end = prevTimeStartList.findIndex((value)=>{
                   return value.timeStart === getAllAppointment[x].timeEnd;
                 });
-                for(let begin = start; begin<=end; begin++){
+                for(let begin = start; begin<end; begin++){
                   indexesToRemove.push(begin);
                 }
               }
@@ -185,46 +189,45 @@ function UpdateModal({data, setData}) {
           return toastFunction("error", "Fill up empty field!")
         }
         const end = calculateTotalTime(inputDetails.timeStart);
-        const totalTimeDuration = moment('00:00:00', 'HH:mm:ss');
-        let start = moment(inputDetails.timeStart, "HH:mm:ss");
+        // const totalTimeDuration = moment('00:00:00', 'HH:mm:ss');
+        // let start = moment(inputDetails.timeStart, "HH:mm:ss");
     
-        const filteredAppointment = appointment.filter((val) => {
-          return (val.status !== "DONE" && val.status !== "CANCELLED")
-            && moment(val.appointmentDate).isSame(moment(inputDetails.date), "day")
-            && val.patient.patientId === data.data.patient.patientId;
-        });
+        // const filteredAppointment = appointment.filter((val) => {
+        //   return (val.status !== "DONE" && val.status !== "CANCELLED")
+        //     && moment(val.appointmentDate).isSame(moment(inputDetails.date), "day")
+        //     && val.patient.patientId === data.data.patient.patientId;
+        // });
     
-        while (start.isBefore(moment(end, "HH:mm:ss").add(30, 'minutes'))) {
-          const startTime = start.format('HH:mm:ss');
-          const matchingTime = timeStartList.find(time => time.timeStart === startTime);
-          if(startTime === "12:30:00" || startTime === "16:30:00"){
-            toastFunction("error",`Kindly select ${
-              totalTimeDuration.format('HH:mm:ss') === "01:00:00"
-                  ? '30 minutes'
-                  : 'less than 1 hour'
-            } service or change other dates`);
-            return;
-          }
-          if (!matchingTime) {
-            if ("00:30:00" !== totalTimeDuration.format("HH:mm:ss")) {
-              toastFunction('error', `Please select time range ${
-                totalTimeDuration.format('HH:mm:ss') === "00:30:00"
-                  ? 'equal to ' +totalTimeDuration.minute() + ' minutes'
-                  : 'less than or equal to ' +totalTimeDuration.hour() + ' hour'
-              }`)
-              return;
-            }
-          }
-          totalTimeDuration.add(30, 'minutes');
-          start.add(30, "minutes");
-        }
+        // while (start.isBefore(moment(end, "HH:mm:ss").add(30, 'minutes'))) {
+        //   const startTime = start.format('HH:mm:ss');
+        //   const matchingTime = timeStartList.find(time => time.timeStart === startTime);
+        //   if(startTime === "12:30:00" || startTime === "16:30:00"){
+        //     toastFunction("error",`Kindly select ${
+        //       totalTimeDuration.format('HH:mm:ss') === "01:00:00"
+        //           ? '30 minutes'
+        //           : 'less than 1 hour'
+        //     } service or change other dates`);
+        //     return;
+        //   }
+        //   if (!matchingTime) {
+        //     if ("00:30:00" !== totalTimeDuration.format("HH:mm:ss")) {
+        //       toastFunction('error', `Please select time range ${
+        //         totalTimeDuration.format('HH:mm:ss') === "00:30:00"
+        //           ? 'equal to ' +totalTimeDuration.minute() + ' minutes'
+        //           : 'less than or equal to ' +totalTimeDuration.hour() + ' hour'
+        //       }`)
+        //       return;
+        //     }
+        //   }
+        //   totalTimeDuration.add(30, 'minutes');
+        //   start.add(30, "minutes");
+        // }
         setInputDetails({...inputDetails,
           timeEnd:end,
           timeSubmitted:moment().format("HH:mm:ss")
-        })
-        
+        });
         dispatch(updateAppointment(data.data.appointmentId, inputDetails));
-        dispatch(fetchAdminPayment(inputDetails.patientId));
+        // dispatch(fetchAdminPayment(data.data.appointmentId));
         setData({...data, isShow:false});
       }
 
@@ -236,7 +239,7 @@ function UpdateModal({data, setData}) {
 
       useEffect(()=>{
         checkAllAppointment();
-      },[dateRef.current]);
+      },[inputDetails.date,inputDetails.timeStart]);
 
     return (
         <View style={{height:"100%", width:"100%",backgroundColor:"rgba(0, 0, 0, 0.5)", position:'absolute',zIndex:10,padding:20, display:'flex', justifyContent:'center', alignItems:'center'}}>
@@ -246,7 +249,7 @@ function UpdateModal({data, setData}) {
                 <ScrollView style={{width:"100%",height:"auto",paddingVertical:15,}}>
 
                     {/* DENTIST NAME */}
-                    <View style={{marginBottom:10}}>
+                    {/* <View style={{marginBottom:10}}>
                             <Text style={{fontSize:10,fontWeight:"bold",color:"#3f3f46",marginBottom:5}}>Dentist Name</Text>
                             <TextInput 
                                 value={inputDetails.dentistId}
@@ -284,7 +287,7 @@ function UpdateModal({data, setData}) {
                                 )
                             }
                             
-                    </View>
+                    </View> */}
 
                     {/*DATE */}
                     <View style={{marginBottom:10}}>
@@ -327,7 +330,7 @@ function UpdateModal({data, setData}) {
                     </View>
 
                     {/*TIMESTART */}
-                    <View style={{marginBottom:10}}>
+                    <View style={{paddingBottom:30}}>
                                 <Text style={{fontSize:10,fontWeight:"bold",color:"#3f3f46",marginBottom:5}}>Appointment Start</Text>
                                     <Pressable onPress={()=>setShowTime(true)}>
                                         <TextInput
@@ -343,14 +346,23 @@ function UpdateModal({data, setData}) {
                                             timeStartList
                                             .filter((val)=>val.timeStart!=="12:00:00" && val.timeStart!=="16:00:00")
                                             .map((val,idx)=>(
-                                                <Text 
-                                                key={idx} 
-                                                style={{paddingHorizontal:10, paddingVertical:5,backgroundColor:"#f4f4f5", color:"#a1a1aa"}}
-                                                onPress={()=>{
-                                                    setInputDetails({...inputDetails, timeStart:val.timeStart});
-                                                    setShowTime(false)
-                                                }}
-                                                >{val.timeValue}</Text>
+                                                <View key={idx}>
+                                                  { inputDetails.timeStart === val.timeStart
+                                                    ? <Text 
+                                                    key={idx} 
+                                                    style={{paddingHorizontal:10, paddingVertical:5,backgroundColor:"#e5e7eb", color:"#a1a1aa",}}
+                                                    >{val.timeValue}</Text>
+
+                                                    : <Text 
+                                                    key={idx} 
+                                                    style={{paddingHorizontal:10, paddingVertical:5,backgroundColor:"#f4f4f5", color:"#a1a1aa",}}
+                                                    onPress={()=>{
+                                                        setInputDetails({...inputDetails, timeStart:val.timeStart});
+                                                        setShowTime(false)
+                                                    }}
+                                                    >{val.timeValue}</Text>
+                                                  }
+                                                </View>
                                             ))
                                         }
                                 </View>
