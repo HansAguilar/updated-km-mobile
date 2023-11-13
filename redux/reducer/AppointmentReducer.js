@@ -48,7 +48,7 @@ const reducer = (state = initialState, action) => {
                 appointment:state.appointment.map(val=>{return val.appointmentId===action.payload.appointmentId?action.payload:val}),
                 loading:false
             }
-        case FETCH_APPOINTMENT_FAILED, CREATE_APPOINTMENT_FAILED:
+        case FETCH_APPOINTMENT_FAILED, CREATE_APPOINTMENT_FAILED,DELETE_APPOINTMENT_FAILED:
             return {
                 ...state,
                 error: action.error,

@@ -4,8 +4,8 @@ import { styles } from '../style/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logOutAccount } from '../redux/action/LoginAction';
-import IonicIcon from 'react-native-vector-icons/Ionicons';
 import { logoutPatientAccount } from '../redux/action/PatientAction';
+import IonicIcon from 'react-native-vector-icons/Ionicons';
 import { AppRegistry } from 'react-native';
 
 export default function CustomDrawer({ navigation, isSideNavShow, setSideNavShow }) {

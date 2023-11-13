@@ -10,26 +10,26 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 
-function index({ dispatch }) {
-     const Stack = createNativeStackNavigator();
-     const save = useDispatch();
-     const { patient } = useSelector((state) => { return state.patient });
-     const services = useSelector((state) => { return state.services });
-     const fee = useSelector((state) => { return state.fee.paymentFee });
-     const [appointmentDetails, setAppointmentDetails] = useState({
-          patient: patient?.patientId,
-          dentist: '',
-          dentalServices: [],
-          date: new Date(),
-          timeStart: '',
-          timeEnd: '',
-          totalAmount: fee?.status === "AVAILABLE" ? fee?.price : 0.00,
-          timeSubmitted: '',
-          method: '',
-          type: '',
-          totalServiceTime: '',
-          numberOfMonths: 0
-     });
+function index({dispatch}) {
+  const Stack = createNativeStackNavigator();
+  const save = useDispatch();
+  const {patient} = useSelector((state)=>{return state.patient});
+  const services = useSelector((state)=>{return state.services}); 
+  const fee = useSelector((state)=>{return state.fee.paymentFee}); 
+  const [appointmentDetails, setAppointmentDetails] = useState({
+    patient: patient?.patientId,
+    dentist: '',
+    dentalServices: [],
+    date: new Date(),
+    timeStart: '',
+    timeEnd: '',
+    totalAmount: fee?.status==="AVAILABLE"?fee?.price:0.00,
+    timeSubmitted: '',
+    method: '', 
+    type: '',
+    totalServiceTime: '', 
+    numberOfMonths:0
+  });
 
      return (
           <Stack.Navigator initialRouteName='Services'>

@@ -1,7 +1,7 @@
-const PORT = `192.168.1.9`;
+const PORT = `192.168.9.1`;
 
-export const PATIENT_URL = `http://${PORT}:8080/api/v1/patient`;
-export const LOGIN_URL = `http://${PORT}:8080/api/v1/login`;
+export const PATIENT_URL = `http://${PORT}:8080/api/v1/patient`; 
+export const LOGIN_URL = `http://${PORT}:8080/api/v1/login`; 
 export const SMS_URL = `http://${PORT}:8080/api/v1/sms`;
 export const SERVICES_URL = `http://${PORT}:8080/api/v1/services`;
 export const APPOINTMENT_URL = `http://${PORT}:8080/api/v1/appointment`;

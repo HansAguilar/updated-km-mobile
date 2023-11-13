@@ -13,15 +13,15 @@ export default function index() {
         {props => <Message setMessageHistory={setMessageHistory} {...props} />}
       </Stack.Screen>
 
-      <Stack.Screen
-        name='Message Room'
-        options={({ route }) => ({
-          title: route.params.roomId,
-          headerShown: false
-        })}
-      >
-        {props => <MessageRoom messageHistory={messageHistory} {...props} />}
-      </Stack.Screen>
+        <Stack.Screen 
+            name='Message Room'
+            options={({ route }) => ({
+            title: route.params.roomId,
+            headerShown: false
+            })}
+        >
+            {props=><MessageRoom messageHistory={messageHistory} {...props}/> }
+        </Stack.Screen>
     </Stack.Navigator>
   )
 }
