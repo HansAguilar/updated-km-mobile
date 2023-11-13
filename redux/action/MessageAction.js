@@ -1,61 +1,102 @@
 import axios from "axios";
-import { CREATE_MESSAGE_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, RESPONSE_MESSAGE_SUCCESS } from "../ActionType"
+import { ADMIN_SEND_MESSAGE_SUCCESS, CREATE_MESSAGE_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, RESPONSE_MESSAGE_SUCCESS, SEND_MESSAGE_SUCCESS } from "../ActionType"
 import { MESSAGE_URL, SOCKET_LINK } from "../../config/APIRoutes";
 import * as io from "socket.io-client";
 import { useSelector } from "react-redux";
 
 const socket = io.connect(SOCKET_LINK);
-export const fetchPatientMessage = (patientId) =>{
+
+
+export const fetchPatientMessage = (patientId) => {
     return async dispatch => {
         try {
             dispatch({ type: FETCH_MESSAGE_REQUEST });
-            const response = await axios.get(`${MESSAGE_URL}/`);
-            const patientMessage = { };
-            for(const [roomId, messageData] of Object.entries(response.data)){
-                const filteredMessage = messageData.filter((patient)=>patient.receiverId.patientId === patientId)
-                if(filteredMessage.length>0){
-                    patientMessage[roomId] = filteredMessage;
-                }
-            }
+            const response = await axios.get(`${MESSAGE_URL}/patient_login/${patientId}`);
+
             dispatch({
                 type: FETCH_MESSAGE_SUCCESS,
-                payload: patientMessage
+                payload: response.data
             })
         } catch (error) {
             dispatch({
-                type:FETCH_MESSAGE_FAILED,
+                type: FETCH_MESSAGE_FAILED,
+                error
+            })
+        }
+    }
+}
+export const fetchAdminMessage = (patientId) => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(`${MESSAGE_URL}/patient_login/${patientId}`);
+            dispatch({
+                type: FETCH_MESSAGE_SUCCESS,
+                payload: response.data
+            })
+        } catch (error) {
+            dispatch({
+                type: FETCH_MESSAGE_FAILED,
                 error
             })
         }
     }
 }
 
-export const createMessage = (roomKey, data) =>{
-    return async dispatch=>{
+export const sendPatientMessage = (roomKey, data) => {
+    return async dispatch => {
         try {
-            const response = await axios.post(`${MESSAGE_URL}/`,data);
+            const response = await axios.post(`${MESSAGE_URL}/send_message/`, data);
             dispatch({
-                type:CREATE_MESSAGE_SUCCESS,
-                key:roomKey,
-                payload:response.data
+                type: SEND_MESSAGE_SUCCESS,
+                key: roomKey,
+                payload: response.data
             })
-           socket.emit("send_to_admin",{key:roomKey, value:response.data});
+            socket.emit("send_to_admin", { key: roomKey, value: data });
         } catch (error) {
-            
+
         }
     }
 }
 
-export const fetchResponseMessage = (roomKey, data) =>{
-    return async dispatch =>{
+export const fetchNewPatientMessage = (roomKey) => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(`${MESSAGE_URL}/fetch_room/${roomKey}`);
+            dispatch({
+                type: CREATE_MESSAGE_SUCCESS,
+                payload: response.data
+            })
+            //    socket.emit("send_to_admin",{key:roomKey, value:response.data});
+        } catch (error) { }
+    }
+}
+
+export const sendByAdminMessage = (roomKey, data) => {
+    return async dispatch => {
         try {
             dispatch({
-                type:CREATE_MESSAGE_SUCCESS,
-                key:roomKey,
+                type: ADMIN_SEND_MESSAGE_SUCCESS,
+                key: roomKey,
                 payload: data
             })
+            socket.emit("send_to_admin", { key: roomKey, value: response.data });
         } catch (error) {
-            
+
+        }
+    }
+}
+
+export const fetchResponseMessage = (roomKey) => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(`${MESSAGE_URL}/room/${roomKey}`);
+            // dispatch({
+            //     type:CREATE_MESSAGE_SUCCESS,
+            //     key:roomKey,
+            //     payload: data
+            // })
+        } catch (error) {
+
         }
     }
 }

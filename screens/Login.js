@@ -5,15 +5,11 @@ import Button from '../components/Button';
 import InputText from '../components/InputText';
 import ToastFunction from '../config/toastConfig';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginPatientAccount } from '../redux/action/PatientVerification';
 import { loginAdmin, logOutAccount } from '../redux/action/LoginAction';
-import { dentistLogin, fetchDentists } from '../redux/action/DentistAction';
 
 const Login = React.memo(({ navigation }) => {
-  const navigate = useNavigation();
   const { account, error } = useSelector((state) => state.login)
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
@@ -31,11 +27,13 @@ const Login = React.memo(({ navigation }) => {
     setUserData({ username: '', password: '' })
     navigation.navigate(`${account.accountType}`);
   }
+
   useEffect(() => {
     if (account) {
       checkIfValidAccount();
     }
   }, [account]);
+
   useEffect(() => {
     if (error) {
       ToastFunction("error", error);
@@ -83,11 +81,10 @@ const Login = React.memo(({ navigation }) => {
                 />
               </View>
 
-              <Text
-                style={{ textAlign: 'right', fontSize: 14, color: '#CCCCCC', marginTop: 5 }}
-              >
-                Forgot password?
-              </Text>
+                <Text style={{ textAlign: 'right', fontSize: 14, color: '#CCCCCC', marginTop: 5 }} onPress={() => navigation.navigate('ForgotPassword')}>
+                  Forgot password?
+                </Text>
+
             </View>
             <Button
               title="Login"

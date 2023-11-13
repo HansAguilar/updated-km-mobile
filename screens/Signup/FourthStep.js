@@ -48,7 +48,7 @@ function FourthStep({ navigation, details, onChangeText }) {
             </View>
 
             <Button onPress={submitButton} title={"Next"} bgColor={"#06b6d4"} textColor={"#fff"} />
-          </View>0938193
+          </View>
 
         </View>
 
