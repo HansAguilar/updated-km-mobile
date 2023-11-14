@@ -39,7 +39,7 @@ export const createAppointment = (data,navigation,ToastFunction,setModal) => {
             const { appointmentId } = appointmentData;
             dispatch(fetchPaymentAppointment(appointmentId));
             const sendData = {value:appointmentId};
-            socket.emit("appointment_changes",JSON.stringify(sendData))
+            socket.emit("new_appointment_patient_changes",JSON.stringify(sendData))
             navigation.navigate("Dashboard");
         } catch (error) {
             ToastFunction("error", error.response.data.message);

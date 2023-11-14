@@ -13,6 +13,7 @@ import Prescription from "./Prescription";
 import Details from "./ViewDetails";
 import Loader from "../../components/Loader";
 import Drawer from "../../components/DentistDrawer";
+import PatientHistory from "./PatientHistory";
 
 function Index({navigation}) {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ function Index({navigation}) {
   const patient = useSelector((state)=>{ return state.patient; });
   const appointment = useSelector((state=>{ return state.appointment }));
   const [isSideNavShow, setSideNavShow]= useState(false);
+  const [appointmentId, setAppointmentId] = useState(null);
 
 
   const navigateToLink = (link) => navigation.navigate(`${link}`);
@@ -42,13 +44,16 @@ function Index({navigation}) {
         
         <Stack.Navigator initialRouteName='Dashboard'>
          <Stack.Screen name='Dashboard' options={{ headerShown: false }}>
-           {props => <Home setSideNavShow={setSideNavShow} {...props} />}
+           {props => <Home setSideNavShow={setSideNavShow} setAppointmentId={setAppointmentId} {...props} />}
          </Stack.Screen>
          <Stack.Screen name="Prescription">
            {props => <Prescription setSideNavShow={setSideNavShow} {...props} />}
          </Stack.Screen>
          <Stack.Screen name="Details" >
            {props => <Details {...props} />}
+         </Stack.Screen>
+         <Stack.Screen name="Patient History" >
+           {props => <PatientHistory appointmentId={appointmentId} {...props} />}
          </Stack.Screen>
        </Stack.Navigator>
         </>

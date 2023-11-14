@@ -227,7 +227,7 @@ function UpdateModal({data, setData}) {
           timeSubmitted:moment().format("HH:mm:ss")
         });
         dispatch(updateAppointment(data.data.appointmentId, inputDetails));
-        // dispatch(fetchAdminPayment(data.data.appointmentId));
+        dispatch(fetchAdminPayment(data.data.appointmentId));
         setData({...data, isShow:false});
       }
 

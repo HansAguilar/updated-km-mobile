@@ -5,7 +5,7 @@ import * as io from "socket.io-client";
 
 const socket = io.connect(SOCKET_LINK);
 
-export const fetchPayment = (id,patientId) =>{
+export const fetchPayment = (id) =>{
     return async dispatch =>{
         try {
             dispatch({type: FETCH_PAYMENT_REQUEST})
