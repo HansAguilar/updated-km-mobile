@@ -4,6 +4,7 @@ import { styles } from '../../../style/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { createAppointment } from '../../../redux/action/AppointmentAction';
+import { createNotification } from '../../../redux/action/NotificationAction';
 import ToastFunction from '../../../config/toastConfig';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { useEffect } from 'react';
@@ -70,15 +71,18 @@ function Review({navigation, appointmentDetails}) {
     
     const data = {
       name: "Appointment Set",
-      time: appointmentDetails.timeSubmitted,
+      time: moment().format("HH:mm:ss"),
       date: moment().format("YYYY-MM-DD"),
+      patientId: patient.patientId,
       description: `
       ${patient.firstname} ${patient.lastname} request an appointment
       ${moment(appointmentDetails.date).format("L").toString()===moment().format("L").toString() ? "today": "on"} 
-      ${moment(appointmentDetails.date).format("MMM DD YYYY")}`
+      ${moment(appointmentDetails.date).format("MMM DD YYYY")}`,
+      receiverType: "ADMIN"
     }
-    socket.emit("send_notification", data)
-    dispatch(createAppointment(appointmentDetails, navigation, ToastFunction,setModal));
+
+    await dispatch(createAppointment(appointmentDetails, navigation, ToastFunction,setModal));
+    await dispatch(createNotification(data));
   };
 
   const Modal = () =>{

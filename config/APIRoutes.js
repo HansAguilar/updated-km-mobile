@@ -13,5 +13,6 @@ export const MESSAGE_URL = `http://${PORT}:8080/api/v1/message`;
 export const FEE_LINK = `http://${PORT}:8080/api/v1/fee`;
 export const SCHEDULE_LINK = `http://${PORT}:8080/api/v1/schedule`;
 export const PRESCRIPTION_LINK = `http://${PORT}:8080/api/v1/prescription`;
+export const NOTIFICATION_LINK = `http://${PORT}:8080/api/v1/notification`;
 
 export const SOCKET_LINK = `http://${PORT}:8081/`;

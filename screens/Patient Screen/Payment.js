@@ -19,10 +19,10 @@ const Payment = ({navigation}) =>{
     const { height } = Dimensions.get("screen");
     const [page, setPage] = useState("cash")
     const { patient } = useSelector((state)=>{ return state.patient });
-    const payment  = useSelector((state)=>{return state.payment.payment.filter((val)=>val.patient.patientId===patient.patientId)});
+    const payment  = useSelector((state)=>{return state.payment.payment});
     
     // const { installment } = useSelector((state)=>{ return state.installment });
-    const installment = payment.filter((val)=> val.type==="installment")
+    const installment = payment.filter((val)=> val.type==="installment").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
     const [selectedPayment, setSelectedPayment] = useState({
         id:"",
         isActive: false,
@@ -213,8 +213,8 @@ const Payment = ({navigation}) =>{
     }
 
     const totalAmount = installment.reduce((acc,val)=>{ return acc+=val.totalPayment; },0);
-
-
+    const totalPayment = installment.filter((val)=>val.status==="APPROVED").reduce((acc,val)=>{ return acc+=val.totalPayment; },0);
+    
     return (
        <>
         { selectedPayment.isActive && <Modal />}
@@ -226,10 +226,10 @@ const Payment = ({navigation}) =>{
             </View>
             {
                 page==="installment" ? (
-                    <ScrollView style={{width:"100%",height:100, paddingHorizontal:20, }}>
+                    <ScrollView style={{width:"100%",height:100, paddingHorizontal:20, marginBottom:20}}>
                         <View style={{width:"100%", backgroundColor:"#0891b2", paddingVertical:15, paddingHorizontal:8, display:'flex', flexDirection:'row',justifyContent:'space-between',borderRadius:10}}>
-                            <Text style={{color:"#fff",fontWeight:'bold',fontSize:16}}>Total Amount:</Text>
-                            <Text style={{color:"#fff",fontSize:16}}>₱ {Math.ceil(totalAmount).toLocaleString()}</Text>
+                            <Text style={{color:"#fff",fontWeight:'bold',fontSize:16}}>Remaining Balance:</Text>
+                            <Text style={{color:"#fff",fontSize:16}}>₱ {Math.ceil(totalAmount-totalPayment).toLocaleString()}</Text>
                         </View>
                         <View style={{width:"100%",height:"auto", paddingHorizontal:10,paddingVertical:15,backgroundColor:"#fff",marginTop:10,borderRadius:10,display:'flex',flexDirection:'column'}}>
                            <Text style={{width:"100%", borderBottomWidth:1,borderBottomColor:"#0891b2",fontSize:16,paddingBottom:10,fontWeight:'bold',color:"#52525b"}}>Payment Schedule</Text>
@@ -256,6 +256,10 @@ const Payment = ({navigation}) =>{
                             ))
                            }
                            </View>
+                           <View style={{width:"100%", paddingHorizontal:20, paddingVertical:15, display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:'row', borderTopWidth:1, marginTop:10}}>
+                                <Text>Total Amount:</Text>
+                                <Text>Php. {totalAmount.toLocaleString()}</Text>
+                           </View>
 
                         </View>
                     </ScrollView>
@@ -265,7 +269,7 @@ const Payment = ({navigation}) =>{
                             payment.length > 0?
                             payment
                             .filter((val)=>{
-                                return val.type === "full-payment" && (val.status === "PENDING" || val.status === "CHECKING");
+                                return val.method !== "cash" && (val.status === "PENDING" || val.status === "CHECKING");
                             })
                             .sort((a,b)=>{
                                 return moment(a.appointment.appointmentDate).isAfter(b.appointment.appointmentDate)?1:-1;

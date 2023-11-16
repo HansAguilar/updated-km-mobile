@@ -21,6 +21,7 @@ import { fetchPayment, fetchAdminPayment, adminUpdatePayment, adminCancelledPaym
 import { fetchInstallmentByPatient } from '../../redux/action/InstallmentAction';
 import { fetchSchedule } from '../../redux/action/ScheduleAction';
 import { fetchPrescription } from '../../redux/action/PrescriptionAction';
+import { fetchAllNotification, storeNotification } from '../../redux/action/NotificationAction';
 import Payment from './Payment';
 import Drawer from '../../components/CustomDrawer';
 import Message from './Message/index';
@@ -29,7 +30,8 @@ import ViewDetails from './ViewDetails';
 import Prescription from './Prescription';
 import PrescriptionDetails from './PrescriptionDetails';
 import UpdateAppointment from './UpdateAppointment';
-import { io } from "socket.io-client";
+import NotificationRoom from './NotificationRoom';
+import {io} from "socket.io-client";
 import { useRef } from 'react';
 
 const socket = io(SOCKET_LINK);
@@ -73,13 +75,14 @@ const Main = React.memo(({ navigation }) => {
 
   const fetchAppointmentData = async () => {
     try {
-      await dispatch(fetchAppointment(patientLogin.current));
-      await dispatch(fetchPatientMessage(patientLogin.current));
-      await dispatch(fetchPayment(patientLogin.current));
-      await dispatch(fetchInstallmentByPatient(patientLogin.current));
-      await dispatch(fetchPrescription(patientLogin.current))
-      await dispatch(fetchSchedule());
-      await dispatch(fetchAppointmentFee());
+        await dispatch(fetchAppointment(patientLogin.current));
+        await dispatch(fetchPatientMessage(patientLogin.current));
+        await dispatch(fetchPayment(patientLogin.current));
+        await dispatch(fetchInstallmentByPatient(patientLogin.current));
+        await dispatch(fetchPrescription(patientLogin.current))
+        await dispatch(fetchAllNotification(patientLogin.current))
+        await dispatch(fetchSchedule());
+        await dispatch(fetchAppointmentFee());
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
@@ -94,7 +97,6 @@ const Main = React.memo(({ navigation }) => {
   }, [patientLogin.current]);
 
   useEffect(() => {
-
     //FOR APPROVAL OF APPOINTMENT
     socket.on("response_changes", (data) => {
       const parseData = JSON.parse(data);
@@ -104,6 +106,12 @@ const Main = React.memo(({ navigation }) => {
     // ADMIN CREATION APPOINTMENT
     socket.on("response_admin_appointment_create", (data) => {
       dispatch(createAppointmentByAdmin(data.value));
+    })
+    socket.on("receive_notification_by_admin", (data) => {
+      const parseData = JSON.parse(data);
+      if(parseData.patientId === patientLogin.current){
+        dispatch(storeNotification(parseData.notification));
+      }
     })
     // FOR CANCEL APPOINTMENT
     socket.on("response_cancel_by_admin", (data) => {
@@ -168,6 +176,9 @@ const Main = React.memo(({ navigation }) => {
               </Stack.Screen>
               <Stack.Screen name='ViewDetails'>
                 {props => <ViewDetails {...props} />}
+              </Stack.Screen>
+              <Stack.Screen name='Notification'>
+                {props => <NotificationRoom {...props} />}
               </Stack.Screen>
               <Stack.Screen name='History' options={{ headerShown: false }}>
                 {props => <History {...props} />}

@@ -46,6 +46,8 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   const { announcement } = useSelector((state) => state.announcement);
   const { services } = useSelector((state) => state.services);
   const { dentists } = useSelector((state) => state.dentist);
+  const notification = useSelector((state) => state.notification.notification);
+  const [notificationUnreadCounter, setNotificationCounter] = useState(null); 
   const [modal, setModalShow] = useState({
     id: '',
     isShow: false,
@@ -104,6 +106,12 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
   }, []);
+  useEffect(()=>{
+    if(notification?.length>0){
+      const data = notification.filter((val)=>val.status==="UNREAD");
+      setNotificationCounter(data.length);
+    }
+  },[notification])
 
   const renderItem = ({ item }) => (
     <View
@@ -131,7 +139,6 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     dispatch(cancelAppointment(modal.id));
     setModalShow({ ...modal, id: '', isShow: false });
   }
-
 
   const Modal = React.memo(() => {
 
@@ -193,7 +200,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     );
   });
 
-  return patient && appointment && announcement && services && dentists ? (
+  return patient && appointment && announcement && services && dentists && notification ? (
     <>
       {modal.isShow && <Modal />}
       {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}
@@ -230,13 +237,13 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
 
           {/* Right Side */}
-          <View style={{ height: 'auto', width: 'auto', padding: 5, position: 'relative' }}>
+          <Pressable style={{ height: 'auto', width: 'auto', padding: 5, position: 'relative' }} onPress={()=>{navigation.navigate("Notification")}}>
             <Ionicons name="notifications" color="#fff" size={25} />
-            <Text style={{ backgroundColor: '#e62e00', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }}>1</Text>
-          </View>
-
-        </View>
-        
+            {
+            notificationUnreadCounter && <Text style={{ backgroundColor: '#ef4444', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }} >{notificationUnreadCounter}</Text>
+            }
+          </Pressable>
+        </View> 
         {/* Body */}
         <View
           style={{

@@ -9,15 +9,17 @@ import moment from 'moment';
 import { useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-function Home({ setSideNavShow }) {
+function Home({ navigation, setSideNavShow, setAppointmentId }) {
   const { activeDentist } = useSelector((state) => { return state.dentist; });
   const appointment = useSelector((state) => { return state.appointment.appointment; });
   const { width, height } = Dimensions.get("screen");
   const [modal, setModal] = useState(false);
   const [treatmentData, setTreatmentData] = useState(null);
 
-  // const currentPatient = appointment.filter((val)=>val.status==="PROCESSING" );
-  const currentPatient = appointment.filter((val) => val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING" && moment(val.appointmentDate, "YYYY-MM-DD").isSame(moment(), 'day'));
+
+  const currentPatient = appointment.filter((val) => val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING");
+  // THIS IS THE CORRECT
+  // const currentPatient = appointment.filter((val)=>val.status==="PROCESSING"&&val.status==="TREATMENT_PROCESSING" && moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day'));
 
   return activeDentist && (
     <SafeAreaView style={{ ...styles.containerGray, height: height, width: width, position: 'relative' }}>
@@ -37,12 +39,13 @@ function Home({ setSideNavShow }) {
             <Text style={{ color: "#fff", fontSize: 12 }}>Dentist</Text>
           </View>
         </View>
-
         <Pressable style={{ position: 'absolute', top: 40, right: 10, zIndex: 20 }}>
           <Ionicons name="notifications" color="#fff" size={30} />
           <Text style={{ backgroundColor: '#e62e00', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }}>1</Text>
         </Pressable>
       </SafeAreaView>
+
+      <DentistCard header="Current Patient" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
 
       <View style={{ padding: 15, rowGap: 10 }}>
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
@@ -69,10 +72,7 @@ function Home({ setSideNavShow }) {
             <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
           </View>
         </View>
-
       </View>
-
-      <DentistCard header="Current Patient" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} />
 
     </SafeAreaView >
   )

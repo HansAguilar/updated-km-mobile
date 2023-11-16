@@ -5,7 +5,7 @@ import { approvedAppointment } from "../redux/action/AppointmentAction";
 import Octicons from "react-native-vector-icons/Octicons";
 import { useDispatch } from 'react-redux';
 
-function DentistCard({ header, data, setModal, setTreatmentData }) {
+function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentId, navigation }) {
     const [dropToggle, setDropToggle] = useState(false);
     const dispatch = useDispatch();
     // console.log(...data);
@@ -22,7 +22,11 @@ function DentistCard({ header, data, setModal, setTreatmentData }) {
                             <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row', }}>
                                 <View>
                                     <Text style={{ fontSize: 14 }}>{val.patient.firstname} {val.patient.lastname}</Text>
-                                    <Text style={{ fontSize: 12, color: "#06b6d4", fontWeight: 'bold', textTransform: 'capitalize', textDecorationLine: 'underline' }} onPress={() => setDropToggle((prev) => !prev)}>{val.status}</Text>
+                                    <Text style={{ fontSize: 12, color: "#06b6d4", fontWeight: 'bold', textTransform: 'capitalize', paddingVertical: 3, textDecorationLine: 'underline' }}
+                                        onPress={() => {
+                                            setAppointmentId(val.appointmentId);
+                                            navigation.navigate("Patient History")
+                                        }}>View Patient History</Text>
 
                                 </View>
                                 {
@@ -60,18 +64,6 @@ function DentistCard({ header, data, setModal, setTreatmentData }) {
                         </View>
                     ))
                 }
-                {
-                    dropToggle && (
-                        <View style={{ width: "100%" }}>
-                            {
-                                data[0].dentalServices.map((val, idx) => (
-                                    <Text key={idx} style={{ paddingHorizontal: 20, paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", textAlign: 'center' }}>{val.name}</Text>
-                                ))
-                            }
-                        </View>)
-                }
-
-
             </View>
         </View>
     );
