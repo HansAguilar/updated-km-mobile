@@ -17,10 +17,10 @@ import PatientHistory from "./PatientHistory";
 function Index({ navigation }) {
   const dispatch = useDispatch();
   const Stack = createNativeStackNavigator();
-  const dentist = useSelector((state) => { return state.dentist; });
-  const patient = useSelector((state) => { return state.patient; });
-  const appointment = useSelector((state => { return state.appointment }));
-  const [isSideNavShow, setSideNavShow] = useState(false);
+  const dentist = useSelector((state)=>{ return state.dentist; });
+  const patient = useSelector((state)=>{ return state.patient; });
+  const appointment = useSelector((state=>{ return state.appointment }));
+  const [isSideNavShow, setSideNavShow]= useState(false);
   const [appointmentId, setAppointmentId] = useState(null);
 
 
@@ -32,32 +32,32 @@ function Index({ navigation }) {
     dispatch(fetchServices())
     dispatch(fetchActiveDentist(token));
   }
-  useEffect(() => { fetchData(); }, []);
-  return (
-    <>
-      {(dentist.loading || appointment.loading) && (<Loader loading={dentist.loading} />)}
-      {
-        (!dentist.loading && !appointment.loading && dentist) && (
-          <>
-            <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
-
-            <Stack.Navigator initialRouteName='Dashboard'>
-              <Stack.Screen name='Dashboard' options={{ headerShown: false }}>
-                {props => <Home setSideNavShow={setSideNavShow} setAppointmentId={setAppointmentId} {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name="Prescription">
-                {props => <Prescription setSideNavShow={setSideNavShow} {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name="Details" >
-                {props => <Details {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name="Patient History" >
-                {props => <PatientHistory appointmentId={appointmentId} {...props} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </>
-        )
-      }
+  useEffect(()=>{fetchData();},[]);
+  return(
+   <>
+    { (dentist.loading || appointment.loading ) && (<Loader loading={dentist.loading} />) }
+    {
+      (!dentist.loading  && !appointment.loading &&dentist ) && (
+        <>
+        <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
+        
+        <Stack.Navigator initialRouteName='Dashboard'>
+         <Stack.Screen name='Dashboard' options={{ headerShown: false }}>
+           {props => <Home setSideNavShow={setSideNavShow} setAppointmentId={setAppointmentId} {...props} />}
+         </Stack.Screen>
+         <Stack.Screen name="Prescription">
+           {props => <Prescription setSideNavShow={setSideNavShow} {...props} />}
+         </Stack.Screen>
+         <Stack.Screen name="Details" >
+           {props => <Details {...props} />}
+         </Stack.Screen>
+         <Stack.Screen name="Patient History" >
+           {props => <PatientHistory appointmentId={appointmentId} {...props} />}
+         </Stack.Screen>
+       </Stack.Navigator>
+        </>
+      ) 
+    }
     </>
   );
 }

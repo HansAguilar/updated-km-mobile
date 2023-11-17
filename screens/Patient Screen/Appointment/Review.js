@@ -68,7 +68,6 @@ function Review({navigation, appointmentDetails}) {
   ]
 
   const submitButton = async () => {
-    
     const data = {
       name: "Appointment Set",
       time: moment().format("HH:mm:ss"),
@@ -80,7 +79,6 @@ function Review({navigation, appointmentDetails}) {
       ${moment(appointmentDetails.date).format("MMM DD YYYY")}`,
       receiverType: "ADMIN"
     }
-
     await dispatch(createAppointment(appointmentDetails, navigation, ToastFunction,setModal));
     await dispatch(createNotification(data));
   };

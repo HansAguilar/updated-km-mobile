@@ -9,6 +9,7 @@ import moment from 'moment';
 import gcashLogo from '../../assets/images/gcashlogo.png';
 import paymayaLogo from '../../assets/images/paymayalogo.png';
 import { createPayment } from '../../redux/action/PaymentAction';
+import { createNotification } from '../../redux/action/NotificationAction';
 import ToastFunction from "../../config/toastConfig";
 import * as io from "socket.io-client";
 import { SOCKET_LINK } from '../../config/APIRoutes';
@@ -28,10 +29,10 @@ const Payment = ({navigation}) =>{
         isActive: false,
         status:"",
         appointmentStatus:"",
+        data: null
     });
     const [receipt, setReceipt] = useState("");
     const [paymentType, setPaymentType] = useState("");
-
 
     const handleImageUpload = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -62,10 +63,21 @@ const Payment = ({navigation}) =>{
         });
       };
 
-      const handleSubmit = () =>{
+      const handleSubmit = async() =>{
         if(!receipt) return Alert.alert("Fill up empty field");
-        const data = { paymentPhoto: receipt, status:"PENDING",method:paymentType}
-        dispatch(createPayment(selectedPayment.id, data));
+        const data = { paymentPhoto: receipt, status:"PENDING",method:paymentType};
+        await dispatch(createPayment(selectedPayment.id, data));
+        const notificationData = {
+            name: "Invoice for Patient Payment",
+            time: moment().format("HH:mm:ss"),
+            date: moment().format("YYYY-MM-DD"),
+            patientId: selectedPayment.data.patient.patientId,
+            description: `${selectedPayment.data.patient.firstname} ${selectedPayment.data.patient.lastname} ${selectedPayment.data.description ? 'update the receipt':`pay Php. ${selectedPayment.data.totalPayment}`}  for appointment ${moment(selectedPayment.data.appointment.appointmentDate).format("L").toString()===moment().format("L").toString() ? "today": "on"} ${moment(selectedPayment.data.appointment.appointmentDate).format("MMM DD YYYY")}`,
+            receiverType: "ADMIN"
+        }
+        dispatch(createNotification(notificationData));
+        const sendData = { value: selectedPayment.data.appointment.appointmentId };
+        socket.emit("payment_client_changes", JSON.stringify(sendData));
         setSelectedPayment({...selectedPayment, id:"", isActive:false});
         setReceipt("");
       }
@@ -288,7 +300,8 @@ const Payment = ({navigation}) =>{
                                                     ...selectedPayment,
                                                     id: val.paymentId,
                                                     isActive:true,
-                                                    appointmentStatus: val.appointment.status
+                                                    appointmentStatus: val.appointment.status,
+                                                    data: val
                                                 })
                                                 setPaymentType(val.method);
                                             }}
