@@ -5,33 +5,33 @@ import { approvedAppointment } from "../redux/action/AppointmentAction";
 import Octicons from "react-native-vector-icons/Octicons";
 import { useDispatch } from 'react-redux';
 
-function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentId, navigation }) {
-	const [dropToggle, setDropToggle] = useState(false);
-	const dispatch = useDispatch();
-	// console.log(...data);
-	return (
-		<View style={{ width: "100%", padding: 15, height: "auto" }}>
+function DentistCard({header, data,setModal,setTreatmentData,setAppointmentId,navigation}) {
+    const [dropToggle, setDropToggle] = useState(false);
+    const dispatch = useDispatch();
+    // console.log(...data);
+    return (
+        <View style={{ width: "100%", padding: 15, height: "auto" }}>
 
-			<Text style={{ fontSize: 16, fontWeight: 'bold', color: "#52525b" }}>{header}</Text>
-			<View style={{ width: "100%", height: 300, }}>
-				{
-					data.map((val, idx) => (
-						<View key={idx} style={{ width: "100%", backgroundColor: "white", height: "auto", padding: 10, display: 'flex', flexDirection: 'row', columnGap: 10, marginTop: 10, }}>
-							<Image source={{ uri: val.patient.profile }} style={{ width: 40, height: 40, borderRadius: 100 }} />
-							{/* LEFT */}
-							<View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row', }}>
-								<View>
-									<Text style={{ fontSize: 14 }}>{val.patient.firstname} {val.patient.lastname}</Text>
-									<Text style={{ fontSize: 12, color: "#06b6d4", fontWeight: 'bold', textTransform: 'capitalize', paddingVertical: 3, textDecorationLine: 'underline' }}
-										onPress={() => {
-											setAppointmentId(val.appointmentId);
-											navigation.navigate("Patient History")
-										}}>View Patient History</Text>
-
-								</View>
-								{
-									(val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && (
-										<View style={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: "#52525b" }}>{header}</Text>
+            <View style={{ width: "100%", height: 300, }}>
+                {
+                    data.map((val, idx) => (
+                        <View key={idx} style={{ width: "100%", backgroundColor: "white", height: "auto", padding: 10, display: 'flex', flexDirection: 'row', columnGap: 10, marginTop: 10, }}>
+                            <Image source={{ uri: val.patient.profile }} style={{ width: 40, height: 40, borderRadius: 100 }} />
+                            {/* LEFT */}
+                            <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row', }}>
+                                <View>
+                                    <Text style={{fontSize:14}}>{val.patient.firstname} {val.patient.lastname}</Text>
+                                    <Text style={{fontSize:12,color:"#06b6d4", fontWeight:'bold',textTransform:'capitalize', paddingVertical:3, textDecorationLine:'underline'}}
+                                    onPress={()=>{
+                                        setAppointmentId(val.appointmentId);
+                                        navigation.navigate("Patient History")
+                                    }}>View Patient History</Text>
+                                    
+                                </View>
+                                {
+                                    (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && (
+                                        <View style={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
 
 											{
 												val.status === "PROCESSING" && (
