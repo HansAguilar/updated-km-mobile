@@ -45,8 +45,6 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
         </Pressable>
       </SafeAreaView>
 
-      <DentistCard header="Current Patient" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
-
       <View style={{ padding: 15, rowGap: 10 }}>
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
 
@@ -73,6 +71,8 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
           </View>
         </View>
       </View>
+
+      <DentistCard header="Current Patient" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
 
     </SafeAreaView >
   )
