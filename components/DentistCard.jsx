@@ -5,7 +5,7 @@ import { approvedAppointment } from "../redux/action/AppointmentAction";
 import Octicons from "react-native-vector-icons/Octicons";
 import { useDispatch } from 'react-redux';
 
-function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentId, navigation }) {
+function DentistCard({header, data,setModal,setTreatmentData,setAppointmentId,navigation}) {
     const [dropToggle, setDropToggle] = useState(false);
     const dispatch = useDispatch();
     // console.log(...data);
@@ -21,13 +21,13 @@ function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentI
                             {/* LEFT */}
                             <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row', }}>
                                 <View>
-                                    <Text style={{ fontSize: 14 }}>{val.patient.firstname} {val.patient.lastname}</Text>
-                                    <Text style={{ fontSize: 12, color: "#06b6d4", fontWeight: 'bold', textTransform: 'capitalize', paddingVertical: 3, textDecorationLine: 'underline' }}
-                                        onPress={() => {
-                                            setAppointmentId(val.appointmentId);
-                                            navigation.navigate("Patient History")
-                                        }}>View Patient History</Text>
-
+                                    <Text style={{fontSize:14}}>{val.patient.firstname} {val.patient.lastname}</Text>
+                                    <Text style={{fontSize:12,color:"#06b6d4", fontWeight:'bold',textTransform:'capitalize', paddingVertical:3, textDecorationLine:'underline'}}
+                                    onPress={()=>{
+                                        setAppointmentId(val.appointmentId);
+                                        navigation.navigate("Patient History")
+                                    }}>View Patient History</Text>
+                                    
                                 </View>
                                 {
                                     (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && (

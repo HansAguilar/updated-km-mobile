@@ -57,19 +57,20 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
             <Text style={{ color: '#fff', fontSize: 20 }}>12</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>Appointments</Text>
           </View>
+
+          <View style={{ flexDirection: 'row', columnGap: 10 }}>
+            <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: '#fff', fontSize: 20 }}>2</Text>
+              <Text style={{ color: '#fff', fontSize: 15 }}>Schedule</Text>
+            </View>
+
+            <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: '#fff', fontSize: 20 }}>4</Text>
+              <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
+            </View>
+          </View>
         </View>
 
-        <View style={{ flexDirection: 'row', columnGap: 10 }}>
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#fff', fontSize: 20 }}>2</Text>
-            <Text style={{ color: '#fff', fontSize: 15 }}>Schedule</Text>
-          </View>
-
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#fff', fontSize: 20 }}>4</Text>
-            <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
-          </View>
-        </View>
       </View>
 
       <DentistCard header="Current Patient" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
