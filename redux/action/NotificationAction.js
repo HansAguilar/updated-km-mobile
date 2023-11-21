@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADMIN_SEND_MESSAGE_SUCCESS, CREATE_MESSAGE_SUCCESS, CREATE_NOTIFICATION_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, FETCH_NOTIFICATION_FAILED, FETCH_NOTIFICATION_REQUEST, FETCH_NOTIFICATION_SUCCESS, RESPONSE_MESSAGE_SUCCESS, SEND_MESSAGE_SUCCESS } from "../ActionType"
+import { ADMIN_SEND_MESSAGE_SUCCESS, CREATE_MESSAGE_SUCCESS, CREATE_NOTIFICATION_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, FETCH_NOTIFICATION_FAILED, FETCH_NOTIFICATION_REQUEST, FETCH_NOTIFICATION_SUCCESS, RESPONSE_MESSAGE_SUCCESS, SEND_MESSAGE_SUCCESS, UPDATE_NOTIFICATION_SUCCESS } from "../ActionType"
 import { MESSAGE_URL, NOTIFICATION_LINK, SOCKET_LINK } from "../../config/APIRoutes";
 import * as io from "socket.io-client";
 import { useSelector } from "react-redux";
@@ -60,6 +60,22 @@ export const storeNotification = (notificationId) =>{
                 type: CREATE_NOTIFICATION_SUCCESS,
                 payload: response.data
             })
+        } catch (error) {
+            
+        }
+    } 
+}
+
+export const readPatientNotification = (notificationId,setData) =>{
+    return async dispatch =>{
+        try {
+            const response = await axios.put(`${NOTIFICATION_LINK}/read_notification/${notificationId}`);
+            const appointmentData = response.data;
+            dispatch({
+                type: UPDATE_NOTIFICATION_SUCCESS,
+                payload: appointmentData
+            })
+            setData(appointmentData);
         } catch (error) {
             
         }

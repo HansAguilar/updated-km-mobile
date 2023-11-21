@@ -39,10 +39,10 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
             <Text style={{ color: "#fff", fontSize: 12 }}>Dentist</Text>
           </View>
         </View>
-        <Pressable style={{ position: 'absolute', top: 40, right: 10, zIndex: 20 }}>
+        {/* <Pressable style={{ position: 'absolute', top: 40, right: 10, zIndex: 20 }}>
           <Ionicons name="notifications" color="#fff" size={30} />
           <Text style={{ backgroundColor: '#e62e00', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }}>1</Text>
-        </Pressable>
+        </Pressable> */}
       </SafeAreaView>
 
       <View style={{ padding: 15, rowGap: 10 }}>

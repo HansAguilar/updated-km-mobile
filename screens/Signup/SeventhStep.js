@@ -33,7 +33,6 @@ function SeventhStep({ navigation, details, onChangeText }) {
 
   }, [isTimerRunning, timer])
 
-  console.log('pin: ', pin);
   const sendSmsMessage = async () => {
     try {
       const message = `Hello, Your verification PIN is: ${pin}. Please enter this 4-digit PIN to proceed with your application. If you didn't request this PIN, please disregard this message. Thank you!`;

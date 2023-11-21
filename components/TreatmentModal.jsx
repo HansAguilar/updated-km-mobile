@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text,Image,Dimensions,ScrollView,TextInput,Pressable,Picker,Alert } from "react-native";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import AntIcon from "react-native-vector-icons/AntDesign";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { createTreatment } from "../redux/action/AppointmentAction";
+import { fetchPayment } from "../redux/action/PaymentAction";
 import toastFunction from "../config/toastConfig";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
@@ -18,6 +19,11 @@ function TreatmentModal({setModal,treatmentData}) {
     const [date, setDate] = useState(new Date());
     const dateRef = useRef("");
     const dispatch = useDispatch();
+    const installment = useSelector((state)=>state.payment.payment?.filter((val)=>val.type === "installment"))
+
+    useEffect(()=>{
+        dispatch(fetchPayment(treatmentData.patient.patientId));
+    },[treatmentData]);
 
     const [toothChart, setToothChart] = useState([...Array(32)].map((_,idx)=>({
         name:idx+1>9?`${idx+1}`:`0${idx+1}`,
@@ -372,7 +378,7 @@ function TreatmentModal({setModal,treatmentData}) {
                                                     Full-Payment
                                                 </Text>
                                         {
-                                            totalAmount>7000 && (
+                                            totalAmount>7000 && installment.length < 1 && (
                                                 <Text onPress={()=>{
                                                     setPaymentType("installment");
                                                     setPaymentToggle(false);
