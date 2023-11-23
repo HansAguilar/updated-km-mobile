@@ -11,7 +11,6 @@ const Prescription = ({setPrescriptionDetails, navigation}) =>{
     const dispatch = useDispatch();
     const { height } = Dimensions.get("screen");
     const prescription = useSelector((state)=>{ return state.prescription.prescription});
-    console.log(prescription);
     return (
        <>
          <View style={{...styles.containerGray,position:'relative'}}>

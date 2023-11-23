@@ -46,7 +46,8 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   const { announcement } = useSelector((state) => state.announcement);
   const { services } = useSelector((state) => state.services);
   const { dentists } = useSelector((state) => state.dentist);
-  const notification = useSelector((state) => state.notification.notification);
+  const notificationCounter = useSelector((state) => state.notification?.notification?.filter((val)=>val.status==="UNREAD"));
+  const notification = useSelector((state) => state.notification?.notification);
   const [notificationUnreadCounter, setNotificationCounter] = useState(null); 
   const [modal, setModalShow] = useState({
     id: '',
@@ -106,12 +107,12 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
   }, []);
-  useEffect(()=>{
-    if(notification?.length>0){
-      const data = notification.filter((val)=>val.status==="UNREAD");
-      setNotificationCounter(data.length);
-    }
-  },[notification])
+  // useEffect(()=>{
+  //   if(notification?.length>0){
+  //     const data = notification.filter((val)=>val.status==="UNREAD");
+  //     setNotificationCounter(data.length);
+  //   }
+  // },[notification])
 
   const renderItem = ({ item }) => (
     <View
@@ -200,7 +201,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     );
   });
 
-  return patient && appointment && announcement && services && dentists && notification ? (
+  return patient && appointment && announcement && services && dentists && notification && (
     <>
       {modal.isShow && <Modal />}
       {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}
@@ -240,7 +241,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
           <Pressable style={{ height: 'auto', width: 'auto', padding: 5, position: 'relative' }} onPress={()=>{navigation.navigate("Notification")}}>
             <Ionicons name="notifications" color="#fff" size={25} />
             {
-            notificationUnreadCounter && <Text style={{ backgroundColor: '#ef4444', color: 'white', width: 20, height: 20, position: 'absolute', right: 0, textAlign: 'center', borderRadius: 100 }} >{notificationUnreadCounter}</Text>
+            notificationCounter?.length > 0 && <Text style={{ backgroundColor: '#ef4444', color: 'white', width: 10, height: 10, position: 'absolute',top:5, right: 5, textAlign: 'center', borderRadius: 100 }} ></Text>
             }
           </Pressable>
         </View> 
@@ -305,7 +306,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
         </ScrollView>
       </View>
     </>
-  ) : null;
+  );
 });
 
 export default Home;

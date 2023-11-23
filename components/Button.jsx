@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TouchableHighlight, Text, StyleSheet } from 'react-native';
 
-export default function Button({ title, onPress, bgColor, textColor, haveBorder }) {
+export default function Button({ title, onPress, bgColor, textColor, haveBorder, }) {
   const styles = StyleSheet.create({
     button: {
       width: '100%',
@@ -20,7 +20,7 @@ export default function Button({ title, onPress, bgColor, textColor, haveBorder 
     }
   })
   return (
-    <TouchableHighlight style={styles.button} onPress={onPress}>
+    <TouchableHighlight style={styles.button} onPress={onPress} >
       <Text style={styles.text}>{title}</Text>
     </TouchableHighlight>
   )

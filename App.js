@@ -11,7 +11,7 @@ import Sample from './screens/Sample';
 import React from 'react';
 import 'react-native-gesture-handler';
 import { StatusBar,  } from 'react-native'; // Add this line to import StatusBar
-import ForgotPassword from './screens/ForgotPassword';
+import ForgotPassword from './screens/Forgot Password/index';
 
 
 function App() {
