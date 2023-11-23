@@ -37,7 +37,7 @@ function Index({ navigation }) {
    <>
     { (dentist.loading || appointment.loading ) && (<Loader loading={dentist.loading} />) }
     {
-      (!dentist.loading  && !appointment.loading &&dentist ) && (
+      (!dentist.loading  && !appointment.loading &&dentist &&patient ) && (
         <>
         <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
         

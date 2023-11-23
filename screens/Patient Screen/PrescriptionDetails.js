@@ -16,28 +16,34 @@ const Prescription = ({prescriptionDetails, navigation}) =>{
     return prescriptionDetails && (
        <>
          <View style={{...styles.containerGray,position:'relative',padding:20}}>
-            <View style={{width:"100%", height:"100%", backgroundColor:"#fff",padding:20}}>
-                
-                {/* IMAGE */}
-                <View style={{width:"100%"}}>
-                    <Image
-                        source={require('../../assets/images/rx.png')}
-                        style={{width:60, height:60}}
-                        resizeMode="contain"
-                    />
+            <View style={{width:"100%", height:"100%", backgroundColor:"#fff",padding:20,position:'relative'}}>
+                    {/* IMAGE */}
+                    <View style={{width:"100%"}}>
+                        <Image
+                            source={require('../../assets/images/rx.png')}
+                            style={{width:60, height:60}}
+                            resizeMode="contain"
+                        />
+                    </View>
+                    
+                    <View style={{width:"100%",marginTop:10,display:'flex', flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',borderTopWidth:1, borderBottomWidth:1, paddingVertical:10}}>
+                        <Text style={{textTransform:'capitalize'}}><Text style={{fontWeight:'bold'}}>Name:</Text> {prescriptionDetails.patient.firstname} {prescriptionDetails.patient.lastname}</Text>
+                        <Text style={{textTransform:'capitalize'}}><Text style={{fontWeight:'bold'}}>Age:</Text> {prescriptionDetails.patient.age}</Text>
+                        <Text style={{textTransform:'capitalize'}}><Text style={{fontWeight:'bold'}}>Sex:</Text> {prescriptionDetails.patient.gender}</Text>
+                        {/* <Text><Text style={{fontWeight:'bold'}}>Dentist:</Text> Dr. {doctor[2]} </Text> */}
+                    </View>
+                    <View style={{width:"100%",marginTop:10,display:'flex', flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',borderBottomWidth:1, paddingBottom:10}}>
+                        <Text style={{textTransform:'capitalize'}}><Text style={{fontWeight:'bold'}}>Dentist:</Text> Dr. {doctor[2]} </Text>
+                        <Text style={{textTransform:'capitalize'}}><Text style={{fontWeight:'bold'}}>Date:</Text> {moment(prescriptionDetails.date).format("MM-DD-YYYY")}</Text>
+                    </View>
+                    <Text style={{marginTop:30}}>{prescriptionDetails.remarks}</Text>
+                    <View style={{position:'absolute', right:0, bottom:0, padding:10}}>
+                        <Text style={{textDecorationLine:'underline',fontSize:10}}>Dra. Kristie Marren V. Geronimo, DMD</Text>
+                        <Text style={{textAlign:'right',fontSize:10}}>License #: <Text style={{textDecorationLine:'underline'}}>57558</Text></Text>
+                        <Text style={{textAlign:'right',fontSize:10}}>PTR #: <Text style={{textDecorationLine:'underline'}}>4835266</Text></Text>
+                    </View>
                 </View>
                 
-                <View style={{width:"100%",marginTop:10,display:'flex', flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',borderTopWidth:1, borderBottomWidth:1, paddingVertical:10}}>
-                    <Text><Text style={{fontWeight:'bold'}}>Name:</Text> {prescriptionDetails.patient.firstname} {prescriptionDetails.patient.lastname}</Text>
-                    <Text><Text style={{fontWeight:'bold'}}>Age:</Text> {prescriptionDetails.patient.age}</Text>
-                    {/* <Text><Text style={{fontWeight:'bold'}}>Dentist:</Text> Dr. {doctor[2]} </Text> */}
-                </View>
-                <View style={{width:"100%",marginTop:10,display:'flex', flexDirection:'row',justifyContent:'space-between',alignItems:'flex-start',borderBottomWidth:1, paddingBottom:10}}>
-                    <Text><Text style={{fontWeight:'bold'}}>Dentist:</Text> Dr. {doctor[2]} </Text>
-                    <Text><Text style={{fontWeight:'bold'}}>Date:</Text> {moment(prescriptionDetails.date).format("MM-DD-YYYY")}</Text>
-                </View>
-                <Text style={{marginTop:30}}>{prescriptionDetails.remarks}</Text>
-            </View>
         </View>
        </>
     );
