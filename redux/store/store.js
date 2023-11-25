@@ -13,6 +13,7 @@ import scheduleReducer from '../reducer/ScheduleReducer';
 import prescriptionReducer from '../reducer/PrescriptionReducer';
 import loginReducer from '../reducer/LoginReducer';
 import notificationReducer from '../reducer/NotificationReducer';
+import insuranceReducer from '../reducer/InsuranceReducer';
 
 import thunk from 'redux-thunk';
 
@@ -31,7 +32,8 @@ export default configureStore({
     schedule:scheduleReducer,
     prescription: prescriptionReducer,
     login:loginReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
+    insurance:insuranceReducer
   },
   middleware:[thunk]
 });
