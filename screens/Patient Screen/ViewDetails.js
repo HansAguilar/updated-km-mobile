@@ -146,7 +146,7 @@ function ViewDetails({navigation}) {
         )
     }
 
-    return data && (
+    return patient && (
       <>
       {modal && <ChangePasswordModal />}
       <View style={{...styles.containerGray,height:height, width:width,position:'relative',padding:20}}>
@@ -158,6 +158,7 @@ function ViewDetails({navigation}) {
             <View>
                 <Image source={{uri:data.profile}} style={{width:120, height:120, borderRadius:100}} />
                 <Text style={{textAlign:'center', color:"#06b6d4", fontWeight:'bold', textDecorationLine:'underline',marginTop:5}} onPress={handleImageUpload}>Edit</Text>
+                <Text style={{textAlign:'center', color:"#06b6d4", fontWeight:'bold', textDecorationLine:'underline',marginTop:5}} onPress={()=>navigation.navigate("HMO")}>Add HMO</Text>
             </View>
             
             {/* Firstname */}

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPatient } from '../../redux/action/PatientAction';
 import Loader from '../../components/Loader';
 import { fetchAppointment, fetchChanges, adminChanges, createAppointmentByAdmin, deleteByAdmin } from '../../redux/action/AppointmentAction';
-import { fetchAppointmentFee } from '../../redux/action/AppointmentFeeAction';
+import { fetchAppointmentFee, updateAppointmentFee } from '../../redux/action/AppointmentFeeAction';
 import { fetchPatientMessage, sendByAdminMessage, fetchNewPatientMessage } from '../../redux/action/MessageAction';
 import { fetchPayment, fetchAdminPayment, adminUpdatePayment, adminCancelledPayment, adminDeletePayment } from '../../redux/action/PaymentAction';
 import { fetchInstallmentByPatient } from '../../redux/action/InstallmentAction';
@@ -33,6 +33,8 @@ import UpdateAppointment from './UpdateAppointment';
 import NotificationRoom from './NotificationRoom';
 import {io} from "socket.io-client";
 import { useRef } from 'react';
+import HealthInsurance from './HealthInsurance';
+import { fetchInsurance } from '../../redux/action/InsuranceAction';
 
 const socket = io(SOCKET_LINK);
 const navLinks = [
@@ -81,6 +83,7 @@ const Main = React.memo(({ navigation }) => {
         await dispatch(fetchInstallmentByPatient(patientLogin.current));
         await dispatch(fetchPrescription(patientLogin.current))
         await dispatch(fetchAllNotification(patientLogin.current))
+        await dispatch(fetchInsurance(patientLogin.current))
         await dispatch(fetchSchedule());
         await dispatch(fetchAppointmentFee());
     } catch (error) {
@@ -145,6 +148,10 @@ const Main = React.memo(({ navigation }) => {
     socket.on("received_by_patient", (data) => {
       dispatch(sendByAdminMessage(data.key, data.value))
     });
+    socket.on("response_appointment_fee", (data) => {
+      const parseData = JSON.parse(data)
+      dispatch(updateAppointmentFee(parseData.value));
+    });
     return () => {
       socket.off();
     }
@@ -192,7 +199,9 @@ const Main = React.memo(({ navigation }) => {
               <Stack.Screen name='Update Schedule' >
                 {props => <UpdateAppointment {...props} />}
               </Stack.Screen>
-
+              <Stack.Screen name='HMO' >
+                {props => <HealthInsurance {...props} />}
+              </Stack.Screen>
             </Stack.Navigator>
 
             <View style={{ width: '100%', height: 60, position: 'relative', bottom: 0, paddingVertical: 10, paddingHorizontal: 30, backgroundColor: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', ...styles.shadow }}>
