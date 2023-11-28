@@ -31,7 +31,7 @@ import Prescription from './Prescription';
 import PrescriptionDetails from './PrescriptionDetails';
 import UpdateAppointment from './UpdateAppointment';
 import NotificationRoom from './NotificationRoom';
-import {io} from "socket.io-client";
+import { io } from "socket.io-client";
 import { useRef } from 'react';
 import HealthInsurance from './HealthInsurance';
 import { fetchInsurance } from '../../redux/action/InsuranceAction';
@@ -77,15 +77,15 @@ const Main = React.memo(({ navigation }) => {
 
   const fetchAppointmentData = async () => {
     try {
-        await dispatch(fetchAppointment(patientLogin.current));
-        await dispatch(fetchPatientMessage(patientLogin.current));
-        await dispatch(fetchPayment(patientLogin.current));
-        await dispatch(fetchInstallmentByPatient(patientLogin.current));
-        await dispatch(fetchPrescription(patientLogin.current))
-        await dispatch(fetchAllNotification(patientLogin.current))
-        await dispatch(fetchInsurance(patientLogin.current))
-        await dispatch(fetchSchedule());
-        await dispatch(fetchAppointmentFee());
+      await dispatch(fetchAppointment(patientLogin.current));
+      await dispatch(fetchPatientMessage(patientLogin.current));
+      await dispatch(fetchPayment(patientLogin.current));
+      await dispatch(fetchInstallmentByPatient(patientLogin.current));
+      await dispatch(fetchPrescription(patientLogin.current))
+      await dispatch(fetchAllNotification(patientLogin.current))
+      await dispatch(fetchInsurance(patientLogin.current))
+      await dispatch(fetchSchedule());
+      await dispatch(fetchAppointmentFee());
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
@@ -112,7 +112,7 @@ const Main = React.memo(({ navigation }) => {
     })
     socket.on("receive_notification_by_admin", (data) => {
       const parseData = JSON.parse(data);
-      if(parseData.patientId === patientLogin.current){
+      if (parseData.patientId === patientLogin.current) {
         dispatch(storeNotification(parseData.notification));
       }
     })
@@ -204,7 +204,7 @@ const Main = React.memo(({ navigation }) => {
               </Stack.Screen>
             </Stack.Navigator>
 
-            <View style={{ width: '100%', height: 60, position: 'relative', bottom: 0, paddingVertical: 10, paddingHorizontal: 30, backgroundColor: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', ...styles.shadow }}>
+            <View style={{ width: '100%', height: 60, position: 'relative', bottom: 0, left: 0, paddingVertical: 10, paddingHorizontal: 30, backgroundColor: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', ...styles.shadow }}>
               {
                 navLinks.map((val, idx) => (
                   <Pressable style={{ width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} key={idx} onPress={() => navigateToLink(val.link)}>

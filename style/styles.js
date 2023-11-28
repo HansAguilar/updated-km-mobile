@@ -109,6 +109,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
+  carouselContainer: {
+    width: '100%',
+    height: 230,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    rowGap: 10,
+  },
 
   inputContainer: {
     width: '100%',
@@ -116,11 +124,12 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 8
   },
+
   shadow: {
-    shadowColor: '#000',      // Shadow color
+    shadowColor: '#2b2b2b',      // Shadow color
     shadowOpacity: 0.1,       // Shadow opacity (0.0 - 1.0) - Increase opacity for a darker shadow
-    shadowRadius: 2,          // Shadow radius
-    elevation: 2,             // Elevation (for Android)
+    shadowRadius: 6,          // Shadow radius
+    elevation: 1,             // Elevation (for Android)
     // Additional shadow properties (optional)
     shadowOffset: {
       width: 0,              // Horizontal offset
