@@ -99,7 +99,7 @@ function AppointmentCard({ title, dataList, type, bgColor, borderColor, subColor
             }
           </>
         ) : <View style={{ width: '100%', padding: 15, }}>
-          <Text style={{ color: '#a1a1aa', fontSize: 12, fontWeight: 'normal' }}>No Appointment 😥</Text>
+          <Text style={{ color: '#a1a1aa', fontSize: 12, fontWeight: 'normal' }}>You have no appointment 😥</Text>
         </View>
       }
       {/* 

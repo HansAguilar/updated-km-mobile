@@ -33,13 +33,12 @@ function index({ dispatch }) {
 			<Stack.Screen name='Services' options={{ headerTitle: 'Step 1 of 5' }}>
 				{props => <Services appointmentDetails={appointmentDetails} setAppointmentDetails={setAppointmentDetails} {...props} />}
 			</Stack.Screen>
-			<Stack.Screen name='Schedule' options={{ headerTitle: 'Step 2 of 5' }}>
+			<Stack.Screen name='Schedule' options={{ headerTitle: 'Step 3 of 5' }}>
 				{props => <Schedule appointmentDetails={appointmentDetails} setAppointmentDetails={setAppointmentDetails} {...props} />}
 			</Stack.Screen>
-			<Stack.Screen name='Dentist' options={{ headerTitle: 'Step 3 of 5' }}>
+			<Stack.Screen name='Dentist' options={{ headerTitle: 'Step 2 of 5' }}>
 				{props => <Dentist appointmentDetails={appointmentDetails} setAppointmentDetails={setAppointmentDetails} {...props} />}
 			</Stack.Screen>
-
 			<Stack.Screen name='Payment' options={{ headerTitle: 'Step 4 of 5' }}>
 				{props => <Payment appointmentDetails={appointmentDetails} setAppointmentDetails={setAppointmentDetails} {...props} />}
 			</Stack.Screen>
