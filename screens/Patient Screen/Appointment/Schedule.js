@@ -1,7 +1,5 @@
-import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Pressable, Button } from 'react-native';
-import Loader from '../../../components/Loader';
+import { View, Text, Pressable, SafeAreaView } from 'react-native';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles } from '../../../style/styles';
@@ -9,6 +7,7 @@ import { useSelector } from 'react-redux';
 import InputText from '../../../components/InputText';
 import ToastFunction from '../../../config/toastConfig';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import Button from '../../../components/Button';
 
 const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => {
   const appointment = useSelector((state) => { return state.appointment.appointment.filter((val) => val.status === "PENDING" || val.status === "APPROVED" || val.status === "TREATMENT") });
@@ -16,6 +15,8 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
   const dateRef = useRef("");
   const [showPicker, setShowPicker] = useState(false);
   const [timePicker, setShowTimePicker] = useState(false);
+  const [selectedTime, setSelectedTime] = useState(null);
+
   let [timeStartList, setTimeStartList] = useState(
     [
       { timeValue: "09:30 Am", timeStart: "09:30:00" },
@@ -159,8 +160,9 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
 
       return updatedTimeList;
     });
-
   }
+
+
   const timeSelectedButton = (value) => {
     const end = calculateTotalTime(value);
     const totalTimeDuration = moment('00:00:00', 'HH:mm:ss');
@@ -171,6 +173,7 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
         && moment(val.appointmentDate).isSame(moment(appointmentDetails.date), "day")
         && val.patient.patientId === appointmentDetails.patient;
     });
+
     console.log(filteredAppointment.length);
     if (filteredAppointment.length > 0) {
       return ToastFunction("error", "You have an existing appointment to this date!")
@@ -179,25 +182,29 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
     while (start.isBefore(moment(end, "HH:mm:ss").add(30, 'minutes'))) {
       const startTime = start.format('HH:mm:ss');
       const matchingTime = timeStartList.find(time => time.timeStart === startTime);
+
       if (startTime === "12:30:00" || startTime === "16:30:00") {
         ToastFunction("error", `Kindly select ${totalTimeDuration.format('HH:mm:ss') === "01:00:00"
-            ? '30 minutes'
-            : 'less than 1 hour'
+          ? '30 minutes'
+          : 'less than 1 hour'
           } service or change other dates`);
         return;
       }
+
       if (!matchingTime) {
         if (appointmentDetails.totalServiceTime !== totalTimeDuration.format("HH:mm:ss")) {
           ToastFunction('error', `Please select time range ${totalTimeDuration.format('HH:mm:ss') === "00:30:00"
-              ? 'equal to ' + totalTimeDuration.minute() + ' minutes'
-              : 'less than or equal to ' + totalTimeDuration.hour() + ' hour'
+            ? 'equal to ' + totalTimeDuration.minute() + ' minutes'
+            : 'less than or equal to ' + totalTimeDuration.hour() + ' hour'
             }`)
           return;
         }
       }
+
       totalTimeDuration.add(30, 'minutes');
       start.add(30, "minutes");
     }
+
     setAppointmentDetails({
       ...appointmentDetails,
       timeStart: value,
@@ -234,9 +241,10 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
   return (
     <>
       <Toast />
-      <View style={{ ...styles.containerGray, position: 'relative', zIndex: -50 }}>
+      <SafeAreaView style={{ ...styles.containerGray, position: 'relative', zIndex: -50, padding: 20, alignItems: "center" }}>
+        <Text style={{ fontSize: 20, fontWeight: '500', color: "#3f3f46", marginRight: "auto" }}>Select your appointment schedule</Text>
 
-        <View style={{ padding: 20 }}>
+        <View style={{ paddingVertical: 10, width: "100%" }}>
           {
             showPicker && (
               <DateTimePicker
@@ -266,43 +274,59 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
             )
           }
         </View>
-        <View style={{ width: '100%', height: 'auto', backgroundColor: 'white', position: 'absolute', bottom: timePicker ? 0 : -500, paddingVertical: 20, paddingHorizontal: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, ...styles.shadow }}>
 
-          <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Morning Schedule</Text>
-          <View style={{ width: '100%', marginTop: 10, flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-            {
-              timeStartList
-                .filter(item => {
-                  const startTime = moment(item.timeStart, 'HH:mm:ss');
-                  const startTimeRange = moment(timeStartList.indexOf(0), 'HH:mm:ss');
-                  const endTimeRange = moment('12:00:00', 'HH:mm:ss');
+        <View style={{ width: "100%", height: 500, position: 'absolute', bottom: timePicker ? 0 : -600, borderRadius: 8, gap: 40 }}>
 
-                  return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
-                })
-                .map((val, idx) => (
-                  <Pressable onPress={() => timeSelectedButton(val.timeStart)} key={idx} style={{ backgroundColor: '#06b6d4', paddingHorizontal: 17, paddingVertical: 10, borderRadius: 10, ...styles.shadow }}><Text style={{ color: "#fff" }}>{val.timeValue}</Text></Pressable>
-                ))
-            }
+          <View style={{ flexDirection: "column", gap: 12 }}>
+            <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#3f3f46" }}>Morning Slots</Text>
+            <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: "center" }}>
+              {
+                timeStartList
+                  .filter(item => {
+                    const startTime = moment(item.timeStart, 'HH:mm:ss');
+                    const startTimeRange = moment(timeStartList.indexOf(0), 'HH:mm:ss');
+                    const endTimeRange = moment('12:00:00', 'HH:mm:ss');
+
+                    return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
+                  })
+                  .map((val, idx) => (
+                    <Pressable onPress={() => {
+                      setSelectedTime(val.timeStart)
+                    }} key={idx} style={{ borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#ccc', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
+                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2b2b2b', fontWeight: "500" }}>{val.timeValue}</Text>
+                    </Pressable>
+                  ))
+              }
+            </View>
           </View>
 
-          <Text style={{ fontSize: 12, fontWeight: 'bold', marginTop: 15 }}>Afternoon Schedule</Text>
-          <View style={{ width: '100%', marginTop: 10, flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-            {
-              timeStartList
-                .filter(item => {
-                  const startTime = moment(item.timeStart, 'HH:mm:ss');
-                  const startTimeRange = moment('13:00:00', 'HH:mm:ss');
-                  const endTimeRange = moment('16:00:00', 'HH:mm:ss');
+          <View style={{ flexDirection: "column", gap: 12 }}>
+            <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#3f3f46" }}>Morning Slots</Text>
+            <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: "center" }}>
+              {
+                timeStartList
+                  .filter(item => {
+                    const startTime = moment(item.timeStart, 'HH:mm:ss');
+                    const startTimeRange = moment('13:00:00', 'HH:mm:ss');
+                    const endTimeRange = moment('16:00:00', 'HH:mm:ss');
 
-                  return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
-                })
-                .map((val, idx) => (
-                  <Pressable onPress={() => timeSelectedButton(val.timeStart)} key={idx} style={{ backgroundColor: '#06b6d4', paddingHorizontal: 17, paddingVertical: 10, borderRadius: 10, ...styles.shadow }}><Text style={{ color: "#fff" }}>{val.timeValue}</Text></Pressable>
-                ))
-            }
+                    return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
+                  })
+                  .map((val, idx) => (
+                    <Pressable onPress={() => {
+                      setSelectedTime(val.timeStart)
+                    }} key={idx} style={{ borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#ccc', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
+                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2b2b2b', fontWeight: "500" }}>{val.timeValue}</Text>
+                    </Pressable>
+                  ))
+              }
+            </View>
           </View>
-
         </View>
+      </SafeAreaView>
+
+      <View style={{ width: '100%', padding: 20, position: 'relative' }}>
+        <Button title='Continue' bgColor='#06b6d4' textColor='#fff' onPress={() => timeSelectedButton(selectedTime)}/>
       </View>
     </>
   );

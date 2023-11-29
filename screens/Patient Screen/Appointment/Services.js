@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Dimensions, ScrollView, Pressable, Alert } from 'react-native';
 import { styles } from '../../../style/styles';
-import axios from 'axios';
-import { SERVICES_URL } from '../../../config/APIRoutes';
-import Loader from '../../../components/Loader';
 import moment, { duration } from 'moment/moment';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import Button from '../../../components/Button';
@@ -34,7 +31,7 @@ const Services = React.memo(({ navigation, appointmentDetails, setAppointmentDet
   };
 
   const buttonContinue = () => {
-    if (selectedServices.length < 1) return Alert.alert("Please fill up empty field");
+    if (selectedServices.length < 1) return Alert.alert("Please select a service");
 
     const totalAmount = services.reduce((acc, val) => {
       if (selectedServices.includes(val.serviceId)) { return acc + parseInt(val.price); }
@@ -43,6 +40,7 @@ const Services = React.memo(({ navigation, appointmentDetails, setAppointmentDet
     setAppointmentDetails({ ...appointmentDetails, dentalServices: selectedServices });
     navigation.navigate('Dentist');
   }
+
   const calculateTotalServiceTime = () => {
     const timeEnd = selectedServices.map((val) => {
       const result = services.filter((service) => {
@@ -64,32 +62,45 @@ const Services = React.memo(({ navigation, appointmentDetails, setAppointmentDet
     const convertTotalTime = moment.duration(total);
     return moment.utc(convertTotalTime.asMilliseconds()).format('HH:mm:ss');
   }
+
   return services && (
     <>
       <ScrollView style={{ maxHeight: height, padding: 20, flexGrow: 1, gap: 10, flexDirection: 'column', position: 'relative', zIndex: -50 }}>
         <Toast />
-        <View style={{ width: '100%', marginBottom: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: -50 }}>
-          <Text style={{ fontSize: 22, fontWeight: 'bold', }}>Select Services</Text>
-          <Text style={{ fontSize: 12, }}>{isActive.idx.length < 1 ? `Empty service` : `${isActive.idx.length} case selected`}</Text>
+        <View style={{ width: '100%', marginBottom: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', zIndex: -50, gap: 10 }}>
+          <Text style={{ fontSize: 20, fontWeight: '500', color: "#3f3f46" }}>Select your preffered service</Text>
+          <Text style={{ fontSize: 14, fontWeight: "400", color: "#666666" }}>{isActive.idx.length < 1 ? `0 selected` : `${isActive.idx.length} service(s) selected`}</Text>
         </View>
+
         <View style={{ flex: 1, rowGap: 20, position: 'relative', zIndex: -50 }}>
           {
-            services.map((val, idx) => (
-              <Pressable style={{ width: '100%', height: 'auto', backgroundColor: '#06b6d4', borderRadius: 10, padding: 20, }} key={idx} onPress={() => { selectServiceEvent(idx, val.serviceId) }}>
-                <View style={{ height: 'auto', flex: 1, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', marginBottom: 5 }}>
-                  <Text style={{ fontSize: 20, textTransform: 'capitalize', fontWeight: 'bold', color: '#fff', }}>{val.type}</Text>
-                  <View style={{ width: 20, height: 20, backgroundColor: isActive.idx.includes(idx) && isActive.status ? '#fff' : '#e4e4e7', borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-                    {isActive.idx.includes(idx) && isActive.status && (<AntDesignIcon name='check' size={15} color={'#06b6d4'} />)}
+            services.map((val, idx) => {
+              let displayPrice;
+              if (val.price >= 1000) {
+                let cleanPrice = val.price.toString();
+                displayPrice = `${cleanPrice.substring(0, cleanPrice.length - 3)},${cleanPrice.substring(cleanPrice.length - 3)}`;
+              }
+              else {
+                displayPrice = val.price;
+              }
+
+              return (
+                <Pressable style={{ width: '100%', backgroundColor: '#fff', borderWidth: 1.2, borderColor: isActive.idx.includes(idx) && isActive.status ? '#06b6d4' : '#f2f2f2', borderRadius: 8, padding: 15, elevation: 1, shadowRadius: 8, shadowOffset: .2 }} key={idx} onPress={() => { selectServiceEvent(idx, val.serviceId) }}>
+                  <View style={{ height: 'auto', flex: 1, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', marginBottom: 5 }}>
+                    <Text style={{ fontSize: 17, textTransform: 'capitalize', fontWeight: '500', color: '#3f3f46', }}>{val.type}</Text>
+                    <View style={{ width: 20, height: 20, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+                      {isActive.idx.includes(idx) && isActive.status && (<AntDesignIcon name='check' size={15} color={'#06b6d4'} />)}
+                    </View>
                   </View>
-                </View>
-                <Text style={{ color: '#fff', fontSize: 12 }}>Total estimation: Php {val.price}</Text>
-                <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#0e7490', }}>Service time: {val.duration === "01:00:00" ? `${moment.duration(val.duration).asHours()}hr` : `${moment.duration(val.duration).asMinutes()} min`}</Text>
-                {/* <View style={{marginTop:10, flex:1, justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
-                                        <Text style={{color: '#fff', fontSize:12}}>See more</Text>
-                                        <AntDesignIcon name='down' size={15} color={'#fff'} />
-                                    </View> */}
-              </Pressable>
-            ))
+                  <Text style={{ color: '#a1a1aa', fontSize: 13 }}>Estimated Price: <Text style={{ fontWeight: "500", color: "#06b6d4" }}>P {displayPrice}</Text></Text>
+                  <Text style={{ color: '#a1a1aa', fontSize: 13 }}>Estimated Service Time: <Text style={{ fontWeight: "500", color: "#06b6d4" }}>{val.duration === "01:00:00" ? `${moment.duration(val.duration).asHours()} hour` : `${moment.duration(val.duration).asMinutes()} minutes`}</Text></Text>
+                  {/* <View style={{marginTop:10, flex:1, justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
+                                            <Text style={{color: '#fff', fontSize:12}}>See more</Text>
+                                            <AntDesignIcon name='down' size={15} color={'#fff'} />
+                                        </View> */}
+                </Pressable>
+              )
+            })
           }
           {/* <Pressable style={{width:'100%', height:'auto', backgroundColor:'#06b6d4', borderRadius:10, padding:20, }} >
                                     <View style={{height:'auto',  flex:1,justifyContent:'space-between', alignItems:'flex-start', flexDirection:'row', marginBottom:5}}>
@@ -101,10 +112,9 @@ const Services = React.memo(({ navigation, appointmentDetails, setAppointmentDet
                                     <Text style={{color:'#fff', fontSize:12}}>Total estimation: Php 500</Text>
                                     <Text style={{fontSize:10, fontWeight:'bold',color:'#0e7490',}}>Service time: 1hr</Text>
                                 </Pressable> */}
-
         </View>
-      </ScrollView>
-      <View style={{ width: '100%', padding: 10, position: 'relative' }}>
+      </ScrollView >
+      <View style={{ width: '100%', padding: 20, position: 'relative' }}>
         <Button title='Continue' bgColor='#06b6d4' textColor='#fff' onPress={buttonContinue} />
       </View>
     </>
