@@ -13,6 +13,7 @@ import Details from "./ViewDetails";
 import Loader from "../../components/Loader";
 import Drawer from "../../components/DentistDrawer";
 import PatientHistory from "./PatientHistory";
+import { fetchAllInsurance, } from '../../redux/action/InsuranceAction';
 
 function Index({ navigation }) {
   const dispatch = useDispatch();
@@ -29,7 +30,8 @@ function Index({ navigation }) {
     const token = await AsyncStorage.getItem("token");
     dispatch(fetchAppointment());
     dispatch(fetchAllPatient());
-    dispatch(fetchServices())
+    dispatch(fetchServices());
+    dispatch(fetchAllInsurance());
     dispatch(fetchActiveDentist(token));
   }
   useEffect(()=>{fetchData();},[]);

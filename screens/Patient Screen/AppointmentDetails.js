@@ -9,12 +9,11 @@ const { height, width } = Dimensions.get('screen');
 
 const AppointmentDetails = React.memo(({ navigation, appointmentId }) => {
   const { appointment } = useSelector((state) => { return state.appointment });
-  console.log(appointment)
 
   const details = appointment.find((val) => val.appointmentId === appointmentId);
   const timeDuration = moment.duration(moment(details?.timeEnd, "HH:mm:ss").diff(moment(details?.timeStart, "HH:mm:ss")));
 
-  return details && (
+  return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f2f2f2", alignItems: "center", justifyContent: "center" }}>
 
       {/* //~ QR CODE WRAPPER */}

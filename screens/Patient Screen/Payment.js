@@ -293,7 +293,7 @@ const Payment = ({navigation}) =>{
                                             <Text style={{fontSize:14, fontWeight:'bold',color:"#71717a"}}>{moment(val.appointment.appointmentDate).format("dddd, MMMM D YYYY")}</Text>
 
                                             {
-                                            (val.method!=="cash" && val.status === "PENDING") 
+                                            ((val.method!=="cash" && val.method!=="hmo") && val.status === "PENDING") 
                                             && val.appointment.status !== "PENDING"
                                             && (<Text style={{color:"#0891b2",fontSize:12,textDecorationLine:'underline'}} onPress={()=>{
                                                 setSelectedPayment({

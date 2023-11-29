@@ -16,7 +16,6 @@ import { styles } from '../../style/styles';
 import moment from 'moment';
 import AppointmentCard from '../../components/AppointmentCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAnnouncement } from '../../redux/action/AnnouncementAction';
 import { fetchServices } from '../../redux/action/ServicesAction';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,13 +30,13 @@ import UpdateModal from '../../components/UpdateModal';
 import Carousel from 'react-native-reanimated-carousel';
 
 // New array added
-const images = [
-  require('../../assets/announcements/a1.png'),
-  require('../../assets/announcements/a2.png'),
-  require('../../assets/announcements/a3.png'),
-  require('../../assets/announcements/a4.png'),
-  require('../../assets/announcements/a5.png'),
-];
+// const images = [
+//   require('../../assets/announcements/a1.png'),
+//   require('../../assets/announcements/a2.png'),
+//   require('../../assets/announcements/a3.png'),
+//   require('../../assets/announcements/a4.png'),
+//   require('../../assets/announcements/a5.png'),
+// ];
 
 const socket = io.connect(SOCKET_LINK);
 const { height, width } = Dimensions.get('screen');
@@ -48,13 +47,12 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
   const { patient } = useSelector((state) => state.patient);
   const { appointment } = useSelector((state) => state.appointment);
-  const { announcement } = useSelector((state) => state.announcement);
+  const { announcement }  = useSelector((state) => state.announcement);
   const { services } = useSelector((state) => state.services);
   const { dentists } = useSelector((state) => state.dentist);
   const notificationCounter = useSelector((state) => state.notification?.notification?.filter((val) => val.status === "UNREAD"));
   const notification = useSelector((state) => state.notification?.notification);
-
-  const [notificationUnreadCounter, setNotificationCounter] = useState(null);
+  const images = announcement?.map((val)=>val.picture);
   const [modal, setModalShow] = useState({ id: '', isShow: false });
   const [updateSchedule, setUpdateSchedule] = useState({ data: null, isShow: false, });
   const [showPopUp, setShowPopUp] = useState(false);
@@ -95,10 +93,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     navigation.navigate('Summary');
   };
 
-  const handleBackPress = () => {
-    // Disable back button functionality
-    return true;
-  };
+  const handleBackPress = () => { return true; };
 
   const handleShowPopUp = (item) => {
     setSelectedItem(item);
@@ -106,22 +101,14 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   }
 
   useEffect(() => {
-    dispatch(fetchAnnouncement());
     dispatch(fetchServices());
     dispatch(fetchDentists());
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
     // Clean up the event listener when the component is unmounted
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
   }, []);
-  // useEffect(()=>{
-  //   if(notification?.length>0){
-  //     const data = notification.filter((val)=>val.status==="UNREAD");
-  //     setNotificationCounter(data.length);
-  //   }
-  // },[notification])
 
   const renderItem = ({ item }) => {
     let displayPrice;
@@ -251,23 +238,55 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
               <Text style={{ backgroundColor: '#ef4444', color: 'white', width: 10, height: 10, position: 'absolute', top: 5, right: 5, textAlign: 'center', borderRadius: 100 }}></Text>
             }
           </Pressable>
-          {/* //~ NOTIFICATION */}
-        </View>
-
-
-        {/*//~ CAROUSEL CONTAINER */}
-        <View style={styles.carouselContainer}>
-
-          {/*//^ CAROUSEL LOGIC */}
-          <Carousel loop width={width} mode='parallax' modeConfig={{ parallaxScrollingScale: 0.9, parallaxScrollingOffset: 50, }} height={width / 2} autoPlay={true} data={images} scrollAnimationDuration={1000}
+        </View> 
+        {/* Body */}
+        <View
+          style={{
+            width: '100%',
+            height: 250,
+            backgroundColor: 'white',
+            padding: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            rowGap: 10,
+            position: 'relative',
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          }}
+        >
+          {/**ADDED CAROUSEL LOGIC */}
+          {
+            images.length > 0 && <Carousel
+            loop
+            width={width}
+            height={width / 2}
+            autoPlay={true}
+            data={images}
+            scrollAnimationDuration={1000}
+            onSnapToItem={(index) => ('current index: ', index)}
             renderItem={({ item }) => (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain', borderRadius: 20 }} source={item} />
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  style={{
+                    width: '80%',
+                    height: '100%',
+                    resizeMode: 'contain',
+                    borderRadius: 20,
+                  }}
+                  source={{uri:item}}
+                />
               </View>
             )}
           />
-          {/*//^ CAROUSEL LOGIC */}
-
+          }
         </View>
         {/* //~ CAROUSEL CONTAINER */}
 

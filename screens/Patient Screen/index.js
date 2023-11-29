@@ -35,6 +35,8 @@ import { io } from "socket.io-client";
 import { useRef } from 'react';
 import HealthInsurance from './HealthInsurance';
 import { fetchInsurance } from '../../redux/action/InsuranceAction';
+import { fetchAnnouncement } from '../../redux/action/AnnouncementAction';
+import { fetchAdmin } from '../../redux/action/AdminAction';
 
 const socket = io(SOCKET_LINK);
 const navLinks = [
@@ -75,17 +77,19 @@ const Main = React.memo(({ navigation }) => {
   };
 
 
-  const fetchAppointmentData = async () => {
+  const fetchAppointmentData = () => {
     try {
-      await dispatch(fetchAppointment(patientLogin.current));
-      await dispatch(fetchPatientMessage(patientLogin.current));
-      await dispatch(fetchPayment(patientLogin.current));
-      await dispatch(fetchInstallmentByPatient(patientLogin.current));
-      await dispatch(fetchPrescription(patientLogin.current))
-      await dispatch(fetchAllNotification(patientLogin.current))
-      await dispatch(fetchInsurance(patientLogin.current))
-      await dispatch(fetchSchedule());
-      await dispatch(fetchAppointmentFee());
+        dispatch(fetchAppointment(patientLogin.current));
+        dispatch(fetchPatientMessage(patientLogin.current));
+        dispatch(fetchPayment(patientLogin.current));
+        dispatch(fetchInstallmentByPatient(patientLogin.current));
+        dispatch(fetchPrescription(patientLogin.current))
+        dispatch(fetchAllNotification(patientLogin.current))
+        dispatch(fetchInsurance(patientLogin.current))
+        dispatch(fetchSchedule());
+        dispatch(fetchAppointmentFee());
+        dispatch(fetchAnnouncement());
+        dispatch(fetchAdmin());
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
