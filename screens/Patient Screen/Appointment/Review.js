@@ -13,6 +13,7 @@ import { SOCKET_LINK } from '../../../config/APIRoutes';
 
 const socket = io.connect(SOCKET_LINK);
 function Review({navigation, appointmentDetails}) {
+  console.log(appointmentDetails);
   const {height} = Dimensions.get("screen");
   const dispatch = useDispatch();
   const [isAvailable, setModal] = useState(false);

@@ -14,7 +14,6 @@ import { styles } from '../../style/styles';
 import moment from 'moment';
 import AppointmentCard from '../../components/AppointmentCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAnnouncement } from '../../redux/action/AnnouncementAction';
 import { fetchServices } from '../../redux/action/ServicesAction';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,13 +27,13 @@ import UpdateModal from '../../components/UpdateModal';
 import Carousel from 'react-native-reanimated-carousel';
 
 // New array added
-const images = [
-  require('../../assets/announcements/a1.png'),
-  require('../../assets/announcements/a2.png'),
-  require('../../assets/announcements/a3.png'),
-  require('../../assets/announcements/a4.png'),
-  require('../../assets/announcements/a5.png'),
-];
+// const images = [
+//   require('../../assets/announcements/a1.png'),
+//   require('../../assets/announcements/a2.png'),
+//   require('../../assets/announcements/a3.png'),
+//   require('../../assets/announcements/a4.png'),
+//   require('../../assets/announcements/a5.png'),
+// ];
 
 const socket = io.connect(SOCKET_LINK);
 
@@ -43,7 +42,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   const { height, width } = Dimensions.get('screen');
   const { patient } = useSelector((state) => state.patient);
   const { appointment } = useSelector((state) => state.appointment);
-  const { announcement } = useSelector((state) => state.announcement);
+  const { announcement }  = useSelector((state) => state.announcement);
   const { services } = useSelector((state) => state.services);
   const { dentists } = useSelector((state) => state.dentist);
   const notificationCounter = useSelector((state) => state.notification?.notification?.filter((val)=>val.status==="UNREAD"));
@@ -57,9 +56,11 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     data: null,
     isShow: false,
   });
+  const images = announcement?.map((val)=>val.picture);
 
   const currentDate = moment(new Date()).format('LL');
   const filteredTodaysAppointment = appointment.slice();
+
   const todaysAppointment = filteredTodaysAppointment.filter((val) => {
     return (
       moment(val.appointmentDate, 'YYYY-MM-DD').isSame(moment(), 'day') &&
@@ -97,11 +98,9 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchAnnouncement());
     dispatch(fetchServices());
     dispatch(fetchDentists());
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
     // Clean up the event listener when the component is unmounted
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
@@ -263,7 +262,8 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
           }}
         >
           {/**ADDED CAROUSEL LOGIC */}
-          <Carousel
+          {
+            images.length > 0 && <Carousel
             loop
             width={width}
             height={width / 2}
@@ -286,11 +286,12 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
                     resizeMode: 'contain',
                     borderRadius: 20,
                   }}
-                  source={item}
+                  source={{uri:item}}
                 />
               </View>
             )}
           />
+          }
         </View>
         <ScrollView>
           <View style={{ height: 'auto', width: '100%', padding: 10, display: 'flex', gap: 5, marginTop: 5 }}>

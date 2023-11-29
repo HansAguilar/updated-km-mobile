@@ -19,11 +19,17 @@ function TreatmentModal({setModal,treatmentData}) {
     const [date, setDate] = useState(new Date());
     const dateRef = useRef("");
     const dispatch = useDispatch();
-    const installment = useSelector((state)=>state.payment.payment?.filter((val)=>val.type === "installment"))
+    const installment = useSelector((state)=>state.payment.payment?.filter((val)=>val.type === "installment"));
+    const hmo = useSelector((state)=>state.insurance.allInsurance.filter((val)=>val.patient.patientId===treatmentData.patient.patientId));
+    const [hmoList, setHmoList] = useState(null);
 
     useEffect(()=>{
         dispatch(fetchPayment(treatmentData.patient.patientId));
     },[treatmentData]);
+
+    useEffect(()=>{
+        setHmoList(hmo);
+    },[treatmentData.patient.patientId]);
 
     const [toothChart, setToothChart] = useState([...Array(32)].map((_,idx)=>({
         name:idx+1>9?`${idx+1}`:`0${idx+1}`,
@@ -44,6 +50,11 @@ function TreatmentModal({setModal,treatmentData}) {
     const [paymentType, setPaymentType] = useState("");
     const [totalAmount, setTotalAmount] = useState(treatmentData.dentalServices.reduce((acc,val)=>{return acc+parseInt(val.price)},0));
     const [paymentToggle, setPaymentToggle] = useState(false);
+    const [patientHMO, setPatientHMO] = useState({
+        hmoId:"",
+        hmoName:"",
+        isShow:false
+    });
 
     const handleSearchService = (text) =>{
         const filteredData = services
@@ -105,6 +116,7 @@ function TreatmentModal({setModal,treatmentData}) {
       };
 
     const handleSubmitButton = () =>{
+        // Hans add ka validation dito sa mga empty field
         if(!treatmentValue.treatmentNumberOfDay || !treatmentValue.treatmentDateType ||!dateRef.current||!paymentType){
             // toastFunction("error", "Fill up empty field!")
             Alert.alert("Fill empty field!")
@@ -119,7 +131,8 @@ function TreatmentModal({setModal,treatmentData}) {
             treatmentNumber:treatmentValue.treatmentNumberOfDay,
             treatmentType:treatmentValue.treatmentDateType,
             paymentType:paymentType,
-            amount:totalAmount
+            amount:totalAmount,
+            insuranceId:patientHMO.hmoId
         }
         if(data.dentalServices.length<0 || !data.startOfTreatment || data.treatmentNumber || data.treatmentType || !data.paymentType){
             toastFunction("error","Fill up empty field");
@@ -389,10 +402,55 @@ function TreatmentModal({setModal,treatmentData}) {
                                                 </Text>
                                             )
                                         }
+                                        {
+                                            hmoList.length > 0 && (
+                                                <Text onPress={()=>{
+                                                    setPaymentType("hmo");
+                                                    setPaymentToggle(false);
+                                                }} 
+                                                style={{width:"100%",paddingVertical:8, textAlign:'center',fontSize:12,textTransform:'capitalize'}}
+                                                >
+                                                    HMO
+                                                </Text>
+                                            )
+                                        }
                                     </View>
                                 )
                             }
                         </View>
+                        {/* HMO */}
+                        {
+                            paymentType === "hmo" &&(
+                                <View style={{marginBottom:10}}>
+                                    <Text style={{fontSize:10,fontWeight:"bold",color:"#3f3f46",marginBottom:5}}>Select HMO</Text>
+                                    <Pressable
+                                    style={{height:"auto",borderWidth:0.5,borderColor:"#e4e4e7",paddingVertical:8, paddingHorizontal:10,backgroundColor:"#fafafa",color:"#3f3f46",display:"flex", flexDirection:"row",justifyContent:'space-between', alignItems:'center'}}
+                                    onPress={()=>setPatientHMO({...patientHMO, isShow:true})}
+                                    >
+                                        <Text style={{fontSize:12,textTransform:'capitalize'}}>{patientHMO.hmoName ? patientHMO.hmoName :"Select payment type"}</Text>
+                                        <AntIcon name='down' size={12} color={"black"} />
+                                    </Pressable>
+                                    {
+                                        patientHMO.isShow && (
+                                            <View style={{width:"100%",height:"auto",borderWidth:1, borderColor:"#e4e4e7"}}>
+                                                {
+                                                    hmoList.map((val,idx)=>(
+                                                        <Text key={idx} onPress={()=>{
+                                                            setPatientHMO({...patientHMO, hmoName:val.card, hmoId:val.insuranceId,isShow:false})
+                                                            }} 
+                                                            style={{width:"100%",paddingVertical:8, textAlign:'center',fontSize:12,textTransform:'capitalize'}}
+                                                            >
+                                                            {val.card}
+                                                        </Text>
+                                                    ))
+                                                }
+                                            </View>
+                                        )
+                                    }
+                                </View>
+                            )
+                        }
+
                          {/* PAYMENT AMOUNT */}
                          <View style={{marginBottom:10}}>
                             <Text style={{fontSize:10,fontWeight:"bold",color:"#3f3f46",marginBottom:5}}>Total Amount</Text>

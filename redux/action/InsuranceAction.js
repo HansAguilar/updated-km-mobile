@@ -1,14 +1,14 @@
 import axios from "axios";
-import { CREATE_INSURANCE_SUCCESS, DELETE_INSURANCE_SUCCESS, FETCH_ALL_INSURANCE_FAILED, FETCH_ALL_INSURANCE_REQUEST, FETCH_INSURANCE_FAILED, FETCH_INSURANCE_REQUEST, FETCH_INSURANCE_SUCCESS, UPDATE_INSURANCE_SUCCESS } from "../ActionType";
+import { CREATE_INSURANCE_SUCCESS, DELETE_INSURANCE_SUCCESS, FETCH_ALL_INSURANCE_FAILED, FETCH_ALL_INSURANCE_REQUEST, FETCH_ALL_INSURANCE_SUCCESS, FETCH_INSURANCE_FAILED, FETCH_INSURANCE_REQUEST, FETCH_INSURANCE_SUCCESS, UPDATE_INSURANCE_SUCCESS } from "../ActionType";
 import { HMO_LINK } from "../../config/APIRoutes";
 
 export const fetchAllInsurance = () =>{
     return async dispatch=>{
         try {
             dispatch({type: FETCH_ALL_INSURANCE_REQUEST});
-            const response = await axios.get(`${HMO_LINK}/}`);
+            const response = await axios.get(`${HMO_LINK}/`);
             dispatch({
-                type: FETCH_ALL_INSURANCE_REQUEST,
+                type: FETCH_ALL_INSURANCE_SUCCESS,
                 payload:response.data
             })
         } catch (error) {

@@ -204,7 +204,19 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
       timeEnd: end,
       timeSubmitted: moment().format("HH:mm:ss")
     })
-    navigation.navigate("Payment");
+    if( appointmentDetails.totalAmount==0){
+      setAppointmentDetails({
+        ...appointmentDetails,
+        type: "free",
+        method: "free",
+        timeStart: value,
+        timeEnd: end,
+        timeSubmitted: moment().format("HH:mm:ss")
+      })
+      navigation.navigate("Review");
+    }else{
+      navigation.navigate("Payment");
+    }
   }
 
   const calculateTotalTime = (value) => {

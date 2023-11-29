@@ -1,4 +1,4 @@
-import { ADMIN_SEND_MESSAGE_SUCCESS, CREATE_MESSAGE_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, RESPONSE_MESSAGE_SUCCESS, SEND_MESSAGE_SUCCESS } from '../ActionType';
+import { ADMIN_SEND_MESSAGE_SUCCESS, CREATE_MESSAGE_SUCCESS, CREATE_NEW_MESSAGE_SUCCESS, FETCH_MESSAGE_FAILED, FETCH_MESSAGE_REQUEST, FETCH_MESSAGE_SUCCESS, RESPONSE_MESSAGE_SUCCESS, SEND_MESSAGE_SUCCESS } from '../ActionType';
 
 const reducer = (state = {}, action) => {
     switch (action.type) {
@@ -49,7 +49,12 @@ const reducer = (state = {}, action) => {
                 message: state.message.length > 0? [...state.message, action.payload]:[action.payload],
                 loading:false
             }
-
+        case CREATE_NEW_MESSAGE_SUCCESS:
+                return{ 
+                    ...state, 
+                    message:  [...state.message, action.payload],
+                    loading:false
+            }
         case FETCH_MESSAGE_FAILED:
             return { ...state, error: action.error, loading: false };
         default: return state;
