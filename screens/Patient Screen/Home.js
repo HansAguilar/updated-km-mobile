@@ -292,7 +292,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
         {/* //~ DASHBOARD CONTAINER */}
         <ScrollView>
-          <View style={{ backgroundColor: '#fff', padding: 10, flexDirection: 'column', gap: 16 }}>
+          <View style={{ backgroundColor: '#f2f2f2', padding: 10, flexDirection: 'column', gap: 16 }}>
 
             {/* //~ FEATURED SERVICES */}
             <View style={{ height: 'auto', width: '100%', display: 'flex', gap: 8 }}>

@@ -189,8 +189,8 @@ function ViewDetails({ navigation }) {
 
 
 					<View style={{ backgroundColor: "#fff", width: "90%", padding: 20, borderRadius: 8, gap: 14, marginVertical: 20, elevation: 1 }}>
-						<View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}>
-							<Text style={{ color: "#06b6d4", fontWeight: 'bold', textDecorationLine: 'underline' }} onPress={() => navigation.navigate("HMO")}>Add HMO</Text>
+						<View style={{ borderColor: "#06a9c6", borderWidth: 1, width: 100, alignItems: "center", paddingVertical: 4, paddingHorizontal: 8, marginLeft: "auto", borderRadius: 4 }}>
+							<Text style={{ color: "#06b6d4", fontWeight: 'bold', textAlign: "right" }} onPress={() => navigation.navigate("HMO")}>Add HMO</Text>
 						</View>
 
 						{/* Firstname */}

@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, Dimensions, Pressable, } from 'react-native';
+import { View, Text, Dimensions, Pressable, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { styles } from "../../style/styles";
+import InputText from '../../components/InputText';
 import moment from 'moment';
 import { useState } from 'react';
-import TextInput from "../../components/InputText";
 import { createPrescription } from "../../redux/action/PrescriptionAction";
 import ToastFunction from "../../config/toastConfig";
 import Toast from 'react-native-toast-message';
 import { ScrollView } from 'react-native-gesture-handler';
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 function Prescription({ setSideNavShow, navigation }) {
   const patient = useSelector((state) => { return state.patient.patientList; });
@@ -50,10 +51,15 @@ function Prescription({ setSideNavShow, navigation }) {
 
   const handleChange = (name, value) => {
     if (name === "patientName") {
-      const filteredPatient = patient.filter((val) => (val.firstname + val.lastname).toLowerCase().includes(value.toLowerCase()));
-      setSuggestion(filteredPatient);
+      filterPatients(value);
     }
-    setData({ ...data, [name]: value });
+
+    setData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  const filterPatients = (value) => {
+    const filteredPatient = patient.filter((val) => (val.firstname + val.lastname).toLowerCase().includes(value.toLowerCase()));
+    setSuggestion(filteredPatient);
   }
 
   const handleSubmit = () => {
@@ -92,55 +98,61 @@ function Prescription({ setSideNavShow, navigation }) {
 
       <ScrollView style={{ ...styles.containerGray, height: height, width: width, position: 'relative', padding: 20, marginBottom: 50, zIndex: 0 }}>
 
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Add Prescription</Text>
-
         {/* PATIENT */}
         <View style={{ marginBottom: 10, marginTop: 10 }}>
-          <Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Patient</Text>
-          <TextInput
-            value={data.patientName}
-            name="patientName"
-            onChangeText={handleChange}
-            style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46" }} />
 
-          <View style={{ width: "100%", height: "auto", padding: 5 }}>
+          <View style={{ width: "100%", gap: 4, }}>
+            <Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Patient Name</Text>
+            <TextInput onChangeText={(value) => handleChange("patientName", value)} name="patientName" value={data.patientName} placeholder="Search patient" style={style.inputTextStyle} />
           </View>
+
           {
             suggestion.length > 0 && data.patientName ?
               suggestion.map((val, idx) => (
-                <Pressable style={{ backgroundColor: "#fff", marginBottom: 10, paddingVertical: 10, paddingHorizontal: 10, borderRadius: 10 }} key={idx}
+                <Pressable style={{ marginTop: 2, backgroundColor: "#cef6fd", borderBottomLeftRadius: 4, borderBottomRightRadius: 4, padding: 10, borderBottomColor: "#06b6d4", borderBottomWidth: 1 }} key={idx}
                   onPress={() => {
                     setData({ ...data, patient: val.patientId, patientName: `${val.firstname} ${val.lastname}` });
                     setSuggestion([]);
                   }}
                 >
-                  <Text >{val.firstname} {val.lastname}</Text>
+                  <Text style={{ color: "#06b6d4" }}>{val.firstname} {val.lastname}</Text>
                 </Pressable>
               ))
               : !data.patientName && suggestion.length < 1 ?
-                <View style={{ marginBottom: 10, paddingVertical: 10, paddingHorizontal: 10, borderRadius: 10 }}>
-                  <Text >No existing patient</Text>
+                <View style={{ marginTop: 2, borderBottomLeftRadius: 4, borderBottomRightRadius: 4, padding: 10, backgroundColor: "#fce9e9", borderBottomColor: "#dd2222", borderBottomWidth: 1 }}>
+                  <Text style={{ color: "#dd2222" }}>No existing patient</Text>
                 </View>
                 : <Text></Text>
           }
         </View>
 
+
+        <Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Write a medicine</Text>
         {/* Medicine Selection */}
-        <View style={{ width: "100%", height: "auto", display: 'flex', rowGap: 10, marginBottom: 10 }}>
+        <View style={{ width: "100%", rowGap: 10, marginBottom: 10, marginTop: 4 }}>
           {
-            descriptionMenu.map((val, idx) => (
+            descriptionMenu?.map((val, idx) => (
               <Pressable
                 key={idx}
-                style={{ backgroundColor: "white", paddingVertical: 10, paddingHorizontal: 10, height: "auto" }}
+                style={{ backgroundColor: "#07bedf", paddingVertical: 10, paddingHorizontal: 10, gap: 6 }}
                 onPress={() => selectedDescriptionMenu(idx)}
               >
-                <Text>{val.medicineName}</Text>
+                <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
+                  <Text style={{ fontSize: 14, fontWeight: "500", color: "#fff" }}>{val.medicineName}</Text>
+                  <SimpleLineIcons name='arrow-up' size={15} color="#fff" />
+                </View>
                 {
                   val.isSelect && (
-                    <View style={{ backgroundColor: "#f3f4f6", padding: 10, display: 'flex', rowGap: 5 }}>
+                    <View style={{ padding: 10, rowGap: 5 }}>
 
                       {/* CAPSULE NO. */}
-                      <TextInput
+                      {/* <TextInput onChangeText={(name, text) => handleDescriptionMenu("capsuleNo", idx, text)} name="capsuleNo" value={val.capsuleNo} placeholder="Enter Capsule no." style={style.inputTextStyle} keyboardType={"phone-pad"} />
+
+                      <TextInput onChangeText={(name, text) => handleDescriptionMenu("hour", idx, text)} name="hour" value={val.hour} placeholder="Enter number of hours" style={style.inputTextStyle} keyboardType={"phone-pad"} />
+
+                      <TextInput onChangeText={(name, text) => handleDescriptionMenu("days", idx, text)} name="days" value={val.days} placeholder="Enter days" style={style.inputTextStyle} keyboardType={"phone-pad"} /> */}
+
+                      <InputText
                         value={val.capsuleNo}
                         name="capsuleNo"
                         onChangeText={(name, text) => handleDescriptionMenu(name, idx, text)}
@@ -150,7 +162,7 @@ function Prescription({ setSideNavShow, navigation }) {
                       />
 
                       {/* Hours */}
-                      <TextInput
+                      <InputText
                         value={val.hour}
                         name="hour"
                         onChangeText={(name, text) => handleDescriptionMenu(name, idx, text)}
@@ -160,7 +172,7 @@ function Prescription({ setSideNavShow, navigation }) {
                       />
 
                       {/* Days */}
-                      <TextInput
+                      <InputText
                         value={val.days}
                         name="days"
                         onChangeText={(name, text) => handleDescriptionMenu(name, idx, text)}
@@ -176,7 +188,7 @@ function Prescription({ setSideNavShow, navigation }) {
           }
         </View>
 
-        <Text style={{ width: "100%", backgroundColor: "#06b6d4", color: "#fff", borderRadius: 10, paddingVertical: 10, textAlign: 'center' }} onPress={handleSubmit}>Submit</Text>
+        <Text style={{ width: "100%", backgroundColor: "#06b6d4", color: "#fff", fontWeight: "bold", borderRadius: 4, paddingVertical: 10, marginTop: 20, textAlign: 'center' }} onPress={handleSubmit}>Send prescription</Text>
 
       </ScrollView>
       <Toast />
@@ -184,4 +196,13 @@ function Prescription({ setSideNavShow, navigation }) {
   )
 }
 
-export default React.memo(Prescription)
+export default React.memo(Prescription);
+
+const style = {
+  inputTextStyle: {
+    borderColor: "#e6e6e6",
+    borderWidth: 1, padding: 4,
+    borderRadius: 4, paddingLeft: 10,
+    backgroundColor: "#fff"
+  }
+}

@@ -78,7 +78,7 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
           <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>4</Text>
-            <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
+            <Text style={{ color: '#fff', fontSize: 15 }}>Appointments</Text>
           </View>
 
           <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
