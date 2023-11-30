@@ -23,7 +23,7 @@ const Payment = ({navigation}) =>{
     const payment  = useSelector((state)=>{return state.payment.payment});
     
     // const { installment } = useSelector((state)=>{ return state.installment });
-    const installment = payment.filter((val)=> val.type==="installment").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
+    const installment = payment.filter((val)=> val.type==="installment" && val.status==="PENDING").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
     const [selectedPayment, setSelectedPayment] = useState({
         id:"",
         isActive: false,

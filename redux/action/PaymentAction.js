@@ -18,6 +18,19 @@ export const fetchPayment = (id) =>{
         }
     }
 }
+export const dentistFetchPayment = (id,setLoading) =>{
+    return async dispatch =>{
+        try {
+            dispatch({type: FETCH_PAYMENT_REQUEST})
+            const response = await axios.get(`${PAYMENT_URL}/all/${id}`);
+            const filteredAppointment = response.data.filter((val)=>val.status!=="CANCELLED"||val.status!=="FAILED");
+            dispatch({type:FETCH_PAYMENT_SUCCESS, payload:filteredAppointment});
+            setLoading(false);
+        } catch (error) {
+            dispatch({type:FETCH_PATIENT_FAILED, error:error.response && error.response.data.message});
+        }
+    }
+}
 
 export const createPayment = (id, data) =>{
     return async dispatch => {

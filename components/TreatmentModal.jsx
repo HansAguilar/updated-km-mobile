@@ -19,7 +19,7 @@ function TreatmentModal({setModal,treatmentData}) {
     const [date, setDate] = useState(new Date());
     const dateRef = useRef("");
     const dispatch = useDispatch();
-    const installment = useSelector((state)=>state.payment.payment?.filter((val)=>val.type === "installment"));
+    const installment = useSelector((state)=>state.payment.payment?.filter((val)=>val.type === "installment" && val.status === "PENDING"));
     const hmo = useSelector((state)=>state.insurance.allInsurance.filter((val)=>val.patient.patientId===treatmentData.patient.patientId));
     const [hmoList, setHmoList] = useState(null);
 
@@ -119,7 +119,10 @@ function TreatmentModal({setModal,treatmentData}) {
         // Hans add ka validation dito sa mga empty field
         if(!treatmentValue.treatmentNumberOfDay || !treatmentValue.treatmentDateType ||!dateRef.current||!paymentType){
             // toastFunction("error", "Fill up empty field!")
-            Alert.alert("Fill empty field!")
+            return Alert.alert("Fill empty field!")
+        }
+        if(patientHMO.isShow && !patientHMO.hmoId){
+            return Alert.alert("Fill hmo field!")
         }
         const data = {
             appointmentId: treatmentData.appointmentId,
@@ -384,6 +387,7 @@ function TreatmentModal({setModal,treatmentData}) {
                                     <View style={{width:"100%",height:"auto",borderWidth:1, borderColor:"#e4e4e7"}}>
                                         <Text onPress={()=>{
                                                     setPaymentType("full-payment");
+                                                    setPatientHMO({...patientHMO, hmoId:"", hmoName:"",isShow:false})
                                                     setPaymentToggle(false);
                                                 }} 
                                                 style={{width:"100%",paddingVertical:8, textAlign:'center',fontSize:12,textTransform:'capitalize'}}
@@ -394,6 +398,7 @@ function TreatmentModal({setModal,treatmentData}) {
                                             totalAmount>7000 && installment.length < 1 && (
                                                 <Text onPress={()=>{
                                                     setPaymentType("installment");
+                                                    setPatientHMO({...patientHMO, hmoId:"", hmoName:"",isShow:false})
                                                     setPaymentToggle(false);
                                                 }} 
                                                 style={{width:"100%",paddingVertical:8, textAlign:'center',fontSize:12,textTransform:'capitalize'}}
