@@ -148,7 +148,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     return (
       <View style={{
         width: '100%', height: height, backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute',
-        top: 0, zIndex: 500, display: 'flex', justifyContent: 'center', alignItems: 'center',
+        top: 0, zIndex: 90, display: 'flex', justifyContent: 'center', alignItems: 'center',
       }}
       >
         <View style={{ width: 300, backgroundColor: 'white', padding: 15, borderRadius: 4, ...styles.shadow, alignItems: 'center' }}>

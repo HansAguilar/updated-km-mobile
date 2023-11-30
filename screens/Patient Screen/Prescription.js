@@ -1,10 +1,10 @@
-import { View, Pressable, Text, ScrollView, Dimensions } from 'react-native';
+import { View, Pressable, Text, ScrollView, Dimensions, Image } from 'react-native';
 import { styles } from '../../style/styles';
-import Title from '../../components/Title';
 import { useDispatch, useSelector } from 'react-redux';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from 'react';
 import moment from 'moment';
+import noprescription from "../../assets/images/prescription.png";
 
 const Prescription = ({ setPrescriptionDetails, navigation }) => {
 	const dispatch = useDispatch();
@@ -19,8 +19,8 @@ const Prescription = ({ setPrescriptionDetails, navigation }) => {
 					{
 						prescription.length <= 0 ?
 							<View style={{ alignItems: "center", gap: 15 }}>
-								<Text style={{ fontSize: 16, fontWeight: "500", color: "#3f3f3f" }}>There is no prescription</Text>
-								<AntDesign name='unknowfile1' size={200} />
+								<Image source={noprescription} style={{ width: 300, height: 300 }} />
+								<Text style={{ fontSize: 16, fontWeight: "500", color: "#3f3f3f" }}>No new prescriptions from your dentist yet!</Text>
 							</View>
 							: (
 								<ScrollView style={{ width: "100%", height: 100, gap: 6, padding: 20 }}>

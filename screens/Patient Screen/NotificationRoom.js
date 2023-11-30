@@ -14,10 +14,10 @@ const NotificationRoom = () => {
 	});
 
 	return (
-		<View style={{ height: "100%", width: width, zIndex: 1, }}>
+		<View style={{ height: "100%", width: width, zIndex: 1 }}>
 			{readNotification.isShow && <NotificationModal notification={readNotification} setNotificationData={setReadNotification} />}
-			<ScrollView style={{}}>
-				<View style={{ gap: 8, alignItems: "center", justifyContent: "center" }}>
+			<ScrollView>
+				<View style={{ gap: 8, height: "100%" }}>
 					{
 						notification.length > 0 ?
 							notification && notification.map((val, idx) => (
@@ -42,7 +42,7 @@ const NotificationRoom = () => {
 								</Pressable>
 							))
 							:
-							<View style={{ padding: 10, alignItems: "center" }}>
+							<View style={{ padding: 20, alignItems: "center" }}>
 								<Image source={empty} style={{ width: 300, height: 300 }} />
 								<View style={{ alignItems: "center", gap: 4 }}>
 									<Text style={{ fontSize: 20, fontWeight: "500", color: "#3f3f3f" }}>Hey there! 👋</Text>

@@ -37,8 +37,6 @@ export default function CustomDrawer({ navigation, isSideNavShow, setSideNavShow
 	const { patient } = useSelector((state) => { return state.patient });
 	const dispatch = useDispatch();
 
-
-
 	const logoutButton = async () => {
 		setSideNavShow(false);
 		dispatch(logoutPatientAccount())
@@ -73,13 +71,13 @@ export default function CustomDrawer({ navigation, isSideNavShow, setSideNavShow
 								setSideNavShow(false);
 								navigation(val.link);
 							}}>
-								<Feather name={val.icon} size={20} style={{ color: val?.active ? '#fff' : "#2b2b2b" }} />
-								<Text style={{ color: val?.active && '#fff', }}>{val.name}</Text>
+								<Feather name={val.icon} size={20} style={{ color: val?.active ? '#fff' : "#3f3f46" }} />
+								<Text style={{ color: val?.active ? '#fff' : "#3f3f46" }}>{val.name}</Text>
 							</Pressable>
 						))
 					}
 					<Pressable style={{ width: '100%', paddingVertical: 8, paddingHorizontal: 8, borderRadius: 10, flexDirection: "row", alignItems: "center", gap: 8, }}>
-						<Feather name="power" size={20} style={{ color: "#2b2b2b" }} />
+						<Feather name="power" size={20} style={{ color: "#3f3f46" }} />
 						<Text onPress={logoutButton}>Logout</Text>
 					</Pressable>
 				</View>

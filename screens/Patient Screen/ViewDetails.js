@@ -121,22 +121,6 @@ function ViewDetails({ navigation }) {
 				<View style={{ width: "100%", height: "auto", maxHeight: 600, backgroundColor: "white", padding: 20, borderRadius: 10, zIndex: -10, gap: 10 }}>
 					<Text style={{ fontSize: 18, fontWeight: "bold" }}>Change New Password</Text>
 
-					{/* <View style={{ width: "100%", gap: 4 }}>
-						<Text style={{ fontSize: 12, color: "#4d4d4d", }}>Password</Text>
-						<View style={{ position: "relative" }}>
-							<TextInput onChangeText={onChangePassword} name="password" value={passwordInfo.password} style={{ ...style.inputTextStyle }}  />
-							<Entypo name={isSecure.password ? 'eye-with-line' : 'eye'} size={15} color="#4b5563" onPress={() => setSecure({ ...isSecure, password: !isSecure.password })} style={{ position: "absolute", bottom: 10, right: 8 }} />
-						</View>
-					</View>
-
-					<View style={{ width: "100%", gap: 4 }}>
-						<Text style={{ fontSize: 12, color: "#4d4d4d" }}>Confirm Password</Text>
-						<View style={{ position: "relative" }}>
-							<TextInput onChangeText={onChangePassword} name="confirmPassword" value={passwordInfo.confirmPassword} style={{ ...style.inputTextStyle }}  />
-							<Entypo name={isSecure.confirmPassword ? 'eye-with-line' : 'eye'} size={15} color="#4b5563" onPress={() => setSecure({ ...isSecure, confirmPassword: !isSecure.confirmPassword })} style={{ position: "absolute", bottom: 10, right: 8 }} />
-						</View>
-					</View> */}
-
 					<View style={{ width: "100%", marginTop: 10 }}>
 						<Text style={{ fontSize: 12, marginBottom: 5 }}>Password</Text>
 						<View style={{
@@ -156,7 +140,6 @@ function ViewDetails({ navigation }) {
 						</View>
 					</View>
 
-					{/* confirm password */}
 					<View style={{ width: "100%", marginTop: 10 }}>
 						<Text style={{ fontSize: 12, marginBottom: 5 }}>Confirm Password</Text>
 						<View style={{
@@ -181,7 +164,6 @@ function ViewDetails({ navigation }) {
 						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", borderRadius: 6 }} onPress={submitPassword}>Save Changes</Text>
 					</View>
 				</View>
-
 			</View>
 		)
 	}
@@ -193,10 +175,10 @@ function ViewDetails({ navigation }) {
 				<ScrollView contentContainerStyle={{ width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 					<Toast />
 
-					<Image source={blurprofile} style={{ backgroundColor: "#06a9c6", position: "absolute", width: "100%", height: 220, top: 0, resizeMode: "cover" }}></Image>
+					<Image source={blurprofile} style={{ backgroundColor: "#06a9c6", position: "absolute", width: "100%", height: 220, top: 0, resizeMode: "cover", zIndex: -20 }}></Image>
 
 					{/* IMAGE */}
-					<View style={{ width: "100%", alignItems: "center", padding: 20 }}>
+					<View style={{ width: "100%", alignItems: "center", padding: 20, zIndex: -10 }}>
 						<Pressable style={{ position: "relative", zIndex: -60, borderRadius: 100 }} onPress={handleImageUpload}>
 							<View style={{ position: "absolute", bottom: 0, right: 5, backgroundColor: "#08d3f7", zIndex: 40, borderRadius: 50, padding: 4 }}>
 								<AntDesign name='plus' size={20} color="#ffff" />
@@ -208,7 +190,6 @@ function ViewDetails({ navigation }) {
 
 					<View style={{ backgroundColor: "#fff", width: "90%", padding: 20, borderRadius: 8, gap: 14, marginVertical: 20, elevation: 1 }}>
 						<View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}>
-							<Text style={{ fontSize: 16, color: "#4d4d4d", fontWeight: 'bold' }}>Update information</Text>
 							<Text style={{ color: "#06b6d4", fontWeight: 'bold', textDecorationLine: 'underline' }} onPress={() => navigation.navigate("HMO")}>Add HMO</Text>
 						</View>
 
@@ -273,8 +254,7 @@ function ViewDetails({ navigation }) {
 	)
 }
 
-export default ViewDetails
-
+export default ViewDetails;
 
 const style = {
 	inputTextStyle: {

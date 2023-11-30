@@ -1,10 +1,7 @@
 import React from 'react';
-import { View, Text, Image, Dimensions, Pressable, Button, } from 'react-native';
+import { View, Text, Dimensions, Pressable, } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { styles } from "../../style/styles";
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import DentistCard from '../../components/DentistCard';
-import Modal from '../../components/TreatmentModal';
 import moment from 'moment';
 import { useState } from 'react';
 import TextInput from "../../components/InputText";
@@ -61,7 +58,7 @@ function Prescription({ setSideNavShow, navigation }) {
 
   const handleSubmit = () => {
     if (!data.patient) {
-      returnToastFunction("error", "Fill up empty field!");
+      return ToastFunction("error", "Fill up empty field!");
     }
     if (descriptionMenu.filter((v) => !v.isSelect).length === 3) {
       return ToastFunction("error", "Please select medicine");

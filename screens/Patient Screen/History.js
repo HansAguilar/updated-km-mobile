@@ -19,9 +19,9 @@ const History = ({ navigation }) => {
 					{
 						appointment.length <= 0 ?
 							<View style={{ alignItems: "center", justifyContent: "center", gap: 4 }}>
+								<Image source={history} style={{ width: 500, height: 300, resizeMode: "contain" }} />
 								<Text style={{ fontSize: 16, fontWeight: "500", color: "#3f3f3f" }}>You have no appointment history.</Text>
 								<Text style={{ fontSize: 16, fontWeight: "500", color: "#3f3f3f" }}>Make an appointment now!</Text>
-								<Image source={history} style={{ width: 500, height: 300, resizeMode: "contain" }} />
 							</View>
 							:
 							(
