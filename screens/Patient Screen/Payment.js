@@ -16,26 +16,24 @@ import { SOCKET_LINK } from '../../config/APIRoutes';
 import nopayment from "../../assets/images/nopayment.png";
 
 const socket = io.connect(SOCKET_LINK);
-const Payment = ({ navigation }) => {
-	const dispatch = useDispatch();
-	const { height } = Dimensions.get("screen");
-	const [page, setPage] = useState("cash")
-	const { patient } = useSelector((state) => { return state.patient });
-	const payment = useSelector((state) => { return state.payment.payment });
-
-	console.log(payment);
-
-	// const { installment } = useSelector((state)=>{ return state.installment });
-	const installment = payment.filter((val) => val.type === "installment").sort((a, b) => moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate ? -1 : 1))))
-	const [selectedPayment, setSelectedPayment] = useState({
-		id: "",
-		isActive: false,
-		status: "",
-		appointmentStatus: "",
-		data: null
-	});
-	const [receipt, setReceipt] = useState("");
-	const [paymentType, setPaymentType] = useState("");
+const Payment = ({navigation}) =>{
+    const dispatch = useDispatch();
+    const { height } = Dimensions.get("screen");
+    const [page, setPage] = useState("cash")
+    const { patient } = useSelector((state)=>{ return state.patient });
+    const payment  = useSelector((state)=>{return state.payment.payment});
+    
+    // const { installment } = useSelector((state)=>{ return state.installment });
+    const installment = payment.filter((val)=> val.type==="installment" && val.status==="PENDING").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
+    const [selectedPayment, setSelectedPayment] = useState({
+        id:"",
+        isActive: false,
+        status:"",
+        appointmentStatus:"",
+        data: null
+    });
+    const [receipt, setReceipt] = useState("");
+    const [paymentType, setPaymentType] = useState("");
 
 	const handleImageUpload = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({

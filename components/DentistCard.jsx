@@ -24,8 +24,7 @@ function DentistCard({header, data,setModal,setTreatmentData,setAppointmentId,na
                                     <Text style={{fontSize:14}}>{val.patient.firstname} {val.patient.lastname}</Text>
                                     <Text style={{fontSize:12,color:"#06b6d4", fontWeight:'bold',textTransform:'capitalize', paddingVertical:3, textDecorationLine:'underline'}}
                                     onPress={()=>{
-                                        setAppointmentId(val.appointmentId);
-                                        navigation.navigate("Patient History")
+                                        navigation.navigate("Patient History", {patientId: val.patient.patientId})
                                     }}>View Patient History</Text>
                                     
                                 </View>

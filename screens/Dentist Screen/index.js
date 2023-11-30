@@ -14,6 +14,7 @@ import Loader from "../../components/Loader";
 import Drawer from "../../components/DentistDrawer";
 import PatientHistory from "./PatientHistory";
 import { fetchAllInsurance, } from '../../redux/action/InsuranceAction';
+import { fetchPayment } from '../../redux/action/PaymentAction';
 
 function Index({ navigation }) {
   const dispatch = useDispatch();
