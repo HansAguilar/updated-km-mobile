@@ -55,16 +55,16 @@ function AppointmentCard({ title, dataList, type, bgColor, borderColor, subColor
                       {/* //~ POP UP MENU */}
                       {
                         showPopUp && idx === selectedItem && (
-                          <SafeAreaView style={{ backgroundColor: '#fff', flexDirection: 'column', position: 'absolute', zIndex: 50, top: -65, right: 15, borderWidth: 1, borderColor: "#e6e6e6", borderRadius: 4, }}>
+                          <SafeAreaView style={{ backgroundColor: '#fff', flexDirection: 'column', position: 'relative', zIndex: 50, top: -65, right: 15, borderWidth: 1, borderColor: "#e6e6e6", borderRadius: 4, }}>
                             {val.typeAppointment === "upcoming" && (
-                              <TouchableHighlight style={{ paddingHorizontal: 50, paddingVertical: 12, borderBottomColor: '#d9d9d9', borderBottomWidth: 1 }} onPress={() =>
+                              <TouchableHighlight style={{ paddingHorizontal: 50, paddingVertical: 12, borderBottomColor: '#d9d9d9', borderBottomWidth: 1, }} onPress={() =>
                                 setUpdateSchedule({ ...update, data: val, isShow: true })
                               }>
                                 <Text style={{ ...cardStyles.buttonText, letterSpacing: 0.2 }}>Update</Text>
                               </TouchableHighlight>
                             )}
                             {moment().format("LL") !== moment(val.appointmentDate).format("LL") && moment(val.appointmentDate).subtract(1, 'day').format("LL") !== moment().format("LL") && (val.status !== "TREATMENT") && (
-                              <TouchableHighlight style={{ paddingHorizontal: 50, paddingVertical: 12 }} onPress={() =>
+                              <TouchableHighlight style={{ paddingHorizontal: 50, paddingVertical: 12, }} onPress={() =>
                                 setModal({ ...modal, id: val.appointmentId, isShow: true })
                               }>
                                 <Text style={{ ...cardStyles.buttonText, color: '#ff6666' }}>Cancel</Text>

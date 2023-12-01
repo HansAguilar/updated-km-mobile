@@ -143,7 +143,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 		dispatch(createTreatment(data));
 		setModal(false);
 	}
-
+	
 	const calculateTotalServiceTime = () => {
 		const timeEnd = dentalServices.map((val) => {
 			return val.duration;
@@ -163,6 +163,15 @@ function TreatmentModal({ setModal, treatmentData }) {
 		return moment.utc(convertTotalTime.asMilliseconds()).format('HH:mm:ss');
 	}
 
+	const daysPerSelection = [
+		{type:"day", number:6 },
+		{type:"week", number:3 },
+		{type:"month", number:12 },
+	]
+	const [daysToggle, setDaysToggle] = useState(false);
+
+	const currentDate = moment();
+  	currentDate.add(1, 'day');
 	return (
 		<View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 			<View style={{ width: "100%", height: 600, maxHeight: 600, backgroundColor: "white", padding: 20, borderRadius: 10, zIndex: -10 }}>
@@ -293,17 +302,6 @@ function TreatmentModal({ setModal, treatmentData }) {
 					<Text style={{ marginVertical: 10, fontWeight: "bold", color: "#3f3f46" }}>Treatment Schedule</Text>
 					<View style={{ paddingHorizontal: 10 }}>
 
-						{/* NUMBER OF TREATMENT */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Number of treatment</Text>
-							<TextInput
-								value={treatmentValue.treatmentNumberOfDay}
-								onChangeText={handleTreatment}
-								keyboardType="numeric"
-								style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46" }}
-							/>
-						</View>
-
 						{/* DATE TYPE */}
 						<View style={{ marginBottom: 10 }}>
 							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Treatment Date Type</Text>
@@ -330,6 +328,47 @@ function TreatmentModal({ setModal, treatmentData }) {
 							}
 						</View>
 
+						{/* NUMBER OF TREATMENT */}
+						{
+							treatmentValue.treatmentDateType && (
+								<View style={{ marginBottom: 10 }}>
+									<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Number of treatment</Text>
+									<Pressable
+										value={treatmentValue.treatmentNumberOfDay}
+										onPress={()=>setDaysToggle(true)}
+										keyboardType="numeric"
+										style={{ borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", }}
+									>
+										<Text style={{fontSize: 12, }}>{treatmentValue.treatmentNumberOfDay ? treatmentValue.treatmentNumberOfDay : "Number of day"}</Text>
+									</Pressable>
+									{daysToggle && (
+									<View>
+									{daysPerSelection
+										.filter((val) => val.type === treatmentValue.treatmentDateType)
+										.map((val,idx) => (
+										<React.Fragment key={idx}>
+											{[...Array(val.number)].map((_, idx) => (
+											<Text
+												key={`${val.type}-${idx + 1}`}
+												onPress={() => {
+												setTreatmentValue({
+													...treatmentValue,
+													treatmentNumberOfDay: idx + 1,
+												});
+												setDaysToggle(false);
+												}}
+											>
+												{idx + 1}
+											</Text>
+											))}
+										</React.Fragment>
+										))}
+									</View>
+								)}
+								</View>
+							)
+						}
+
 						{/* Date start */}
 						<View style={{ marginBottom: 10 }}>
 							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Select starting date</Text>
@@ -340,13 +379,13 @@ function TreatmentModal({ setModal, treatmentData }) {
 										display='spinner'
 										value={date}
 										onChange={onChangeDate}
-										maximumDate={moment().endOf('year').toDate()}
-										minimumDate={moment().add(1, 'day').toDate()} // Exclude the current day
+										maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
+										minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
 										androidMode="calendar"
 										{...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
-										{...(Platform.OS === 'ios' && { maximumDate: moment().endOf('year').toDate() })}
+										{...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
 										{...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
-										{...(Platform.OS === 'android' && { maxDate: moment().endOf('year').toDate() })}
+										{...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
 										{...(Platform.OS === 'android' && { minDate: moment().toDate() })}
 									/>
 								)

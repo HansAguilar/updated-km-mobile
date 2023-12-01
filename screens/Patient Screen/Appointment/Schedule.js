@@ -250,19 +250,19 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
           {
             showPicker && (
               <DateTimePicker
-                mode="date"
-                display='spinner'
-                value={appointmentDetails.date}
-                onChange={onChangeDate}
-                maximumDate={moment().endOf('year').toDate()}
-                minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
-                androidMode="calendar"
-                {...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
-                {...(Platform.OS === 'ios' && { maximumDate: moment().endOf('year').toDate() })}
-                {...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
-                {...(Platform.OS === 'android' && { maxDate: moment().endOf('year').toDate() })}
-                {...(Platform.OS === 'android' && { minDate: moment().toDate() })}
-              />
+              mode="date"
+              display='spinner'
+              value={appointmentDetails.date}
+              onChange={onChangeDate}
+              maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
+              minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
+              androidMode="calendar"
+              {...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
+              {...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
+              {...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
+              {...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
+              {...(Platform.OS === 'android' && { minDate: moment().toDate() })}
+            />
             )
           }
           {

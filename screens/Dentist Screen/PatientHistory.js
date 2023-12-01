@@ -30,25 +30,31 @@ function History({route}) {
             !loading && payment && (
               payment.map((val,idx)=>(
                 <View key={idx} style={{ width:"100%", backgroundColor:"white", marginBottom:10, paddingHorizontal:15, paddingVertical:10 }}>
+                    {/* Appointment Date */}
                     <Text>{moment(val.appointment.appointmentDate).format("MMM DD, YYYY")}</Text>
+
                     {/* Time Start */}
                     <Text>Time start: {moment(val.appointment.timeStart, 'HH:mm:ss').format('h:mm A')}</Text>
+
                     {/* Time End */}
                     <Text>Time start: {moment(val.appointment.timeEnd, 'HH:mm:ss').format('h:mm A')}</Text>
+
                     {/* SERVICES */}
                     <Text>Services</Text>
-                    <View style={{display:'flex', flexDirection:'row',columnGap:10}}>
+                    <View style={{display:'flex', flexDirection:'row',columnGap:10,}}>
                       {
-                        val.appointment.dentalServices.map((v)=>(
-                          <Text>{v.name}</Text>
+                        val.appointment.dentalServices.map((v, idx)=>(
+                          <Text key={idx}>{v.name}</Text>
                         ))
                       }
                     </View>
                     
                     {/* Amount Charge */}
-                    <Text>Amount Charge: {val.amountCharge}</Text>
+                    <Text>Amount Charge: Php. {val.amountCharge.toLocaleString()}</Text>
+
                     {/* Amount Charge */}
-                    <Text>Amount Charge: {val.balance}</Text>
+                    <Text>Amount Charge: Php. {val.balance.toLocaleString()}</Text>
+
                     {/* Amount Charge */}
                     <Text>Status: {val.appointment.status }</Text>
   

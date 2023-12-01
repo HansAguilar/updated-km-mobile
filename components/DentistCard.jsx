@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, ScrollView } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { approvedAppointment } from "../redux/action/AppointmentAction";
 import Octicons from "react-native-vector-icons/Octicons";
@@ -14,7 +14,7 @@ function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentI
 		<View style={{ width: "100%", padding: 15, height: "auto" }}>
 
 			<Text style={{ fontSize: 18, fontWeight: '500', color: '#3f3f46' }}>{header}</Text>
-			<View style={{ width: "100%", height: 300, }}>
+			<ScrollView style={{ width: "100%", height: 200, paddingBottom:50}}>
 				{
 					data.length > 0 ?
 						data.map((val, idx) => (
@@ -70,7 +70,7 @@ function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentI
 							<Text style={{ color: '#a1a1aa', fontSize: 12, fontWeight: 'normal' }}>No appointments scheduled for today.</Text>
 						</View>
 				}
-			</View>
+			</ScrollView>
 		</View>
 	);
 }
