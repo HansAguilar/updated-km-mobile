@@ -187,13 +187,13 @@ const Payment = ({navigation}) =>{
 										paymentType === "e-payment/gcash" ? (
 											<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
 												<Image source={gcashLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
-												<Text style={{ fontSize: 14, color: "#2b2b2b" }}>091234567890</Text>
+												<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09120600101</Text>
 											</View>
 										)
 											: (
 												<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
 													<Image source={paymayaLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
-													<Text style={{ fontSize: 14, color: "#2b2b2b" }}>091234567890</Text>
+													<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09427540968</Text>
 												</View>
 											)
 									}
@@ -304,7 +304,7 @@ const Payment = ({navigation}) =>{
 
 														<View style={{ elevation: 1.2, backgroundColor: "#fff", borderRadius: 4, padding: 10, borderTopColor: val.status === "PENDING" ? "#b6eefc" : "#86f9ae", borderTopWidth: 4 }}>
 															<View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingBottom: 8 }}>
-																<Text style={{ fontSize: 15, fontWeight: "400", color: "#595959" }}>Dr. Jack</Text>
+																<Text style={{ fontSize: 15, fontWeight: "400", color: "#595959" }}>Dr. {val.appointment.dentist.fullname}</Text>
 																<View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
 																	<Text style={{ fontSize: 14, fontWeight: "500", color: "#3f3f3f" }}>Amount:</Text>
 																	<Text style={{ fontSize: 14, fontWeight: "500", color: "#0891b2" }}>₱ {val.totalPayment.toLocaleString()}</Text>

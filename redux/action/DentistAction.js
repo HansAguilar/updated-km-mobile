@@ -53,7 +53,7 @@ export const fetchActiveDentist = (token) =>{
     } 
 }
 
-export const updateDentistInfo = (id, data)=>{
+export const updateDentistInfo = (id, data, toastHandler,navigation)=>{
     return async dispatch=>{
         try {
             const response = await axios.put(`${DENTIST_URL}/update/dentist/login/${id}`,data);
@@ -61,8 +61,10 @@ export const updateDentistInfo = (id, data)=>{
                 type: UPDATE_DENTIST_INFO_SUCCESS,
                 payload: response.data,
             })
+            toastHandler("success", "Update information successfully")
+            navigation.navigate("Dashboard");
         } catch (error) {
-            
+            toastHandler("error", error.response.data.message)
         }
     }
 }

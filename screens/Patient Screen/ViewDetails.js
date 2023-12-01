@@ -22,7 +22,7 @@ function ViewDetails({ navigation }) {
 		address: patient.address,
 		contactNumber: patient.contactNumber,
 		email: patient.email,
-		password: "",
+		password: null,
 	});
 	const [modal, setModal] = useState(false);
 	const dispatch = useDispatch();
@@ -62,20 +62,19 @@ function ViewDetails({ navigation }) {
 
 	const submitButton = () => {
 		if (!data.firstname || !data.lastname || !data.address || !data.contactNumber || !data.email) {
-			return Alert.alert("Fill empty field!");
+			return ToastFunction("error","Fill empty field!");
 		}
 		if (/[^\w\s]/.test(data.fullname)) {
-			return Alert.alert("Invalid characters for fullname!");
+			return ToastFunction("error","Invalid characters for fullname!");
 		}
 		if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(data.email)) {
-			return Alert.alert("Invalid email!");
+			return ToastFunction("error","Invalid email!");
 		}
 		const regex = /^09\d{9}$/;
 		if (!regex.test(data.contactNumber)) {
-			return Alert.alert("Contact number must be 11-digit and must start with 09");
+			return ToastFunction("error","Contact number must be 11-digit and must start with 09");
 		}
-		dispatch(updatePatientInfo(patient.patientId, data));
-		navigation.navigate("Dashboard");
+		dispatch(updatePatientInfo(patient.patientId, data,ToastFunction, navigation));
 	}
 
 	const cancelButton = () => {
@@ -86,8 +85,8 @@ function ViewDetails({ navigation }) {
 
 	const ChangePasswordModal = () => {
 		const [passwordInfo, setPasswordInfo] = useState({
-			password: "",
-			confirmPassword: ""
+			password: null,
+			confirmPassword: null
 		});
 		const [isSecure, setSecure] = useState({
 			password: true,
@@ -196,35 +195,35 @@ function ViewDetails({ navigation }) {
 						{/* Firstname */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>First Name</Text>
-							<TextInput onChangeText={onChangeText} name="firstname" value={data.firstname} style={{ ...style.inputTextStyle }} />
+							<TextInput  name="firstname" value={data.firstname} onChangeText={(value)=>onChangeText("firstname", value)} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Middle Name</Text>
-							<TextInput onChangeText={onChangeText} name="middlename" value={data.middlename} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value)=>onChangeText("middlename", value)} name="middlename" value={data.middlename} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Last Name</Text>
-							<TextInput onChangeText={onChangeText} name="lastname" value={data.lastname} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value)=>onChangeText("lastname", value)} name="lastname" value={data.lastname} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Address */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Address</Text>
-							<TextInput onChangeText={onChangeText} name="address" value={data.address} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value)=>onChangeText("address", value)} name="address" value={data.address} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Contact Number */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Contact Number</Text>
-							<TextInput onChangeText={onChangeText} name="contactNumber" value={data.contactNumber} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value)=>onChangeText("contactNumber", value)} name="contactNumber" value={data.contactNumber} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Email */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Email</Text>
-							<TextInput onChangeText={onChangeText} name="email" value={data.email} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value)=>onChangeText("email", value)} name="email" value={data.email} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{
@@ -247,6 +246,7 @@ function ViewDetails({ navigation }) {
 							<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", borderRadius: 6 }} onPress={submitButton}>Save Changes</Text>
 						</View>
 					</View>
+					<Toast />
 				</ScrollView>
 
 			</View>
