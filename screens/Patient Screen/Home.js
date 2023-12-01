@@ -47,12 +47,12 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
   const { patient } = useSelector((state) => state.patient);
   const { appointment } = useSelector((state) => state.appointment);
-  const { announcement }  = useSelector((state) => state.announcement);
+  const { announcement } = useSelector((state) => state.announcement);
   const { services } = useSelector((state) => state.services);
   const { dentists } = useSelector((state) => state.dentist);
   const notificationCounter = useSelector((state) => state.notification?.notification?.filter((val) => val.status === "UNREAD"));
   const notification = useSelector((state) => state.notification?.notification);
-  const images = announcement?.map((val)=>val.picture);
+  const images = announcement?.map((val) => val.picture);
   const [modal, setModalShow] = useState({ id: '', isShow: false });
   const [updateSchedule, setUpdateSchedule] = useState({ data: null, isShow: false, });
   const [showPopUp, setShowPopUp] = useState(false);
@@ -123,16 +123,15 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     return (
       <View style={{
         padding: 10, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',
-        backgroundColor: '#fff', borderRadius: 6, gap: 5, marginRight: 12, borderWidth: 1, borderColor: "#e6e6e6"
+        backgroundColor: '#0ab1db', borderRadius: 6, gap: 5, marginRight: 12, elevation: .8, shadowRadius: 6, shadowOpacity: .8
       }}>
-        {/* <FontAwesomeIcons name="teeth-open" size={25} color="#fff" /> */}
-        <MaterialCommunityIcons name="tooth-outline" size={25} color="#b3b3b3" />
+        <MaterialCommunityIcons name="tooth-outline" size={25} color="#fff" />
         <View>
-          <Text style={{ textTransform: 'capitalize', fontSize: 14, color: '#666666', fontWeight: '500', letterSpacing: 0.2 }}>
+          <Text style={{ textTransform: 'capitalize', fontSize: 14, color: '#fff', fontWeight: '500', letterSpacing: 0.2 }}>
             {item.type}
           </Text>
-          <Text style={{ textTransform: 'capitalize', fontSize: 12, color: '#08abc4', fontWeight: '400' }}>
-            P {displayPrice}
+          <Text style={{ textTransform: 'capitalize', fontSize: 12, color: '#fff', fontWeight: '400' }}>
+            ₱ {displayPrice}
           </Text>
         </View>
       </View>
@@ -149,7 +148,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
     return (
       <View style={{
         width: '100%', height: height, backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute',
-        top: 0, zIndex: 500, display: 'flex', justifyContent: 'center', alignItems: 'center',
+        top: 0, zIndex: 90, display: 'flex', justifyContent: 'center', alignItems: 'center',
       }}
       >
         <View style={{ width: 300, backgroundColor: 'white', padding: 15, borderRadius: 4, ...styles.shadow, alignItems: 'center' }}>
@@ -238,7 +237,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
               <Text style={{ backgroundColor: '#ef4444', color: 'white', width: 10, height: 10, position: 'absolute', top: 5, right: 5, textAlign: 'center', borderRadius: 100 }}></Text>
             }
           </Pressable>
-        </View> 
+        </View>
         {/* Body */}
         <View
           style={{
@@ -259,33 +258,33 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
           {/**ADDED CAROUSEL LOGIC */}
           {
             images.length > 0 && <Carousel
-            loop
-            width={width}
-            height={width / 2}
-            autoPlay={true}
-            data={images}
-            scrollAnimationDuration={1000}
-            onSnapToItem={(index) => ('current index: ', index)}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Image
+              loop
+              width={width}
+              height={width / 2}
+              autoPlay={true}
+              data={images}
+              scrollAnimationDuration={1000}
+              onSnapToItem={(index) => ('current index: ', index)}
+              renderItem={({ item }) => (
+                <View
                   style={{
-                    width: '80%',
-                    height: '100%',
-                    resizeMode: 'contain',
-                    borderRadius: 20,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
-                  source={{uri:item}}
-                />
-              </View>
-            )}
-          />
+                >
+                  <Image
+                    style={{
+                      width: '80%',
+                      height: '100%',
+                      resizeMode: 'contain',
+                      borderRadius: 20,
+                    }}
+                    source={{ uri: item }}
+                  />
+                </View>
+              )}
+            />
           }
         </View>
         {/* //~ CAROUSEL CONTAINER */}
@@ -293,7 +292,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
         {/* //~ DASHBOARD CONTAINER */}
         <ScrollView>
-          <View style={{ backgroundColor: '#fff', padding: 10, flexDirection: 'column', gap: 16 }}>
+          <View style={{ backgroundColor: '#f2f2f2', padding: 10, flexDirection: 'column', gap: 16 }}>
 
             {/* //~ FEATURED SERVICES */}
             <View style={{ height: 'auto', width: '100%', display: 'flex', gap: 8 }}>

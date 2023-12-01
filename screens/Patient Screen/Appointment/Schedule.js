@@ -69,8 +69,6 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
     }
   };
 
-
-
   const onChangeText = (name, text) => {
     setAppointmentDetails({
       ...appointmentDetails,
@@ -164,6 +162,8 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
 
 
   const timeSelectedButton = (value) => {
+    if (!appointmentDetails.date || !selectedTime) return ToastFunction("error", "Please select a date and time");
+
     const end = calculateTotalTime(value);
     const totalTimeDuration = moment('00:00:00', 'HH:mm:ss');
     let start = moment(value, "HH:mm:ss");
@@ -176,7 +176,7 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
 
     console.log(filteredAppointment.length);
     if (filteredAppointment.length > 0) {
-      return ToastFunction("error", "You have an existing appointment to this date!")
+      return ToastFunction("error", "You have an existing appointment on this date")
     }
 
     while (start.isBefore(moment(end, "HH:mm:ss").add(30, 'minutes'))) {
@@ -211,7 +211,8 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
       timeEnd: end,
       timeSubmitted: moment().format("HH:mm:ss")
     })
-    if( appointmentDetails.totalAmount==0){
+
+    if (appointmentDetails.totalAmount == 0) {
       setAppointmentDetails({
         ...appointmentDetails,
         type: "free",
@@ -221,7 +222,8 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
         timeSubmitted: moment().format("HH:mm:ss")
       })
       navigation.navigate("Review");
-    }else{
+    }
+    else {
       navigation.navigate("Payment");
     }
   }
@@ -326,7 +328,7 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
       </SafeAreaView>
 
       <View style={{ width: '100%', padding: 20, position: 'relative' }}>
-        <Button title='Continue' bgColor='#06b6d4' textColor='#fff' onPress={() => timeSelectedButton(selectedTime)}/>
+        <Button title='Continue' bgColor='#06b6d4' textColor='#fff' onPress={() => timeSelectedButton(selectedTime)} />
       </View>
     </>
   );

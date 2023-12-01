@@ -19,7 +19,7 @@ const NotificationBox = ({ notification, setNotificationData }) => {
         readFunction();
     }, [])
     return data && (
-        <View style={{ height: height, width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ backgroundColor: "white", padding: 20, borderRadius: 6 }}>
                 <View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row" }}>
                     <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: "500" }}>{data.name}</Text>

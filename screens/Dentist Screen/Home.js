@@ -12,17 +12,23 @@ import { FlatList } from 'react-native-gesture-handler';
 
 function Home({ navigation, setSideNavShow, setAppointmentId }) {
   const { activeDentist } = useSelector((state) => { return state.dentist; });
-  const appointment = useSelector(state=>state.appointment.appointment.filter((val)=>val.dentist.dentistId===activeDentist.dentistId));
-  const patient = useSelector((state) => { return state.appointment.appointment.filter((val)=>
-    (val.status !== "DONE" && val.status !== "CANCELLED"&& val.status !== "TREATMENT_DONE")
-    && val.dentist.dentistId === activeDentist.dentistId
-    ); });
-  const treatment = useSelector((state) => { return state.appointment.appointment.filter((val)=>
+  const appointment = useSelector(state => state.appointment.appointment.filter((val) => val.dentist.dentistId === activeDentist.dentistId));
+  const patient = useSelector((state) => {
+    return state.appointment.appointment.filter((val) =>
+      (val.status !== "DONE" && val.status !== "CANCELLED" && val.status !== "TREATMENT_DONE")
+      && val.dentist.dentistId === activeDentist.dentistId
+    );
+  });
+  const treatment = useSelector((state) => {
+    return state.appointment.appointment.filter((val) =>
       val.status === "TREATMENT" && val.dentist.dentistId === activeDentist.dentistId
-      ); });
-  const processing = useSelector((state) => { return state.appointment.appointment.filter((val)=>
-        (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && val.dentist.dentistId === activeDentist.dentistId
-        ); });
+    );
+  });
+  const processing = useSelector((state) => {
+    return state.appointment.appointment.filter((val) =>
+      (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && val.dentist.dentistId === activeDentist.dentistId
+    );
+  });
   const { width, height } = Dimensions.get("screen");
   const [modal, setModal] = useState(false);
   const [treatmentData, setTreatmentData] = useState(null);
@@ -56,36 +62,34 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
         </Pressable> */}
       </SafeAreaView>
 
-      <View style={{ padding: 15, rowGap: 10,}}>
+      <View style={{ padding: 15, rowGap: 10, }}>
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
-
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{patient.length}</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>Patients</Text>
           </View>
 
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{processing.length}</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>For Processing</Text>
           </View>
+        </View>
 
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#fff', fontSize: 20 }}>{treatment.length}</Text>
-            <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
+        <View style={{ flexDirection: 'row', columnGap: 10 }}>
+          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: '#fff', fontSize: 20 }}>4</Text>
+            <Text style={{ color: '#fff', fontSize: 15 }}>Appointments</Text>
           </View>
 
-          <View style={{ flexDirection: 'row', columnGap: 10 }}>
-
-            <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 10, height: 100, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: '#fff', fontSize: 20 }}>4</Text>
-              <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
-            </View>
+          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: '#fff', fontSize: 20 }}>{treatment.length}</Text>
+            <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
           </View>
         </View>
 
       </View>
 
-      <DentistCard header="Current Patient" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
+      <DentistCard header="Today's Patients" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
 
     </SafeAreaView >
   )

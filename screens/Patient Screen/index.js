@@ -79,17 +79,17 @@ const Main = React.memo(({ navigation }) => {
 
   const fetchAppointmentData = () => {
     try {
-        dispatch(fetchAppointment(patientLogin.current));
-        dispatch(fetchPatientMessage(patientLogin.current));
-        dispatch(fetchPayment(patientLogin.current));
-        dispatch(fetchInstallmentByPatient(patientLogin.current));
-        dispatch(fetchPrescription(patientLogin.current))
-        dispatch(fetchAllNotification(patientLogin.current))
-        dispatch(fetchInsurance(patientLogin.current))
-        dispatch(fetchSchedule());
-        dispatch(fetchAppointmentFee());
-        dispatch(fetchAnnouncement());
-        dispatch(fetchAdmin());
+      dispatch(fetchAppointment(patientLogin.current));
+      dispatch(fetchPatientMessage(patientLogin.current));
+      dispatch(fetchPayment(patientLogin.current));
+      dispatch(fetchInstallmentByPatient(patientLogin.current));
+      dispatch(fetchPrescription(patientLogin.current))
+      dispatch(fetchAllNotification(patientLogin.current))
+      dispatch(fetchInsurance(patientLogin.current))
+      dispatch(fetchSchedule());
+      dispatch(fetchAppointmentFee());
+      dispatch(fetchAnnouncement());
+      dispatch(fetchAdmin());
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
@@ -179,22 +179,22 @@ const Main = React.memo(({ navigation }) => {
               <Stack.Screen name='Appointment' options={{ headerShown: false }}>
                 {props => <Appointment dispatch={dispatch}  {...props} />}
               </Stack.Screen>
-              <Stack.Screen name='Payment' options={{ headerShown: false }}>
+              <Stack.Screen name='Payment'>
                 {props => <Payment {...props} />}
               </Stack.Screen>
               <Stack.Screen name='Summary' options={{ headerTitle: "Appointment Details" }}>
                 {props => <AppointmentDetails appointmentId={appointmentId} setAppointmentId={setAppointmentId} {...props} />}
               </Stack.Screen>
-              <Stack.Screen name='ViewDetails'>
+              <Stack.Screen name='Profile'>
                 {props => <ViewDetails {...props} />}
               </Stack.Screen>
               <Stack.Screen name='Notification'>
                 {props => <NotificationRoom {...props} />}
               </Stack.Screen>
-              <Stack.Screen name='History' options={{ headerShown: false }}>
+              <Stack.Screen name='History'>
                 {props => <History {...props} />}
               </Stack.Screen>
-              <Stack.Screen name='Prescription' options={{ headerShown: false }}>
+              <Stack.Screen name='Prescription' >
                 {props => <Prescription setPrescriptionDetails={setPrescriptionDetails} {...props} />}
               </Stack.Screen>
               <Stack.Screen name='Prescription Details' >
