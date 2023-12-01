@@ -18,8 +18,7 @@ function FourthStep({ navigation, details, onChangeText }) {
         navigation.navigate("Step 5");
       }
     } catch (error) {
-      // ToastFunction("error", error.response.data.message);
-      console.log(error);
+      ToastFunction("error", error.response.data.message);
     }
   }
 
@@ -52,7 +51,7 @@ function FourthStep({ navigation, details, onChangeText }) {
           </View>
 
         </View>
-
+        <Toast />
       </ImageBackground>
     </SafeAreaView>
   )

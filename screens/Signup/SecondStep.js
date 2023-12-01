@@ -42,20 +42,6 @@ function SecondStep({ navigation, details, setDetails, onChangeText }) {
     }
   }
 
-  const checkIfEmailExist = async () => {
-    try {
-      const response = await axios.post(`${PATIENT_URL}/checkEmail/${details.email}`);
-      console.log(response);
-
-      if (response.data) {
-        navigation.navigate("Step 3")
-      }
-    } catch (error) {
-      console.log(error);
-      ToastFunction("error", error.response.data.message);
-    }
-  }
-
   const onSubmitButton = async () => {
     console.log(details.email);
     if (!details.address || !details.birthday || !details.email) return ToastFunction("error", "Fill empty field!");
@@ -66,7 +52,6 @@ function SecondStep({ navigation, details, setDetails, onChangeText }) {
         navigation.navigate("Step 3")
       }
     } catch (error) {
-      console.log(error);
       ToastFunction("error", error.response.data.message);
     }
   }

@@ -20,7 +20,6 @@ function History({route}) {
 
     useEffect(()=>{
       dispatch(dentistFetchPayment(patientId, setLoading));
-      console.log(loading);
     },[patientId]);
 
     
