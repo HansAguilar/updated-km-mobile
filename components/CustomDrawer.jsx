@@ -17,7 +17,7 @@ const links = [
 	{
 		name: "Payment",
 		link: "Payment",
-		icon: "credit-card"  
+		icon: "credit-card"
 	},
 	{
 		name: "History",
@@ -56,7 +56,7 @@ export default function CustomDrawer({ navigation, isSideNavShow, setSideNavShow
 					</View>
 
 					<View>
-						<Text style={{ fontSize: 16, fontWeight: '400', color: '#3f3f46' }}>{patient?.firstname} {patient?.lastname}</Text>
+						<Text style={{ fontSize: 16, fontWeight: '400', color: '#3f3f46' }}>{patient?.firstname.length > 14 ? patient?.firstname.substring(0, 14) + "..." : patient?.firstname} {patient?.lastname.length > 8 ? patient?.lastname.substring(0, 8) + "..." : patient?.lastname}</Text>
 						<Text style={{ fontSize: 14, fontWeight: 'bold', color: '#06b6d4' }} onPress={() => {
 							navigation("Profile");
 							setSideNavShow(false);
