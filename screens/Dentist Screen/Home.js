@@ -12,21 +12,27 @@ import { FlatList } from 'react-native-gesture-handler';
 
 function Home({ navigation, setSideNavShow, setAppointmentId }) {
   const { activeDentist } = useSelector((state) => { return state.dentist; });
-  const appointment = useSelector(state => state.appointment.appointment.filter((val) => val.dentist.dentistId === activeDentist.dentistId));
+  const appointment = useSelector(state => state?.appointment?.appointment?.filter((val) => val.dentist.dentistId === activeDentist?.dentistId));
   const patient = useSelector((state) => {
-    return state.appointment.appointment.filter((val) =>
+    return state?.appointment?.appointment?.filter((val) =>
       (val.status !== "DONE" && val.status !== "CANCELLED" && val.status !== "TREATMENT_DONE")
-      && val.dentist.dentistId === activeDentist.dentistId
+      && val.dentist.dentistId === activeDentist?.dentistId
+    );
+  });
+  const consultation = useSelector((state) => {
+    return state?.appointment?.appointment?.filter((val) =>
+      (val.status === "APPROVED" || val.status === "PROCESS")
+      && val.dentist.dentistId === activeDentist?.dentistId
     );
   });
   const treatment = useSelector((state) => {
-    return state.appointment.appointment.filter((val) =>
-      val.status === "TREATMENT" && val.dentist.dentistId === activeDentist.dentistId
+    return state?.appointment?.appointment?.filter((val) =>
+      val.status === "TREATMENT" && val.dentist.dentistId === activeDentist?.dentistId
     );
   });
   const processing = useSelector((state) => {
-    return state.appointment.appointment.filter((val) =>
-      (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && val.dentist.dentistId === activeDentist.dentistId
+    return state?.appointment?.appointment?.filter((val) =>
+      (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && val.dentist.dentistId === activeDentist?.dentistId
     );
   });
   const { width, height } = Dimensions.get("screen");
@@ -77,8 +83,8 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
 
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
           <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: '#fff', fontSize: 20 }}>4</Text>
-            <Text style={{ color: '#fff', fontSize: 15 }}>Appointments</Text>
+            <Text style={{ color: '#fff', fontSize: 20 }}>{consultation.length}</Text>
+            <Text style={{ color: '#fff', fontSize: 15 }}>Consultation</Text>
           </View>
 
           <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>

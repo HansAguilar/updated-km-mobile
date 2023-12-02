@@ -19,7 +19,7 @@ function ViewDetails({ navigation }) {
 		address: activeDentist.address,
 		contactNumber: activeDentist.contactNumber,
 		email: activeDentist.email,
-		password: "",
+		password: null,
 	});
 	const [modal, setModal] = useState(false);
 	const dispatch = useDispatch();
@@ -59,20 +59,19 @@ function ViewDetails({ navigation }) {
 
 	const submitButton = () => {
 		if (!data.fullname || !data.address || !data.contactNumber || !data.email) {
-			return Alert.alert("Fill empty field!");
+			return ToastFunction("error","Fill empty field!");
 		}
 		if (/[^\w\s]/.test(data.fullname)) {
-			return Alert.alert("Invalid characters for fullname!");
+			return ToastFunction("error","Invalid characters for fullname!");
 		}
 		if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(data.email)) {
-			return Alert.alert("Invalid email!");
+			return ToastFunction("error","Invalid email!");
 		}
 		const regex = /^09\d{9}$/;
 		if (!regex.test(data.contactNumber)) {
-			return Alert.alert("Contact number must be 11-digit and must start with 09");
+			return ToastFunction("error","Contact number must be 11-digit and must start with 09");
 		}
-		dispatch(updateDentistInfo(activeDentist.dentistId, data));
-		navigation.navigate("Dashboard");
+		dispatch(updateDentistInfo(activeDentist.dentistId, data, ToastFunction,navigation));
 	}
 
 	const cancelButton = () => {
@@ -82,7 +81,7 @@ function ViewDetails({ navigation }) {
 	const ChangePasswordModal = () => {
 		const [passwordInfo, setPasswordInfo] = useState({
 			password: "",
-			confirmPassword: ""
+			confirmPassword: null
 		});
 		const [isSecure, setSecure] = useState({
 			password: true,
@@ -95,15 +94,15 @@ function ViewDetails({ navigation }) {
 
 		const submitPassword = () => {
 			if (!passwordInfo.confirmPassword || !passwordInfo.password) {
-				return Alert.alert("Fill up empty field!");
+				return ToastFunction("error","Fill up empty field!");
 			}
 
 			if (passwordInfo.password !== passwordInfo.confirmPassword) {
-				return Alert.alert("Mismatch password and confirmPassword!");
+				return ToastFunction("error","Mismatch password and confirmPassword!");
 			}
 
 			if (passwordInfo.password.length <= 7 || passwordInfo.confirmPassword.length <= 7) {
-				return Alert.alert("Password must be 8 characters");
+				return ToastFunction("error","Password must be 8 characters");
 			}
 
 			setData({ ...data, password: passwordInfo.password });
@@ -124,9 +123,9 @@ function ViewDetails({ navigation }) {
 							borderRadius: 4,
 						}}>
 							<InputText
-								onChangeText={onChangePassword}
-								name="password"
+							    name="password"
 								value={passwordInfo.password}
+								onChangeText={onChangePassword}
 								isSecure={isSecure.password}
 								iconName={isSecure.password ? 'eye-with-line' : 'eye'}
 								iconFunction={() => setSecure({ ...isSecure, password: !isSecure.password })}
@@ -189,25 +188,25 @@ function ViewDetails({ navigation }) {
 						{/* DENTIST */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Full Name</Text>
-							<TextInput onChangeText={onChangeText} name="fullname" value={data.fullname} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(text)=>onChangeText("fullname", text)} name="fullname" value={data.fullname} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Address */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Address</Text>
-							<TextInput onChangeText={onChangeText} name="address" value={data.address} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(text)=>onChangeText("address", text)} name="address" value={data.address} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Contact Number */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Contact Number</Text>
-							<TextInput onChangeText={onChangeText} name="contactNumber" value={data.contactNumber} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(text)=>onChangeText("contactNumber", text)} name="contactNumber" value={data.contactNumber} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Email */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Email</Text>
-							<TextInput onChangeText={onChangeText} name="email" value={data.email} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(text)=>onChangeText("email", text)} name="email" value={data.email} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{
@@ -234,6 +233,7 @@ function ViewDetails({ navigation }) {
 						</View>
 
 					</View>
+					<Toast />
 				</ScrollView>
 
 			</View>

@@ -36,7 +36,7 @@ function Index({ navigation }) {
     dispatch(fetchActiveDentist(token));
   }
   useEffect(()=>{fetchData();},[]);
-  return(
+  return dentist && patient && appointment && (
    <>
     { (dentist.loading || appointment.loading ) && (<Loader loading={dentist.loading} />) }
     {

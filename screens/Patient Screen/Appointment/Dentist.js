@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, Pressable, Dimensions, Image, Alert } from 'react-native';
 import { styles } from '../../../style/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import Button from '../../../components/Button';
+import { fetchDentists } from '../../../redux/action/DentistAction';
 
 function Dentist({ navigation, appointmentDetails, setAppointmentDetails }) {
 	const { height } = Dimensions.get("screen");
-	const { dentists } = useSelector((state) => { return state.dentist });
+	const { dentists } = useSelector((state) => { return state?.dentist });
 	const [selectedDentist, setSelectedDentist] = useState(null);
+	const dispatch = useDispatch();
 
 	const dentistSubmitButton = (value) => {
 		if (!selectedDentist) return Alert.alert("Please select a dentist");
@@ -20,13 +22,17 @@ function Dentist({ navigation, appointmentDetails, setAppointmentDetails }) {
 		navigation.navigate('Schedule');
 	}
 
-	return (
+	useEffect(()=>{
+		dispatch(fetchDentists());
+	},[])
+
+	return dentists && (
 		<>
 			<ScrollView style={{ maxHeight: height, padding: 20, flexGrow: 1, gap: 10, flexDirection: 'column', position: 'relative', zIndex: -50 }}>
 				<Text style={{ fontSize: 20, fontWeight: '500', color: "#3f3f46" }}>Select a dentist</Text>
 				<View style={{ flex: 1, flexDirection: 'column', rowGap: 15, ...styles.shadow, marginTop: 10 }}>
 					{
-						dentists.map((val, idx) => (
+						dentists?.map((val, idx) => (
 							<Pressable key={idx} style={{ borderWidth: 1.2, borderColor: selectedDentist === val.dentistId ? '#06b6d4' : '#f2f2f2', width: '100%', backgroundColor: '#fff', borderRadius: 8, padding: 15, elevation: 1, shadowRadius: 8, shadowOffset: .2, flex: 1, flexDirection: 'row', columnGap: 10, justifyContent: 'flex-start', alignItems: 'center', borderRadius: 10 }} onPress={() => setSelectedDentist(val.dentistId)}>
 								<Image source={{ uri: val.profile }} style={{ width: 60, height: 60, borderRadius: 30, }} />
 								<View>

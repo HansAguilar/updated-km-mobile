@@ -38,7 +38,7 @@ const AppointmentDetails = React.memo(({ navigation, appointmentId }) => {
 
           {/* //~ PATIENT INFO */}
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, fontWeight: "500", letterSpacing: 0.1, color: "#06b6d4" }}>Patient Name</Text>
+            <Text style={{ fontSize: 16, fontWeight: "500", letterSpacing: 0.1, color: "#06b6d4" }}>{details.patient.firstname} {details.patient.lastname}</Text>
             <Text style={{ fontSize: 13, fontWeight: "400", color: "#bfbfbf" }}>New Patient</Text>
           </View>
           {/* //~ PATIENT INFO */}

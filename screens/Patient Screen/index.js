@@ -37,6 +37,7 @@ import HealthInsurance from './HealthInsurance';
 import { fetchInsurance } from '../../redux/action/InsuranceAction';
 import { fetchAnnouncement } from '../../redux/action/AnnouncementAction';
 import { fetchAdmin } from '../../redux/action/AdminAction';
+import { fetchServices } from '../../redux/action/ServicesAction';
 
 const socket = io(SOCKET_LINK);
 const navLinks = [
@@ -66,9 +67,9 @@ const Main = React.memo(({ navigation }) => {
   const [isSideNavShow, setSideNavShow] = useState(false);
   const [appointmentId, setAppointmentId] = useState("");
   const patient = useSelector((state) => { return state.patient });
-  const patientId = useSelector((state) => { return state.patient.patient });
-  const appointment = useSelector((state) => { return state.appointment });
-  const messages = useSelector((state) => { return state.messages });
+  const appointment = useSelector((state) => { return state?.appointment});
+  const services = useSelector((state) => state?.services);
+  const notificationCounter = useSelector((state) => state?.notification);
   const patientLogin = useRef("");
 
   const fetchPatientData = async () => {
@@ -76,20 +77,14 @@ const Main = React.memo(({ navigation }) => {
     dispatch(fetchPatient(token, patientLogin));
   };
 
-
   const fetchAppointmentData = () => {
     try {
       dispatch(fetchAppointment(patientLogin.current));
-      dispatch(fetchPatientMessage(patientLogin.current));
-      dispatch(fetchPayment(patientLogin.current));
-      dispatch(fetchInstallmentByPatient(patientLogin.current));
-      dispatch(fetchPrescription(patientLogin.current))
-      dispatch(fetchAllNotification(patientLogin.current))
-      dispatch(fetchInsurance(patientLogin.current))
+      dispatch(fetchAllNotification(patientLogin.current));
+      dispatch(fetchServices());
       dispatch(fetchSchedule());
       dispatch(fetchAppointmentFee());
       dispatch(fetchAnnouncement());
-      dispatch(fetchAdmin());
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
@@ -106,18 +101,26 @@ const Main = React.memo(({ navigation }) => {
   useEffect(() => {
     //FOR APPROVAL OF APPOINTMENT
     socket.on("response_changes", (data) => {
-      const parseData = JSON.parse(data);
-      dispatch(adminChanges(parseData.value));
-      dispatch(fetchAdminPayment(parseData.value));
+      try {
+        const parseData = JSON.parse(data);
+        dispatch(adminChanges(parseData.value));
+        dispatch(fetchAdminPayment(parseData.value));
+      } catch (error) {
+        console.log("response changes", error);
+      }
     })
     // ADMIN CREATION APPOINTMENT
     socket.on("response_admin_appointment_create", (data) => {
       dispatch(createAppointmentByAdmin(data.value));
     })
     socket.on("receive_notification_by_admin", (data) => {
-      const parseData = JSON.parse(data);
-      if (parseData.patientId === patientLogin.current) {
-        dispatch(storeNotification(parseData.notification));
+      try {
+        const parseData = JSON.parse(data);
+        if (parseData.patientId === patientLogin.current) {
+          dispatch(storeNotification(parseData.notification));
+        }
+      } catch (error) {
+        console.log("response changes", error);
       }
     })
     // FOR CANCEL APPOINTMENT
@@ -127,15 +130,25 @@ const Main = React.memo(({ navigation }) => {
     })
     // FOR UPDATE APPOINTMENT
     socket.on("response_admin_changes", (data) => {
-      const parseData = JSON.parse(data);
-      dispatch(adminChanges(parseData.value));
-      dispatch(fetchAdminPayment(parseData.value));
+      try {
+        const parseData = JSON.parse(data);
+        dispatch(adminChanges(parseData.value));
+        dispatch(fetchAdminPayment(parseData.value));
+      } catch (error) {
+        console.log("response changes", error);
+      }
+      
     })
     // DELETE APPOINTMENT
     socket.on("response_delete", (data) => {
-      const parseData = JSON.parse(data);
-      dispatch(deleteByAdmin(parseData.value));
-      dispatch(adminDeletePayment(parseData.value));
+      try {
+        const parseData = JSON.parse(data);
+        dispatch(deleteByAdmin(parseData.value));
+        dispatch(adminDeletePayment(parseData.value));
+      } catch (error) {
+        console.log("response changes", error);
+      }
+      
     })
 
     socket.on("admin_response_payment_changes", (data) => {
@@ -153,8 +166,12 @@ const Main = React.memo(({ navigation }) => {
       dispatch(sendByAdminMessage(data.key, data.value))
     });
     socket.on("response_appointment_fee", (data) => {
-      const parseData = JSON.parse(data)
+      try {
+        const parseData = JSON.parse(data)
       dispatch(updateAppointmentFee(parseData.value));
+      } catch (error) {
+        console.log("appointment fee: ",error);
+      }
     });
     return () => {
       socket.off();
@@ -164,9 +181,9 @@ const Main = React.memo(({ navigation }) => {
   const navigateToLink = (link) => navigation.navigate(`${link}`);
   return (
     <>
-      {patient.loading || appointment.loading || messages.loading && (<Loader loading={appointment.loading} />)}
+      {patient.loading || appointment.loading || services.loading || notificationCounter.loading && (<Text>Loading...</Text>)}
       {
-        (!patient.loading && !appointment.loading && !messages.loading) && (
+        ((!patient.loading && patient.patient) && (!appointment.loading && appointment.appointment) && (!services.loading && services.services)&& (!notificationCounter.loading && notificationCounter.notification) ) && (
           <>
             <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
             <Stack.Navigator initialRouteName='Dashboard'>

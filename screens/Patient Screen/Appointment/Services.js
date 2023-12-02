@@ -87,7 +87,7 @@ const Services = React.memo(({ navigation, appointmentDetails, setAppointmentDet
               return (
                 <Pressable style={{ width: '100%', backgroundColor: '#fff', borderWidth: 1.2, borderColor: isActive.idx.includes(idx) && isActive.status ? '#06b6d4' : '#f2f2f2', borderRadius: 8, padding: 15, elevation: 1, shadowRadius: 8, shadowOffset: .2 }} key={idx} onPress={() => { selectServiceEvent(idx, val.serviceId) }}>
                   <View style={{ height: 'auto', flex: 1, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', marginBottom: 5 }}>
-                    <Text style={{ fontSize: 17, textTransform: 'capitalize', fontWeight: '500', color: '#3f3f46', }}>{val.type}</Text>
+                    <Text style={{ fontSize: 17, textTransform: 'capitalize', fontWeight: '500', color: '#3f3f46', }}>{val.name}</Text>
                     <View style={{ width: 20, height: 20, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                       {isActive.idx.includes(idx) && isActive.status && (<AntDesignIcon name='check' size={15} color={'#06b6d4'} />)}
                     </View>

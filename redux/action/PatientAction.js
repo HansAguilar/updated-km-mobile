@@ -47,7 +47,7 @@ export const fetchPatient = (token,patientLogin) => {
 };
 
 // Action Creator
-export const updatePatientInfo = (id, data) => {
+export const updatePatientInfo = (id, data,ToastFunction, navigation) => {
   return async (dispatch) => {
     try {
       const response = await axios.put(`${PATIENT_URL}/update/patient/login/${id}`, data);
@@ -55,7 +55,10 @@ export const updatePatientInfo = (id, data) => {
         type: UPDATE_PATIENT_INFO_SUCCESS,
         payload: response.data,
       });
+      ToastFunction("success", "Update patient information successfully");
+      navigation.navigate("Dashboard");
     } catch (error) {
+      ToastFunction("error", error.response.data.message);
     }
   };
 };

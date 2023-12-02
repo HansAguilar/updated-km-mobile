@@ -8,12 +8,13 @@ import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import gcashLogo from '../../assets/images/gcashlogo.png';
 import paymayaLogo from '../../assets/images/paymayalogo.png';
-import { createPayment } from '../../redux/action/PaymentAction';
+import { createPayment, fetchPayment } from '../../redux/action/PaymentAction';
 import { createNotification } from '../../redux/action/NotificationAction';
 import ToastFunction from "../../config/toastConfig";
 import * as io from "socket.io-client";
 import { SOCKET_LINK } from '../../config/APIRoutes';
 import nopayment from "../../assets/images/nopayment.png";
+import { useEffect } from 'react';
 
 const socket = io.connect(SOCKET_LINK);
 const Payment = ({navigation}) =>{
@@ -21,10 +22,10 @@ const Payment = ({navigation}) =>{
     const { height } = Dimensions.get("screen");
     const [page, setPage] = useState("cash")
     const { patient } = useSelector((state)=>{ return state.patient });
-    const payment  = useSelector((state)=>{return state.payment.payment});
+    const payment  = useSelector((state)=>{return state?.payment?.payment});
     
     // const { installment } = useSelector((state)=>{ return state.installment });
-    const installment = payment.filter((val)=> val.type==="installment" && val.status==="PENDING").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
+    const installment = payment?.filter((val)=> val.type==="installment" && val.status==="PENDING"||val.status==="TREATMENT_DONE").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
     const [selectedPayment, setSelectedPayment] = useState({
         id:"",
         isActive: false,
@@ -83,7 +84,9 @@ const Payment = ({navigation}) =>{
 		setReceipt("");
 	}
 
-
+	useEffect(()=>{
+		dispatch(fetchPayment(patient.patientId))
+	},[])
 	const Modal = () => {
 		const [paymentToggle, setPaymentToggle] = useState(false);
 
@@ -138,7 +141,7 @@ const Payment = ({navigation}) =>{
 										</Text>
 									</View>
 								)}
-
+								{/* CASH */}
 								{
 									(paymentType && paymentType !== "cash") && (
 										<>
@@ -180,20 +183,22 @@ const Payment = ({navigation}) =>{
 								}
 
 							</View>
-						) : (
+						) : 
+						// E-payment
+						( 
 							<>
 								<View style={{ paddingVertical: 10, display: "flex", rowGap: 5, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
 									{
 										paymentType === "e-payment/gcash" ? (
 											<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
 												<Image source={gcashLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
-												<Text style={{ fontSize: 14, color: "#2b2b2b" }}>091234567890</Text>
+												<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09120600101</Text>
 											</View>
 										)
 											: (
 												<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
 													<Image source={paymayaLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
-													<Text style={{ fontSize: 14, color: "#2b2b2b" }}>091234567890</Text>
+													<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09427540968</Text>
 												</View>
 											)
 									}
@@ -227,10 +232,9 @@ const Payment = ({navigation}) =>{
 		)
 	}
 
-	const totalAmount = installment.reduce((acc, val) => { return acc += val.totalPayment; }, 0);
-	const totalPayment = installment.filter((val) => val.status === "APPROVED").reduce((acc, val) => { return acc += val.totalPayment; }, 0);
+	const totalAmount = installment?.filter((_,idx)=>idx===installment?.length-1).map((val)=>{return { balance:val.balance, totalAmount:val.amountCharge}});
 
-	return (
+	return payment && (
 		<>
 			{selectedPayment.isActive && <Modal />}
 			<View style={{ ...styles.containerGray, position: 'relative' }}>
@@ -250,14 +254,14 @@ const Payment = ({navigation}) =>{
 							<View style={{ padding: 20 }}>
 								<View style={{ justifyContent: "space-between", flexDirection: "row", backgroundColor: "#099ec3", padding: 10 }}>
 									<Text style={{ color: "#fff", fontWeight: '400', fontSize: 16 }}>Remaining Balance:</Text>
-									<Text style={{ color: "#fff", fontSize: 16 }}>₱ {Math.ceil(totalAmount - totalPayment).toLocaleString()}</Text>
+									<Text style={{ color: "#fff", fontSize: 16 }}>₱ {totalAmount[0]?.balance ? Math.ceil(totalAmount[0]?.balance).toLocaleString():0}</Text>
 								</View>
 
 								<View style={{ width: "100%", backgroundColor: "#fff", marginTop: 10, borderRadius: 6, padding: 10, flexDirection: 'column' }}>
 									<Text style={{ width: "100%", fontSize: 16, paddingBottom: 10, fontWeight: 'bold', color: "#52525b" }}>Payment Schedule</Text>
 									<View style={{ marginTop: 10, flex: 1, rowGap: 10, paddingHorizontal: 15 }}>
 										{
-											installment.map((val, idx) => (
+											installment?.map((val, idx) => (
 												<View key={idx} style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
 													<Text style={{ fontSize: 12 }}>{moment(val.appointment.appointmentDate).format("ddd DD MMM,YYYY")}</Text>
 													<Text style={{ fontSize: 12 }}>₱{Math.ceil(val.totalPayment).toLocaleString()}</Text>
@@ -281,7 +285,7 @@ const Payment = ({navigation}) =>{
 									</View>
 									<View style={{ width: "100%", paddingHorizontal: 20, paddingVertical: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', borderTopWidth: 1, marginTop: 10 }}>
 										<Text>Total Amount:</Text>
-										<Text>Php. {totalAmount.toLocaleString()}</Text>
+										<Text>Php. {totalAmount[0]?.totalAmount ? totalAmount[0]?.totalAmount.toLocaleString() : 0}</Text>
 									</View>
 								</View>
 							</View>
@@ -290,21 +294,21 @@ const Payment = ({navigation}) =>{
 							(
 								<View style={{ gap: 18, padding: 12 }}>
 									{
-										payment.length > 0 ?
+										payment?.length > 0 ?
 											payment
-												.filter((val) => {
+												?.filter((val) => {
 													return val.method !== "cash"
 												})
 												.sort((a, b) => {
 													return moment(a.appointment.appointmentDate).isAfter(b.appointment.appointmentDate) ? -1 : 1;
 												})
-												.map((val) => (
+												?.map((val) => (
 													<View key={val.paymentId} style={{ paddingHorizontal: 12, gap: 4 }}>
 														<Text style={{ fontSize: 12, fontWeight: "500", color: "#595959" }}>{moment(val.appointment.appointmentDate).format("dddd, MMMM D YYYY")}</Text>
 
 														<View style={{ elevation: 1.2, backgroundColor: "#fff", borderRadius: 4, padding: 10, borderTopColor: val.status === "PENDING" ? "#b6eefc" : "#86f9ae", borderTopWidth: 4 }}>
 															<View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingBottom: 8 }}>
-																<Text style={{ fontSize: 15, fontWeight: "400", color: "#595959" }}>Dr. Jack</Text>
+																<Text style={{ fontSize: 15, fontWeight: "400", color: "#595959" }}>Dr. {val.appointment.dentist.fullname}</Text>
 																<View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
 																	<Text style={{ fontSize: 14, fontWeight: "500", color: "#3f3f3f" }}>Amount:</Text>
 																	<Text style={{ fontSize: 14, fontWeight: "500", color: "#0891b2" }}>₱ {val.totalPayment.toLocaleString()}</Text>
