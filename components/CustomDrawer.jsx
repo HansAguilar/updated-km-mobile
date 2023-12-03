@@ -17,7 +17,7 @@ const links = [
 	{
 		name: "Payment",
 		link: "Payment",
-		icon: "credit-card"
+		icon: "credit-card"  
 	},
 	{
 		name: "History",

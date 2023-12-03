@@ -29,16 +29,6 @@ import UpdateModal from '../../components/UpdateModal';
 
 import Carousel from 'react-native-reanimated-carousel';
 
-// New array added
-// const images = [
-//   require('../../assets/announcements/a1.png'),
-//   require('../../assets/announcements/a2.png'),
-//   require('../../assets/announcements/a3.png'),
-//   require('../../assets/announcements/a4.png'),
-//   require('../../assets/announcements/a5.png'),
-// ];
-
-const socket = io.connect(SOCKET_LINK);
 const { height, width } = Dimensions.get('screen');
 const statusbarHeight = StatusBar.currentHeight;
 
@@ -49,9 +39,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   const { appointment } = useSelector((state) => state.appointment);
   const { announcement } = useSelector((state) => state.announcement);
   const { services } = useSelector((state) => state.services);
-  const { dentists } = useSelector((state) => state.dentist);
   const notificationCounter = useSelector((state) => state.notification?.notification?.filter((val) => val.status === "UNREAD"));
-  const notification = useSelector((state) => state.notification?.notification);
   const images = announcement?.map((val) => val.picture);
   const [modal, setModalShow] = useState({ id: '', isShow: false });
   const [updateSchedule, setUpdateSchedule] = useState({ data: null, isShow: false, });
@@ -101,10 +89,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   }
 
   useEffect(() => {
-    dispatch(fetchServices());
-    dispatch(fetchDentists());
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-    // Clean up the event listener when the component is unmounted
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
@@ -202,7 +187,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   {/* //~ CANCEL APPOINTMENT */ }
 
 
-  return patient && appointment && announcement && services && dentists && notification && (
+  return (
     <>
       {modal.isShow && <Modal />}
       {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}

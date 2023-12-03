@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { View, ScrollView, Text, Dimensions, Pressable, Image } from 'react-native';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NotificationModal from "../../components/NotificationModal";
 import kmlogo from "../../assets/images/gcashlogo.png";
 import empty from "../../assets/images/empty.png"
+import { deleteAllNotification } from "../../redux/action/NotificationAction";
 
 const NotificationRoom = () => {
-	const { height, width } = Dimensions.get("screen");
+	const { width } = Dimensions.get("screen");
 	const notification = useSelector((state) => state.notification.notification);
+	const patient = useSelector((state) => { return state.patient.patient });
 	const [readNotification, setReadNotification] = useState({
 		id: null,
 		isShow: false
 	});
+	const dispatch = useDispatch();
 
 	return (
 		<View style={{ height: "100%", width: width, zIndex: 1 }}>
 			{readNotification.isShow && <NotificationModal notification={readNotification} setNotificationData={setReadNotification} />}
+			<View style={{paddingHorizontal:10, paddingVertical:5}}>
+			    <Text style={{textDecorationLine:"underline"}} onPress={()=>dispatch(deleteAllNotification(patient.patientId))}>Delete all notification</Text>
+			</View>
 			<ScrollView>
 				<View style={{ gap: 8, height: "100%" }}>
 					{
