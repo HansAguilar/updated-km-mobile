@@ -66,7 +66,7 @@ const Main = React.memo(({ navigation }) => {
 
   const [isSideNavShow, setSideNavShow] = useState(false);
   const [appointmentId, setAppointmentId] = useState("");
-  const patient = useSelector((state) => { return state.patient });
+  const patient = useSelector((state) => { return state?.patient });
   const appointment = useSelector((state) => { return state?.appointment});
   const services = useSelector((state) => state?.services);
   const notificationCounter = useSelector((state) => state?.notification);
@@ -183,7 +183,7 @@ const Main = React.memo(({ navigation }) => {
     <>
       {patient.loading || appointment.loading || services.loading || notificationCounter.loading && (<Text>Loading...</Text>)}
       {
-        ((!patient.loading && patient.patient) && (!appointment.loading && appointment.appointment) && (!services.loading && services.services)&& (!notificationCounter.loading && notificationCounter.notification) ) && (
+        (!patient.loading && !appointment.loading && !services.loading && !notificationCounter.loading ) && (
           <>
             <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
             <Stack.Navigator initialRouteName='Dashboard'>
