@@ -19,34 +19,39 @@ const NotificationRoom = () => {
 	return (
 		<View style={{ height: "100%", width: width, zIndex: 1 }}>
 			{readNotification.isShow && <NotificationModal notification={readNotification} setNotificationData={setReadNotification} />}
-			<View style={{paddingHorizontal:10, paddingVertical:5}}>
-			    <Text style={{textDecorationLine:"underline"}} onPress={()=>dispatch(deleteAllNotification(patient.patientId))}>Delete all notification</Text>
-			</View>
+
 			<ScrollView>
 				<View style={{ gap: 8, height: "100%" }}>
 					{
 						notification.length > 0 ?
-							notification && notification.map((val, idx) => (
-								<Pressable key={idx} style={{ width: width, backgroundColor: "#fff", padding: 15, gap: 6, borderWidth: 1, borderColor: "#f2f2f2" }} onPress={() => setReadNotification({ ...readNotification, id: val.notificationId, isShow: true })}>
-									<View style={{ gap: 8, flexDirection: "row" }}>
-										<Image source={kmlogo} style={{ width: 50, height: 50 }} />
-										<View style={{ width: "100%", display: "flex", flexDirection: "column", flexWrap: "wrap", width: "100%" }}>
-											<View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
-												<Text style={{ fontSize: 15, fontWeight: "500", color: "#3f3f3f" }}>{val.name}</Text>
+							<>
+								<View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+									<Text style={{ textDecorationLine: "underline" }} onPress={() => dispatch(deleteAllNotification(patient.patientId))}>Delete all notification</Text>
+								</View>
+								{
+									notification && notification.map((val, idx) => (
+										<Pressable key={idx} style={{ width: width, backgroundColor: "#fff", padding: 15, gap: 6, borderWidth: 1, borderColor: "#f2f2f2" }} onPress={() => setReadNotification({ ...readNotification, id: val.notificationId, isShow: true })}>
+											<View style={{ gap: 8, flexDirection: "row" }}>
+												<Image source={kmlogo} style={{ width: 50, height: 50 }} />
+												<View style={{ width: "100%", display: "flex", flexDirection: "column", flexWrap: "wrap", width: "100%" }}>
+													<View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
+														<Text style={{ fontSize: 15, fontWeight: "500", color: "#3f3f3f" }}>{val.name}</Text>
 
-												{
-													val.status === "UNREAD" &&
-													<View style={{ width: 10, height: 10, borderRadius: 50, backgroundColor: "red" }}>
+														{
+															val.status === "UNREAD" &&
+															<View style={{ width: 10, height: 10, borderRadius: 50, backgroundColor: "red" }}>
+															</View>
+														}
 													</View>
-												}
+
+													<Text style={{ fontSize: 12, color: "#595959" }}>{val.description.length > 53 ? val.description.substring(0, 53) + "\n" + val.description.substring(53) : val.description}</Text>
+												</View>
 											</View>
 
-											<Text style={{ fontSize: 12, color: "#595959" }}>{val.description.length > 53 ? val.description.substring(0, 53) + "\n" + val.description.substring(53) : val.description}</Text>
-										</View>
-									</View>
-
-								</Pressable>
-							))
+										</Pressable>
+									))
+								}
+							</>
 							:
 							<View style={{ padding: 20, alignItems: "center" }}>
 								<Image source={empty} style={{ width: 300, height: 300 }} />
