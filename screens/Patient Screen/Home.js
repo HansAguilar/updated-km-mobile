@@ -187,7 +187,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   {/* //~ CANCEL APPOINTMENT */ }
 
 
-  return (
+  return patient && (
     <>
       {modal.isShow && <Modal />}
       {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}
