@@ -1,4 +1,4 @@
-const SOCKET_PORT = "192.168.254.100";
+const SOCKET_PORT = "https://socket-kmgeronimo-0bfe0b875638.herokuapp.com";
 const PORT = "https://springboot-kmgeronimo-backend-422ca9010c76.herokuapp.com";
 
 export const PATIENT_URL = `${PORT}/api/v1/patient`; 
@@ -18,4 +18,4 @@ export const NOTIFICATION_LINK = `${PORT}/api/v1/notification`;
 export const HMO_LINK = `${PORT}/api/v1/insurance`;
 export const ADMIN_LINK = `${PORT}/api/v1/admin`;
 
-export const SOCKET_LINK = `http://${SOCKET_PORT}:8081/`;
+export const SOCKET_LINK = `${SOCKET_PORT}`;
