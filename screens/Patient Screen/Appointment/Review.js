@@ -86,33 +86,32 @@ function Review({ navigation, appointmentDetails }) {
 
   const Modal = () => {
     return isAvailable && (
-      <View style={{ width: '100%', height: height, backgroundColor: '#06b6d4', position: 'relative', zIndex: 500, padding: 20 }}>
-        <View style={{ width: '100%', height: "80%", backgroundColor: '#06b6d4', ...styles.shadow }}>
-          <View style={{ width: '100%', display: 'flex', flexDirection: "row", alignItems: 'center', columnGap: 10, borderBottomColor: "#fff", borderBottomWidth: 1, paddingBottom: 10 }}>
+      <View style={{ width: '100%', height: height, backgroundColor: '#f2f2f2', position: 'relative', zIndex: 500, padding: 10 }}>
+        <View style={{ width: '100%', height: "80%" }}>
+
+          <View style={{ width: '100%', display: 'flex', flexDirection: "column", alignItems: 'center', marginBottom: 10 }}>
             <Image source={require("../../../assets/images/small-logo.jpg")} style={{ width: 65, height: 65, borderRadius: 50 }} />
-            <View>
-              <Text style={{ textTransform: 'uppercase', fontWeight: 'bold', color: "#fff", letterSpacing: 2 }}>Terms and condition</Text>
-              <Text style={{ color: "#fff", fontSize: 10 }}>Last Update Jan 2023</Text>
-            </View>
+            <Text style={{ textTransform: 'uppercase', fontWeight: 'bold', color: "#475569", fontSize: 18 }}>Terms and condition</Text>
+            <Text style={{ color: "#F97316", fontSize: 14 }}>Last Revised: April 22, 2023</Text>
           </View>
 
-          <ScrollView style={{ xmarginTop: 5 }}>
+          <ScrollView style={{ width: "100%", marginTop: 10, paddingHorizontal: 10 }}>
             {
               rules.map((val, idx) => (
-                <View style={{ width: '100%', paddingHorizontal: 10, marginTop: 10 }} key={idx}>
-                  <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>{idx + 1}.{val.title}</Text>
-                  <Text style={{ fontSize: 12, color: "#fff", textAlign: 'justify', marginTop: 5 }}>{val.description}</Text>
+                <View style={{ width: '100%', paddingVertical: 10 }} key={idx}>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#444444' }}>{idx + 1}. {val.title}</Text>
+                  <Text style={{ fontSize: 14, color: "#2b2b2b", textAlign: 'justify' }}>{val.description}</Text>
                 </View>
               ))
             }
           </ScrollView>
 
           <View style={{ padding: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', ...styles.shadow }}>
-            <TouchableHighlight style={{ width: 120, paddingHorizontal: 15, paddingVertical: 8, borderWidth: 1, borderColor: '#fff', borderRadius: 4 }} onPress={() => setModal(false)}>
-              <Text style={{ textAlign: 'center', textTransform: 'uppercase', fontSize: 12, color: "#fff" }}>Decline</Text>
+            <TouchableHighlight style={{ width: 120, paddingHorizontal: 15, paddingVertical: 8, borderWidth: 1, borderColor: '#2C3E50', borderRadius: 6 }} onPress={() => setModal(false)}>
+              <Text style={{ fontWeight: "500", textAlign: 'center', textTransform: 'uppercase', fontSize: 13, color: "#2C3E50" }}>Decline</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={{ paddingHorizontal: 15, paddingVertical: 8, backgroundColor: '#fff', borderRadius: 4, }} onPress={submitButton}>
-              <Text style={{ width: 100, textAlign: 'center', textTransform: 'uppercase', fontSize: 12, color: "#155e75" }}>accept</Text>
+            <TouchableHighlight style={{ paddingHorizontal: 15, paddingVertical: 8, backgroundColor: '#06b6d4', borderRadius: 6 }} onPress={submitButton}>
+              <Text style={{ fontWeight: "500", width: 100, textAlign: 'center', textTransform: 'uppercase', fontSize: 13, color: "#fff" }}>accept</Text>
             </TouchableHighlight>
           </View>
 
@@ -125,8 +124,7 @@ function Review({ navigation, appointmentDetails }) {
     <>
       <Toast />
       <Modal />
-      <ScrollView style={{ ...styles.containerGray, padding: 15, position: 'relative', zIndex: -500 }}>
-
+      <ScrollView style={{ ...styles.containerGray, padding: 20, position: 'relative' }}>
         <View style={{ gap: 8 }}>
           <Text style={{ fontSize: 20, fontWeight: '500', color: "#3f3f46" }}>Appointment Summary</Text>
         </View>
@@ -185,7 +183,7 @@ function Review({ navigation, appointmentDetails }) {
             </View>
           </View>
 
-          <Text style={{ fontSize: 12, fontWeight: "400", color: "#2b2b2b", paddingVertical: 20 }}>Please review your appointment details above to ensure accuracy.</Text>
+          <Text style={{ fontSize: 11, fontWeight: "500", color: "#2b2b2b", paddingVertical: 20 }}>Please review your appointment details above to ensure accuracy.</Text>
 
         </View>
       </ScrollView >

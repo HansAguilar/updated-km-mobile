@@ -289,10 +289,10 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
               <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 8 }}>
                 <Text style={{ fontSize: 18, fontWeight: '500', letterSpacing: 0.1, color: '#3f3f46' }}>Services</Text>
-                <Pressable onPress={() => { navigation.navigate("Notification") }}>
+                {/* <Pressable onPress={() => { navigation.navigate("Notification") }}>
                   <SimpleLineIcons name="arrow-right-circle" color="#404040" size={15} />
                 </Pressable>
-                <Text style={{ fontSize: 13, fontWeight: '500', color: '#08abc4', marginLeft: 'auto', marginRight: 16 }}>See All</Text>
+                <Text style={{ fontSize: 13, fontWeight: '500', color: '#08abc4', marginLeft: 'auto', marginRight: 16 }}>See All</Text> */}
               </View>
 
               <FlatList data={services.sort()} renderItem={renderItem} keyExtractor={(item) => item.serviceId} horizontal={true} showsHorizontalScrollIndicator={false} />

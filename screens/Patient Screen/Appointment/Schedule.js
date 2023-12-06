@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Pressable, SafeAreaView } from 'react-native';
+import { View, Text, Pressable, SafeAreaView, TouchableHighlight } from 'react-native';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles } from '../../../style/styles';
@@ -8,6 +8,7 @@ import InputText from '../../../components/InputText';
 import ToastFunction from '../../../config/toastConfig';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import Button from '../../../components/Button';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => {
   const appointment = useSelector((state) => { return state.appointment.appointment.filter((val) => val.status === "PENDING" || val.status === "APPROVED" || val.status === "TREATMENT") });
@@ -160,7 +161,6 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
     });
   }
 
-
   const timeSelectedButton = (value) => {
     if (!appointmentDetails.date || !selectedTime) return ToastFunction("error", "Please select a date and time");
 
@@ -174,7 +174,6 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
         && val.patient.patientId === appointmentDetails.patient;
     });
 
-    console.log(filteredAppointment.length);
     if (filteredAppointment.length > 0) {
       return ToastFunction("error", "You have an existing appointment on this date")
     }
@@ -243,89 +242,97 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
   return (
     <>
       <Toast />
-      <SafeAreaView style={{ ...styles.containerGray, position: 'relative', zIndex: -50, padding: 20, alignItems: "center" }}>
-        <Text style={{ fontSize: 20, fontWeight: '500', color: "#3f3f46", marginRight: "auto" }}>Select your appointment schedule</Text>
+      <SafeAreaView style={{ ...styles.containerGray, position: 'relative', zIndex: -50, }}>
 
-        <View style={{ paddingVertical: 10, width: "100%" }}>
-          {
-            showPicker && (
-              <DateTimePicker
-                mode="date"
-                display='spinner'
-                value={appointmentDetails.date}
-                onChange={onChangeDate}
-                maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
-                minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
-                androidMode="calendar"
-                {...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
-                {...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
-                {...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
-                {...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
-                {...(Platform.OS === 'android' && { minDate: moment().toDate() })}
-              />
-            )
-          }
-          {
-            !showPicker && (
-              <Pressable
-                style={{ width: '100%' }}
-                onPress={toggleDatepicker}
-              >
-                <InputText onChangeText={onChangeText} value={dateRef.current} placeholder={"Select Appointment Date"} isEditable={false} />
-              </Pressable>
-            )
-          }
+        <View style={{ paddingTop: 20, paddingLeft: 20, gap: 4 }}>
+          <Text style={{ fontSize: 20, fontWeight: '500', color: "#3f3f46", marginRight: "auto", }}>Select your appointment schedule</Text>
+          <Text style={{ fontSize: 12, color: "#404040" }}>Note: Please be informed that appointment times may vary. Kindly check your schedule for any updates.</Text>
         </View>
 
-        <View style={{ width: "100%", height: 500, position: 'absolute', bottom: timePicker ? 0 : -600, borderRadius: 8, gap: 40 }}>
 
-          <View style={{ flexDirection: "column", gap: 12 }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#3f3f46" }}>Morning Slots</Text>
-            <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: "center" }}>
-              {
-                timeStartList
-                  .filter(item => {
-                    const startTime = moment(item.timeStart, 'HH:mm:ss');
-                    const startTimeRange = moment(timeStartList.indexOf(0), 'HH:mm:ss');
-                    const endTimeRange = moment('12:00:00', 'HH:mm:ss');
+        <ScrollView contentContainerStyle={{ width: "100%", padding: 20, alignItems: "center" }}>
+          <View style={{ width: "100%", backgroundColor: "#fff", elevation: 1, marginBottom: 10 }}>
+            {
+              showPicker && (
+                <DateTimePicker
+                  mode="date"
+                  display='spinner'
+                  value={appointmentDetails.date}
+                  onChange={onChangeDate}
+                  maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
+                  minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
+                  androidMode="calendar"
+                  {...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
+                  {...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
+                  {...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
+                  {...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
+                  {...(Platform.OS === 'android' && { minDate: moment().toDate() })}
+                />
+              )
+            }
+            {
+              !showPicker && (
+                <Pressable
+                  style={{ width: '100%' }}
+                  onPress={toggleDatepicker}
+                >
+                  <InputText onChangeText={onChangeText} value={dateRef.current} placeholder={"Select Appointment Date"} isEditable={false} />
+                </Pressable>
+              )
+            }
+          </View>
 
-                    return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
-                  })
-                  .map((val, idx) => (
-                    <Pressable onPress={() => {
-                      setSelectedTime(val.timeStart)
-                    }} key={idx} style={{ backgroundColor: "#fff", borderWidth: 1, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#D0D3D4', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
-                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2C3E50', fontWeight: "500" }}>{val.timeValue}</Text>
-                    </Pressable>
-                  ))
-              }
+          <View style={{ width: "100%", height: 500, borderRadius: 8, gap: 20, position: "relative", display: timePicker ? "flex" : "none" }}>
+            <View style={{ flexDirection: "column", gap: 12, backgroundColor: "#fff", paddingVertical: 15, paddingHorizontal: 10, borderRadius: 6, elevation: 1 }}>
+              <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#3f3f46" }}>Morning Slots</Text>
+              {/* 3f3f46 */}
+              <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: "space-evenly" }}>
+                {
+                  timeStartList
+                    .filter(item => {
+                      const startTime = moment(item.timeStart, 'HH:mm:ss');
+                      const startTimeRange = moment(timeStartList.indexOf(0), 'HH:mm:ss');
+                      const endTimeRange = moment('12:00:00', 'HH:mm:ss');
+
+                      return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
+                    })
+                    .map((val, idx) => (
+                      <Pressable onPress={() => {
+                        setSelectedTime(val.timeStart)
+                      }} key={idx} style={{ backgroundColor: "#fff", borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#D0D3D4', paddingHorizontal: 25, paddingVertical: 12, borderRadius: 4 }}>
+                        <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2C3E50', fontWeight: "500" }}>{val.timeValue}</Text>
+                      </Pressable>
+                    ))
+                }
+              </View>
+            </View>
+
+            <View style={{ flexDirection: "column", gap: 12, backgroundColor: "#fff", paddingVertical: 15, paddingHorizontal: 10, borderRadius: 6, elevation: 1 }}>
+              <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#3f3f46" }}>Afternoon Slots</Text>
+              <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: "space-evenly" }}>
+                {
+                  timeStartList
+                    .filter(item => {
+                      const startTime = moment(item.timeStart, 'HH:mm:ss');
+                      const startTimeRange = moment('13:00:00', 'HH:mm:ss');
+                      const endTimeRange = moment('16:00:00', 'HH:mm:ss');
+
+                      return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
+                    })
+                    .map((val, idx) => (
+                      <Pressable onPress={() => {
+                        setSelectedTime(val.timeStart)
+                      }} key={idx} style={{ backgroundColor: "#fff", borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#D0D3D4', paddingHorizontal: 25, paddingVertical: 12, borderRadius: 4 }}>
+                        <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2C3E50', fontWeight: "500" }}>{val.timeValue}</Text>
+                      </Pressable>
+                    ))
+                }
+              </View>
             </View>
           </View>
 
-          <View style={{ flexDirection: "column", gap: 12 }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#3f3f46" }}>Morning Slots</Text>
-            <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: "center" }}>
-              {
-                timeStartList
-                  .filter(item => {
-                    const startTime = moment(item.timeStart, 'HH:mm:ss');
-                    const startTimeRange = moment('13:00:00', 'HH:mm:ss');
-                    const endTimeRange = moment('16:00:00', 'HH:mm:ss');
-
-                    return startTime.isSameOrAfter(startTimeRange) && startTime.isBefore(endTimeRange);
-                  })
-                  .map((val, idx) => (
-                    <Pressable onPress={() => {
-                      setSelectedTime(val.timeStart)
-                    }} key={idx} style={{ backgroundColor: "#fff", borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#D0D3D4', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
-                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2C3E50', fontWeight: "500" }}>{val.timeValue}</Text>
-                    </Pressable>
-                  ))
-              }
-            </View>
-          </View>
-        </View>
-      </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView >
 
       <View style={{ width: '100%', padding: 20, position: 'relative' }}>
         <Button title='Continue' bgColor='#06b6d4' textColor='#fff' onPress={() => timeSelectedButton(selectedTime)} />

@@ -49,7 +49,7 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
 
       {modal && (<Modal setModal={setModal} treatmentData={treatmentData} />)}
 
-      <SafeAreaView style={{ width: width, height: height / 3, backgroundColor: "#00ace6", ...styles.shadow, justifyContent: 'center' }} >
+      <SafeAreaView style={{ width: width, height: height / 3, backgroundColor: "#06b6d4", ...styles.shadow, justifyContent: 'center' }} >
 
         <Pressable onPress={() => { setSideNavShow(true) }} style={{ position: 'absolute', top: 40, left: 10, zIndex: 20 }}>
           <EntypoIcon name='menu' size={30} color={'#fff'} />
@@ -70,24 +70,24 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
 
       <View style={{ padding: 15, rowGap: 10, }}>
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '48%', backgroundColor: '#06b6d4', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{patient.length}</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>Patients</Text>
           </View>
 
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '48%', backgroundColor: '#06b6d4', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{processing.length}</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>For Processing</Text>
           </View>
         </View>
 
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '48%', backgroundColor: '#06b6d4', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{consultation.length}</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>Consultation</Text>
           </View>
 
-          <View style={{ width: '48%', backgroundColor: '#00ace6', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '48%', backgroundColor: '#06b6d4', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{treatment.length}</Text>
             <Text style={{ color: '#fff', fontSize: 15 }}>Treatment</Text>
           </View>

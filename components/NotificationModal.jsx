@@ -19,11 +19,11 @@ const NotificationBox = ({ notification, setNotificationData }) => {
         readFunction();
     }, [])
     return data && (
-        <View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 70, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ backgroundColor: "white", padding: 20, borderRadius: 6 }}>
                 <View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row" }}>
                     <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: "500" }}>{data.name}</Text>
-                    <AntDesign name="closecircleo" style={{ color: "red" }} size={20} onPress={() => setNotificationData({ ...notification, isShow: false })} />
+                    <AntDesign name="closecircle" style={{ color: "red" }} size={24} onPress={(prev) => setNotificationData({ ...prev, isShow: false })} />
                 </View>
                 <Text>{data.description}</Text>
             </View>

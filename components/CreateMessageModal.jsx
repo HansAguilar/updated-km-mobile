@@ -68,13 +68,13 @@ function CreateMessageModal({ modal, setModal }) {
                     <View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <View style={{ backgroundColor: "white", padding: 10, height: "auto", width: "100%" }}>
 
-                            <View style={{gap: 6}}>
+                            <View style={{ gap: 6 }}>
                                 <Text style={{ fontSize: 14, color: "#595959" }}>Search Admin</Text>
                                 <TextInput
                                     value={messageData.adminName}
                                     style={{ width: "100%", borderWidth: 1, padding: 6, borderColor: "#ccc", borderRadius: 6 }}
                                     onChangeText={(text) => handleChange("adminName", text)}
-                                    placeholder="Search admin..." />
+                                />
                                 {
                                     suggestion?.length > 0 && (
                                         <View style={{ marginTop: 10 }}>

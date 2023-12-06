@@ -107,9 +107,9 @@ function Prescription({ setSideNavShow, navigation }) {
           </View>
 
           {
-            suggestion.length > 0 && data.patientName ?
+            suggestion?.length > 0 && data.patientName ?
               suggestion.map((val, idx) => (
-                <Pressable style={{ marginTop: 2, backgroundColor: "#cef6fd", borderBottomLeftRadius: 4, borderBottomRightRadius: 4, padding: 10, borderBottomColor: "#06b6d4", borderBottomWidth: 1 }} key={idx}
+                <Pressable style={{ marginTop: 2, backgroundColor: "#cef6fd", borderBottomLeftRadius: 4, borderBottomRightRadius: 4, padding: 10, borderBottomColor: "#06b6d4", borderBottomWidth: suggestion.length > 1 ? 1 : 0 }} key={idx}
                   onPress={() => {
                     setData({ ...data, patient: val.patientId, patientName: `${val.firstname} ${val.lastname}` });
                     setSuggestion([]);
@@ -118,8 +118,8 @@ function Prescription({ setSideNavShow, navigation }) {
                   <Text style={{ color: "#06b6d4" }}>{val.firstname} {val.lastname}</Text>
                 </Pressable>
               ))
-              : !data.patientName && suggestion.length < 1 ?
-                <View style={{ marginTop: 2, borderBottomLeftRadius: 4, borderBottomRightRadius: 4, padding: 10, backgroundColor: "#fce9e9", borderBottomColor: "#dd2222", borderBottomWidth: 1 }}>
+              : suggestion?.length < 1 ?
+                <View style={{ marginTop: 2, padding: 10, backgroundColor: "#fce9e9" }}>
                   <Text style={{ color: "#dd2222" }}>No existing patient</Text>
                 </View>
                 : <Text></Text>
