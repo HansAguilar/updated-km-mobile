@@ -55,4 +55,4 @@ const Home = React.memo(({ navigation }) => {
   )
 })
 
-export default Home;
+export default React.memo(Home);

@@ -8,7 +8,6 @@ const socket = io.connect(SOCKET_LINK);
 export const fetchAllNotification = (patientId) =>{
     return async dispatch => {
         try {
-            dispatch({ type: FETCH_NOTIFICATION_REQUEST });
             const response = await axios.get(`${NOTIFICATION_LINK}/patient/${patientId}`);
             dispatch({
                 type: FETCH_NOTIFICATION_SUCCESS,

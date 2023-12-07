@@ -6,7 +6,6 @@ import { ADMIN_LINK, } from "../../config/APIRoutes";
 export const fetchAdmin= () =>{
     return async dispatch=>{
         try {
-            dispatch({type: FETCH_ADMIN_REQUEST});
             const response = await axios.get(`${ADMIN_LINK}/`);
             const filteredData = response?.data.filter((val)=>val.role === "STAFF")
             dispatch({

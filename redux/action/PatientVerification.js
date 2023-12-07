@@ -15,9 +15,6 @@ import ToastFunction from "../../config/toastConfig";
 export const loginPatientAccount = (data) => {
   return async (dispatch) => {
     try {
-      dispatch({
-        type: LOGIN_PATIENT_REQUEST
-      });
       const response = await axios.post(`${PATIENT_URL}/login`, data);
       dispatch({
         type: LOGIN_PATIENT_SUCCESS,
@@ -37,9 +34,6 @@ export const loginPatientAccount = (data) => {
 export const checkIfValidPatient = (token) => {
   return async (dispatch) => {
     try {
-      dispatch({
-        type: VALID_PATIENT_REQUEST
-      });
       const response = await axios.post(`${PATIENT_URL}/ifValidPatient/${token}`);
       dispatch({
         type: VALID_PATIENT_SUCCESS,

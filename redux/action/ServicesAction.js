@@ -4,9 +4,6 @@ import { SERVICES_URL } from '../../config/APIRoutes';
 export const fetchServices = () =>{
     return async(dispatch)=>{
         try {
-            dispatch({
-                type: FETCH_SERVICES_REQUEST
-            });
             const response = await axios(`${SERVICES_URL}/`);
             dispatch({
                 type: FETCH_SERVICES_SUCCESS,

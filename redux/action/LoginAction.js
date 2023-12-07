@@ -41,7 +41,6 @@ export const forgotPassword = (data)=>{
 export const changePassword = (email,data)=>{
     return async dispatch =>{
         try {
-            console.log(email, " ", data);
             dispatch({ type: CHANGE_PASSWORD_REQUEST })
             const response = await axios.post(`${LOGIN_URL}/changePassword/${email}`,data);
             dispatch({

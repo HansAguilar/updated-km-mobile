@@ -6,9 +6,6 @@ import ToastFunction from '../../config/toastConfig';
 export const fetchDentists = () =>{
     return async(dispatch) =>{
         try {
-            dispatch({
-                type: FETCH_DENTIST_REQUEST,
-            })
             const response = await axios.get(`${DENTIST_URL}/`);
             dispatch({
                 type: FETCH_DENTIST_SUCCESS,
