@@ -271,7 +271,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 											}
 											<Text key={"none"}
 												style={{
-													padding: 10, backgroundColor: "#ff1a1a",
+													padding: 10, backgroundColor: "#ed6868",
 													color: "#fff", borderRadius: 4,
 													textAlign: "center", width: "20%", margin: 4
 												}}
@@ -517,7 +517,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 
 
 					<View style={{ width: "100%", display: "flex", flexDirection: 'row', gap: 10 , paddingTop: 15}}>
-						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#ef4444", color: "#fff", borderRadius: 6 }} onPress={() => setModal(false)}>Cancel</Text>
+						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#ed6868", color: "#fff", borderRadius: 6 }} onPress={() => setModal(false)}>Cancel</Text>
 						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", borderRadius: 6 }} onPress={handleSubmitButton}>Confirm</Text>
 					</View>
 				</ScrollView>

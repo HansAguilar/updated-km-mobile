@@ -1,6 +1,5 @@
 import { View, Pressable, Text, ScrollView, TouchableHighlight, Dimensions, Image, Alert, TouchableOpacity } from 'react-native';
 import { styles } from '../../style/styles';
-import Title from '../../components/Title';
 import { useDispatch, useSelector } from 'react-redux';
 import AntIcon from "react-native-vector-icons/AntDesign";
 import React, { useState } from 'react';
@@ -17,24 +16,40 @@ import nopayment from "../../assets/images/nopayment.png";
 import { useEffect } from 'react';
 
 const socket = io.connect(SOCKET_LINK);
-const Payment = ({navigation}) =>{
-    const dispatch = useDispatch();
-    const { height } = Dimensions.get("screen");
-    const [page, setPage] = useState("cash")
-    const { patient } = useSelector((state)=>{ return state.patient });
-    const payment  = useSelector((state)=>{return state?.payment?.payment});
-    
-    // const { installment } = useSelector((state)=>{ return state.installment });
-    const installment = payment?.filter((val)=> val.type==="installment" && val.status==="PENDING"||val.status==="TREATMENT_DONE").sort((a,b)=>moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate? -1:1))))
-    const [selectedPayment, setSelectedPayment] = useState({
-        id:"",
-        isActive: false,
-        status:"",
-        appointmentStatus:"",
-        data: null
-    });
-    const [receipt, setReceipt] = useState("");
-    const [paymentType, setPaymentType] = useState("");
+
+const SkeletonLoading = () => {
+	return (
+		<View style={style.skeletonContainer}>
+			<View style={{ width: "100%", justifyContent: "space-between", alignItems: "center", gap: 10, flexDirection: "row" }}>
+				<View style={style.skeletonSpecialty} />
+				<View style={style.skeletonSpecialty} />
+			</View>
+			<View style={{ width: "100%", justifyContent: "space-between", alignItems: "center", gap: 10, flexDirection: "row" }}>
+				<View style={style.skeletonSpecialty} />
+				<View style={style.skeletonSpecialty} />
+			</View>
+		</View>
+	);
+};
+
+const Payment = ({ navigation }) => {
+	const dispatch = useDispatch();
+	const { height } = Dimensions.get("screen");
+	const [page, setPage] = useState("cash")
+	const { patient } = useSelector((state) => { return state.patient });
+	const payment = useSelector((state) => { return state?.payment?.payment });
+
+	// const { installment } = useSelector((state)=>{ return state.installment });
+	const installment = payment?.filter((val) => val.type === "installment" && val.status === "PENDING" || val.status === "TREATMENT_DONE").sort((a, b) => moment(a.appointment.appointmentDate).isBefore((moment(b.appointment.appointmentDate ? -1 : 1))))
+	const [selectedPayment, setSelectedPayment] = useState({
+		id: "",
+		isActive: false,
+		status: "",
+		appointmentStatus: "",
+		data: null
+	});
+	const [receipt, setReceipt] = useState("");
+	const [paymentType, setPaymentType] = useState("");
 
 	const handleImageUpload = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
@@ -84,9 +99,10 @@ const Payment = ({navigation}) =>{
 		setReceipt("");
 	}
 
-	useEffect(()=>{
+	useEffect(() => {
 		dispatch(fetchPayment(patient.patientId))
-	},[])
+	}, [])
+
 	const Modal = () => {
 		const [paymentToggle, setPaymentToggle] = useState(false);
 
@@ -183,47 +199,47 @@ const Payment = ({navigation}) =>{
 								}
 
 							</View>
-						) : 
-						// E-payment
-						( 
-							<>
-								<View style={{ paddingVertical: 10, display: "flex", rowGap: 5, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
-									{
-										paymentType === "e-payment/gcash" ? (
-											<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
-												<Image source={gcashLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
-												<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09120600101</Text>
-											</View>
-										)
-											: (
+						) :
+							// E-payment
+							(
+								<>
+									<View style={{ paddingVertical: 10, display: "flex", rowGap: 5, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+										{
+											paymentType === "e-payment/gcash" ? (
 												<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
-													<Image source={paymayaLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
-													<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09427540968</Text>
+													<Image source={gcashLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
+													<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09120600101</Text>
 												</View>
 											)
+												: (
+													<View style={{ display: "flex", flexDirection: 'row', columnGap: 3, alignItems: 'center', backgroundColor: "#f4f4f5", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 }}>
+														<Image source={paymayaLogo} style={{ width: 30, height: 30, borderRadius: 4 }} />
+														<Text style={{ fontSize: 14, color: "#2b2b2b" }}>09427540968</Text>
+													</View>
+												)
+										}
+									</View>
+									{
+										receipt ? (
+											<Image source={{ uri: receipt }} style={{ width: "100%", height: 300 }} />
+										) : (
+											<TouchableHighlight style={{ backgroundColor: "#0ab1db", width: "100%", padding: 20, marginTop: 15, borderRadius: 6, elevation: 1 }} onPress={handleImageUpload}>
+												<Text style={{ color: "#fff", textAlign: "center", fontSize: 15, fontWeight: "500", letterSpacing: .2 }}>Upload Receipt</Text>
+											</TouchableHighlight>
+										)
 									}
-								</View>
-								{
-									receipt ? (
-										<Image source={{ uri: receipt }} style={{ width: "100%", height: 300 }} />
-									) : (
-										<TouchableHighlight style={{ backgroundColor: "#0ab1db", width: "100%", padding: 20, marginTop: 15, borderRadius: 6, elevation: 1 }} onPress={handleImageUpload}>
-											<Text style={{ color: "#fff", textAlign: "center", fontSize: 15, fontWeight: "500", letterSpacing: .2 }}>Upload Receipt</Text>
-										</TouchableHighlight>
-									)
-								}
-								<View style={{ width: "100%", paddingVertical: 10, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', columnGap: 10, marginTop: 10 }}>
-									<Text style={{ color: "#2b2b2b", width: 120, paddingVertical: 7, paddingHorizontal: 20, borderWidth: 1, borderColor: "#ccc", textAlign: 'center', borderRadius: 6 }} onPress={() => {
-										setSelectedPayment({
-											...selectedPayment,
-											id: "",
-											isActive: false
-										});
-										setReceipt("")
-									}}>Cancel</Text>
-									<Text style={{ width: 120, paddingVertical: 7, paddingHorizontal: 20, color: "#fff", backgroundColor: "#06b6d4", textAlign: 'center', borderRadius: 6 }} onPress={handleSubmit}>Submit</Text>
-								</View>
-							</>)
+									<View style={{ width: "100%", paddingVertical: 10, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', columnGap: 10, marginTop: 10 }}>
+										<Text style={{ color: "#2b2b2b", width: 120, paddingVertical: 7, paddingHorizontal: 20, borderWidth: 1, borderColor: "#ccc", textAlign: 'center', borderRadius: 6 }} onPress={() => {
+											setSelectedPayment({
+												...selectedPayment,
+												id: "",
+												isActive: false
+											});
+											setReceipt("")
+										}}>Cancel</Text>
+										<Text style={{ width: 120, paddingVertical: 7, paddingHorizontal: 20, color: "#fff", backgroundColor: "#06b6d4", textAlign: 'center', borderRadius: 6 }} onPress={handleSubmit}>Submit</Text>
+									</View>
+								</>)
 					}
 
 					{/*  */}
@@ -232,7 +248,7 @@ const Payment = ({navigation}) =>{
 		)
 	}
 
-	const totalAmount = installment?.filter((_,idx)=>idx===installment?.length-1).map((val)=>{return { balance:val.balance, totalAmount:val.amountCharge}});
+	const totalAmount = installment?.filter((_, idx) => idx === installment?.length - 1).map((val) => { return { balance: val.balance, totalAmount: val.amountCharge } });
 
 	return payment && (
 		<>
@@ -254,7 +270,7 @@ const Payment = ({navigation}) =>{
 							<View style={{ padding: 20 }}>
 								<View style={{ justifyContent: "space-between", flexDirection: "row", backgroundColor: "#099ec3", padding: 10 }}>
 									<Text style={{ color: "#fff", fontWeight: '400', fontSize: 16 }}>Remaining Balance:</Text>
-									<Text style={{ color: "#fff", fontSize: 16 }}>₱ {totalAmount[0]?.balance ? Math.ceil(totalAmount[0]?.balance).toLocaleString():0}</Text>
+									<Text style={{ color: "#fff", fontSize: 16 }}>₱ {totalAmount[0]?.balance ? Math.ceil(totalAmount[0]?.balance).toLocaleString() : 0}</Text>
 								</View>
 
 								<View style={{ width: "100%", backgroundColor: "#fff", marginTop: 10, borderRadius: 6, padding: 10, flexDirection: 'column' }}>
@@ -360,10 +376,15 @@ const Payment = ({navigation}) =>{
 													</View>
 												))
 											:
-											<View style={{ alignItems: "center" }}>
-												<Image source={nopayment} style={{ width: 300, height: 300 }} />
-												<Text style={{ fontSize: 20, fontWeight: "500", color: "#595959", textAlign: "center" }}>Your dental payments are up to date!</Text>
-											</View>
+											// <>
+											// 	<SkeletonLoading />
+											// 	<SkeletonLoading />
+											// 	<SkeletonLoading />
+											// </>
+										<View style={{ alignItems: "center" }}>
+											<Image source={nopayment} style={{ width: 300, height: 300 }} />
+											<Text style={{ fontSize: 20, fontWeight: "500", color: "#595959", textAlign: "center" }}>Your dental payments are up to date!</Text>
+										</View>
 									}
 								</View>
 							)
@@ -375,3 +396,34 @@ const Payment = ({navigation}) =>{
 }
 
 export default React.memo(Payment);
+
+const style = {
+	skeletonContainer: {
+		borderWidth: 1.2,
+		borderColor: '#f2f2f2',
+		width: '100%',
+		backgroundColor: '#fff',
+		borderRadius: 8,
+		padding: 15,
+		elevation: 1,
+		shadowRadius: 8,
+		shadowOffset: .2,
+		flex: 1,
+		flexDirection: 'column',
+		alignItems: 'flex-start',
+		borderRadius: 10,
+		gap: 10,
+		paddingVertical: 20
+	},
+	skeletonInfo: {
+		width: '80%',
+		height: 40,
+		backgroundColor: '#f2f2f2',
+		marginBottom: 10,
+	},
+	skeletonSpecialty: {
+		width: '50%',
+		height: 15,
+		backgroundColor: '#f2f2f2',
+	},
+}

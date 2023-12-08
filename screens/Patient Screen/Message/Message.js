@@ -26,8 +26,8 @@ function Message({ setMessageHistory, navigation }) {
             messages?.length > 0 ?
               <ScrollView contentContainerStyle={{ width: "100%", }}>
                 {
-                  messages?.map((val, idx) => (
-                    <Pressable key={idx} style={{ paddingHorizontal: 20, paddingVertical: 20, backgroundColor: "white", borderRadius: 6 }} onPress={() => selectMessage(val.roomId, val)}>
+                  messages && messages?.map((val, idx) => (
+                    <Pressable key={idx} style={{ paddingHorizontal: 20, paddingVertical: 20, backgroundColor: "white", borderRadius: 6, borderBottomColor: "#ccc", borderBottomWidth: .5 }} onPress={() => selectMessage(val.roomId, val)}>
                       <Text style={{ fontSize: 16, fontWeight: "500", color: "#3f3f3f" }}>Admin {val.adminId.firstname}</Text>
                       <Text style={{ fontSize: 14, color: "#595959" }}>{val.messageEntityList[val.messageEntityList.length - 1].messageContent}</Text>
                     </Pressable>

@@ -118,11 +118,12 @@ function Prescription({ setSideNavShow, navigation }) {
                   <Text style={{ color: "#06b6d4" }}>{val.firstname} {val.lastname}</Text>
                 </Pressable>
               ))
-              : suggestion?.length < 1 ?
-                <View style={{ marginTop: 2, padding: 10, backgroundColor: "#fce9e9" }}>
+              :
+              suggestion?.length > 0 && !data.patientName && (
+                <View style={{ marginTop: 2, padding: 10, backgroundColor: "#fce9e9", borderWidth: .5, borderColor: "red", borderRadius: 4 }}>
                   <Text style={{ color: "#dd2222" }}>No existing patient</Text>
                 </View>
-                : <Text></Text>
+              )
           }
         </View>
 

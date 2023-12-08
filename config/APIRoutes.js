@@ -37,5 +37,7 @@ export const SCHEDULE_LINK = `http://${PORT}:8080/api/v1/schedule`;
 export const PRESCRIPTION_LINK = `http://${PORT}:8080/api/v1/prescription`;
 export const NOTIFICATION_LINK = `http://${PORT}:8080/api/v1/notification`;
 export const HMO_LINK = `http://${PORT}:8080/api/v1/insurance`;
+export const ADMIN_LINK = `http://${PORT}:8080/api/v1/admin`;
+
 
 export const SOCKET_LINK = `http://${PORT}:8081/`;
