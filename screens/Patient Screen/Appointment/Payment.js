@@ -172,7 +172,7 @@ function Payment({ navigation, appointmentDetails, setAppointmentDetails }) {
           <Text style={{ fontSize: 14, color: "#595959", fontWeight: "500" }}>Payment Type:</Text>
           <Text style={{ fontSize: 14, fontWeight: "500", color: "#3f3f3f" }}>{appointmentDetails.type}</Text>
         </View> */}
-        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', }}>
+        <View style={{ borderBottomWidth: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 8 , borderColor: "#CCC"}}>
           <Text style={{ fontSize: 16, color: "#595959", fontWeight: "500" }}>Total Amount</Text>
           <Text style={{ fontSize: 16, fontWeight: "500", color: "#3f3f3f" }}>₱ {appointmentDetails.totalAmount.toLocaleString()}</Text>
         </View>

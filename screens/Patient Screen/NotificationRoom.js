@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView, Text, Dimensions, Pressable, Image } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 import NotificationModal from "../../components/NotificationModal";
-import kmlogo from "../../assets/images/logo.jpg";
+import kmlogo from "../../assets/images/logo2.jpg";
 import empty from "../../assets/images/empty.png"
 import { deleteAllNotification } from "../../redux/action/NotificationAction";
 
@@ -17,11 +17,11 @@ const NotificationRoom = () => {
 	const dispatch = useDispatch();
 
 	return (
-		<View style={{ height: "100%", width: width, zIndex: 1 }}>
+		<View style={{ height: "100%", width: width, zIndex: 50 }}>
 			{readNotification.isShow && <NotificationModal notification={readNotification} setNotificationData={setReadNotification} />}
 
 			<ScrollView>
-				<View style={{ gap: 8, height: "100%" }}>
+				<View style={{ height: "100%" }}>
 					{
 						notification?.length > 0 ?
 							<>
@@ -30,30 +30,25 @@ const NotificationRoom = () => {
 								</View>
 								{
 									notification.map((val, idx) => (
-										<>
+										<Pressable key={idx} style={{ width: width, backgroundColor: val.status === "UNREAD" ? "#ECF8FE" : "#fff", padding: 15, gap: 6, borderWidth: 1, borderColor: "#f2f2f2", zIndex: 50 }} onPress={(prev) => setReadNotification({ ...prev, id: val.notificationId, isShow: true })}>
+											<View style={{ gap: 8, flexDirection: "row" }}>
+												<Image source={kmlogo} style={{ width: 50, height: 50 }} />
+												<View style={{ width: "100%", display: "flex", flexDirection: "column", flexWrap: "wrap", width: "100%" }}>
+													<View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+														<Text style={{ fontSize: 15, fontWeight: "500", color: "#3f3f3f" }}>{val.name}</Text>
 
-
-											<Pressable key={idx} style={{ width: width, backgroundColor: "#fff", padding: 15, gap: 6, borderWidth: 1, borderColor: "#f2f2f2" }} onPress={() => setReadNotification({ ...readNotification, id: val.notificationId, isShow: true })}>
-												<View style={{ gap: 8, flexDirection: "row" }}>
-													<Image source={kmlogo} style={{ width: 50, height: 50 }} />
-													<View style={{ width: "100%", display: "flex", flexDirection: "column", flexWrap: "wrap", width: "100%" }}>
-														<View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
-															<Text style={{ fontSize: 15, fontWeight: "500", color: "#3f3f3f" }}>{val.name}</Text>
-
-															{
-																val.status === "UNREAD" &&
-																<View style={{ width: 10, height: 10, borderRadius: 50, backgroundColor: "red" }}>
-																</View>
-															}
-														</View>
-
-														<Text style={{ fontSize: 12, color: "#595959" }}>{val.description.length > 53 ? val.description.substring(0, 53) + "\n" + val.description.substring(53) : val.description}</Text>
+														{
+															val.status === "UNREAD" &&
+															<View style={{ width: 10, height: 10, borderRadius: 50, backgroundColor: "red" }}>
+															</View>
+														}
 													</View>
+
+													<Text style={{ fontSize: 12, color: "#595959" }}>{val.description.length > 53 ? val.description.substring(0, 53) + "\n" + val.description.substring(53) : val.description}</Text>
 												</View>
+											</View>
 
-											</Pressable>
-										</>
-
+										</Pressable>
 									))
 								}
 							</>

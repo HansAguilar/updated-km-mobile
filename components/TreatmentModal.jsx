@@ -9,6 +9,7 @@ import { createTreatment } from "../redux/action/AppointmentAction";
 import { fetchPayment } from "../redux/action/PaymentAction";
 import toastFunction from "../config/toastConfig";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 function TreatmentModal({ setModal, treatmentData }) {
 	const { height } = Dimensions.get("screen");
@@ -43,7 +44,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 		treatmentNumberOfDay: "",
 		treatmentDateType: "",
 	});
-	const treatmentDateList = ["day", "week", "month"];
+	const treatmentDateList = ["Day", "Week", "Month"];
 	const [treatmentDateListToggle, setTreatmentDateListToggle] = useState(false);
 	const [showPicker, setShowPicker] = useState(false);
 
@@ -143,7 +144,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 		dispatch(createTreatment(data));
 		setModal(false);
 	}
-	
+
 	const calculateTotalServiceTime = () => {
 		const timeEnd = dentalServices.map((val) => {
 			return val.duration;
@@ -164,361 +165,382 @@ function TreatmentModal({ setModal, treatmentData }) {
 	}
 
 	const daysPerSelection = [
-		{type:"day", number:6 },
-		{type:"week", number:3 },
-		{type:"month", number:12 },
+		{ type: "day", number: 6 },
+		{ type: "week", number: 3 },
+		{ type: "month", number: 12 },
 	]
 	const [daysToggle, setDaysToggle] = useState(false);
 
 	const currentDate = moment();
-  	currentDate.add(1, 'day');
+	currentDate.add(1, 'day');
 	return (
 		<View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 			<View style={{ width: "100%", height: 600, maxHeight: 600, backgroundColor: "white", padding: 20, borderRadius: 10, zIndex: -10 }}>
-				<Text style={{ fontSize: 18, fontWeight: 'bold', color: "#52525b", width: "100%", paddingBottom: 5, borderBottomWidth: 1, borderColor: "gray" }}>Treatment Data</Text>
-				<ScrollView style={{ width: "100%", height: "100%", paddingVertical: 15, }}>
+				<Text style={{ fontSize: 18, fontWeight: 'bold', color: "#52525b", width: "100%", paddingBottom: 5, borderBottomWidth: 1, borderColor: "#CCC" }}>Treatment Data</Text>
+				<ScrollView style={{ width: "100%", height: "100%", marginVertical: 15 }}>
 
 					{/* Appointment Info */}
-					<Text style={{ marginBottom: 10, fontWeight: "bold", color: "#3f3f46" }}>Appointment Information</Text>
-					<View style={{ paddingHorizontal: 10 }}>
-						{/* PATIENT NAME */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Patient Name</Text>
-							<TextInput
-								value={`${treatmentData.patient.firstname} ${treatmentData.patient.lastname}`}
-								editable={false}
-								style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46" }}
-							/>
-						</View>
+					<View>
+						<Text style={{ marginBottom: 10, fontWeight: "bold", color: "#595959", fontSize: 16 }}>Appointment Information</Text>
+						<View style={{ gap: 10, paddingHorizontal: 8 }}>
 
-						{/* DENTIST NAME */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Dentist Name</Text>
-							<TextInput
-								value={`Dr. ${treatmentData.dentist.fullname}`}
-								editable={false}
-								style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46" }}
-							/>
-						</View>
-
-						{/* SERVICES */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Services</Text>
-							<View
-								style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", width: "100%", display: 'flex', flexWrap: 'wrap', gap: 10, flexDirection: 'row' }}
-							>
-								{
-									dentalServices.map((val, idx) => (
-										<View key={idx} style={{ backgroundColor: "#06b6d4", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 5, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', columnGap: 8 }}>
-											<Text style={{ color: "#fff", }}>{val.name}</Text>
-											<Pressable
-												style={{ borderColor: "#fff", borderWidth: 1, padding: 1, borderRadius: 20 }}
-												onPress={() => {
-													setTotalAmount((prev) => prev - val.price)
-													setDentalServices(prev => {
-														return prev.filter((p) => p.serviceId !== val.serviceId)
-													})
-												}
-												}
-											>
-												<EntypoIcon name="cross" color="#fff" />
-											</Pressable>
-										</View>
-									))
-								}
-								<TextInput style={{ flex: 1 }} value={searchService} onChangeText={handleSearchService} />
+							{/* PATIENT NAME */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Patient Name</Text>
+								<TextInput value={`${treatmentData.patient.firstname} ${treatmentData.patient.lastname}`} editable={false} style={{ ...style.inputTextStyle, backgroundColor: "#fafafa" }} />
 							</View>
-							{
-								searchService && suggestion.length > 0
-									? suggestion.map((val, idx) => <Text
-										key={idx}
-										style={{ width: "100%", paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#f4f4f5" }}
-										onPress={() => {
-											setTotalAmount((prev) => prev + val.price)
-											setDentalServices((prev) => [...prev, val])
-											setSearchService("");
-										}}
-									>
-										{val.name}
-									</Text>)
-									: searchService && suggestion.length < 1 ? <Text>No existing services</Text>
-										: <></>
-							}
-						</View>
 
-						{/* Teeth */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Teeth</Text>
-							<Pressable
-								style={{ height: "auto", borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 8, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", display: "flex", flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}
-								onPress={() => setToothToggle(true)}
-							>
-								<Text style={{ fontSize: 12, }}>{selectedTeeth.length > 0 ? `${selectedTeeth.length} tooth selected` : "None"}</Text>
-								<AntIcon name='down' size={12} color={"black"} />
-							</Pressable>
-							{
-								toothToggle && (
-									<View style={{ height: "auto", width: "100%", display: "flex", justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', flexDirection: "row", gap: 10, paddingVertical: 10, paddingHorizontal: 5 }}>
-										{
-											toothChart.map((val, idx) => (
-												<Text key={idx}
-													style={{
-														padding: 5,
-														backgroundColor: val.isClick ? "#06b6d4" : "#fff",
-														color: val.isClick ? "#fff" : "#52525b",
-														borderRadius: 5,
-														borderWidth: 1,
-														borderColor: val.isClick ? "#06b6d4" : "#f4f4f5",
-													}}
-													onPress={() => selectTeethHandler(idx)}
-												>{val.name}</Text>
-											))
-										}
-										<Text key={"none"}
-											style={{
-												padding: 5,
-												backgroundColor: "#fff",
-												color: "#52525b",
-												borderRadius: 5,
-												borderWidth: 1,
-												borderColor: "#f4f4f5",
-											}}
-											onPress={() => {
-												setSelectedTeeth([]);
-												setToothChart((prev) => {
-													return prev.map(val => ({ ...val, isClick: false }))
-												})
-												setToothToggle(false)
-											}}
-										>None</Text>
-									</View>
-								)
-							}
-							{selectedTeeth.length > 0 && toothToggle && <Text style={{ backgroundColor: "#06b6d4", paddingVertical: 6, textAlign: 'center', color: "#fff", borderRadius: 5 }} onPress={() => setToothToggle(false)}>Done</Text>}
-						</View>
-					</View>
+							{/* DENTIST NAME */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Dentist Name</Text>
+								<TextInput value={`Dr. ${treatmentData.dentist.fullname}`} editable={false} style={{ ...style.inputTextStyle, backgroundColor: "#fafafa" }} />
+							</View>
 
-					{/* Treatment Info */}
-					<Text style={{ marginVertical: 10, fontWeight: "bold", color: "#3f3f46" }}>Treatment Schedule</Text>
-					<View style={{ paddingHorizontal: 10 }}>
-
-						{/* DATE TYPE */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Treatment Date Type</Text>
-							<Pressable
-								style={{ height: "auto", borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 8, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", display: "flex", flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}
-								onPress={() => setTreatmentDateListToggle(true)}
-							>
-								<Text style={{ fontSize: 12, textTransform: 'capitalize' }}>{treatmentValue.treatmentDateType ? treatmentValue.treatmentDateType : "Select treatment type"}</Text>
-								<AntIcon name='down' size={12} color={"black"} />
-							</Pressable>
-							{
-								treatmentDateListToggle && (
-									<View style={{ width: "100%", height: "auto", borderWidth: 1, borderColor: "#e4e4e7" }}>
-										{
-											treatmentDateList.map((val, idx) => (
-												<Text key={idx} onPress={() => {
-													setTreatmentValue({ ...treatmentValue, treatmentDateType: val })
-													setTreatmentDateListToggle(false);
-												}} style={{ width: "100%", paddingVertical: 8, textAlign: 'center', fontSize: 12, textTransform: 'capitalize' }}>{val}</Text>
-											))
-										}
-									</View>
-								)
-							}
-						</View>
-
-						{/* NUMBER OF TREATMENT */}
-						{
-							treatmentValue.treatmentDateType && (
-								<View style={{ marginBottom: 10 }}>
-									<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Number of treatment</Text>
-									<Pressable
-										value={treatmentValue.treatmentNumberOfDay}
-										onPress={()=>setDaysToggle(true)}
-										keyboardType="numeric"
-										style={{ borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", }}
-									>
-										<Text style={{fontSize: 12, }}>{treatmentValue.treatmentNumberOfDay ? treatmentValue.treatmentNumberOfDay : "Number of day"}</Text>
-									</Pressable>
-									{daysToggle && (
-									<View>
-									{daysPerSelection
-										.filter((val) => val.type === treatmentValue.treatmentDateType)
-										.map((val,idx) => (
-										<React.Fragment key={idx}>
-											{[...Array(val.number)].map((_, idx) => (
-											<Text
-												key={`${val.type}-${idx + 1}`}
-												onPress={() => {
-												setTreatmentValue({
-													...treatmentValue,
-													treatmentNumberOfDay: idx + 1,
-												});
-												setDaysToggle(false);
-												}}
-											>
-												{idx + 1}
-											</Text>
-											))}
-										</React.Fragment>
-										))}
-									</View>
-								)}
-								</View>
-							)
-						}
-
-						{/* Date start */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Select starting date</Text>
-							{
-								showPicker && (
-									<DateTimePicker
-										mode="date"
-										display='spinner'
-										value={date}
-										onChange={onChangeDate}
-										maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
-										minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
-										androidMode="calendar"
-										{...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
-										{...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
-										{...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
-										{...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
-										{...(Platform.OS === 'android' && { minDate: moment().toDate() })}
-									/>
-								)
-							}
-							{
-								!showPicker && (
-									<Pressable
-										style={{ width: '100%' }}
-										onPress={handleAppointmentStart}
-									>
-										<TextInput
-											value={dateRef.current}
-											editable={false}
-											style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46" }}
-											onChangeText={onChangeText}
-											placeholder={"Select Appointment Date"}
-										/>
-									</Pressable>
-								)
-							}
-						</View>
-					</View>
-
-					{/* Payment Info */}
-					<Text style={{ marginVertical: 10, fontWeight: "bold", color: "#3f3f46" }}>Payment Information</Text>
-					<View style={{ paddingHorizontal: 10 }}>
-
-						{/* Payment Type */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Payment Type</Text>
-							<Pressable
-								style={{ height: "auto", borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 8, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", display: "flex", flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}
-								onPress={() => setPaymentToggle(true)}
-							>
-								<Text style={{ fontSize: 12, textTransform: 'capitalize' }}>{paymentType ? paymentType : "Select payment type"}</Text>
-								<AntIcon name='down' size={12} color={"black"} />
-							</Pressable>
-							{
-								paymentToggle && (
-									<View style={{ width: "100%", height: "auto", borderWidth: 1, borderColor: "#e4e4e7" }}>
-										<Text onPress={() => {
-											setPaymentType("full-payment");
-											setPatientHMO({ ...patientHMO, hmoId: "", hmoName: "", isShow: false })
-											setPaymentToggle(false);
-										}}
-											style={{ width: "100%", paddingVertical: 8, textAlign: 'center', fontSize: 12, textTransform: 'capitalize' }}
-										>
-											Full-Payment
-										</Text>
-										{
-											totalAmount > 7000 && installment.length < 1 && (
-												<Text onPress={() => {
-													setPaymentType("installment");
-													setPatientHMO({ ...patientHMO, hmoId: "", hmoName: "", isShow: false })
-													setPaymentToggle(false);
-												}}
-													style={{ width: "100%", paddingVertical: 8, textAlign: 'center', fontSize: 12, textTransform: 'capitalize' }}
-												>
-													Installment
-												</Text>
-											)
-										}
-										{
-											hmoList.length > 0 && (
-												<Text onPress={() => {
-													setPaymentType("hmo");
-													setPaymentToggle(false);
-												}}
-													style={{ width: "100%", paddingVertical: 8, textAlign: 'center', fontSize: 12, textTransform: 'capitalize' }}
-												>
-													HMO
-												</Text>
-											)
-										}
-									</View>
-								)
-							}
-						</View>
-						{/* HMO */}
-						{
-							paymentType === "hmo" && (
-								<View style={{ marginBottom: 10 }}>
-									<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Select HMO</Text>
-									<Pressable
-										style={{ height: "auto", borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 8, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46", display: "flex", flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}
-										onPress={() => setPatientHMO({ ...patientHMO, isShow: true })}
-									>
-										<Text style={{ fontSize: 12, textTransform: 'capitalize' }}>{patientHMO.hmoName ? patientHMO.hmoName : "Select payment type"}</Text>
-										<AntIcon name='down' size={12} color={"black"} />
-									</Pressable>
+							{/* SERVICES */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Services</Text>
+								<View style={{ flexDirection: "row", gap: 4, flexWrap: "wrap" }}>
 									{
-										patientHMO.isShow && (
-											<View style={{ width: "100%", height: "auto", borderWidth: 1, borderColor: "#e4e4e7" }}>
-												{
-													hmoList.map((val, idx) => (
-														<Text key={idx} onPress={() => {
-															setPatientHMO({ ...patientHMO, hmoName: val.card, hmoId: val.insuranceId, isShow: false })
-														}}
-															style={{ width: "100%", paddingVertical: 8, textAlign: 'center', fontSize: 12, textTransform: 'capitalize' }}
-														>
-															{val.card}
-														</Text>
-													))
-												}
+										dentalServices.map((val, idx) => (
+											<View key={idx} style={{ backgroundColor: "#cef6fd", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+												<Text style={{ color: "#06b6d4", }}>{val.name}</Text>
+												<Pressable style={{ borderColor: "red", borderWidth: 1, padding: 1, borderRadius: 20 }}
+													onPress={() => {
+														setTotalAmount((prev) => prev - val.price)
+														setDentalServices(prev => {
+															return prev.filter((p) => p.serviceId !== val.serviceId)
+														})
+													}
+													}
+												>
+													<EntypoIcon name="cross" color="red" />
+												</Pressable>
 											</View>
-										)
+										))
 									}
 								</View>
-							)
-						}
 
-						{/* PAYMENT AMOUNT */}
-						<View style={{ marginBottom: 10 }}>
-							<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Total Amount</Text>
-							<TextInput
-								value={`Php. ${totalAmount.toLocaleString()}`}
-								editable={false}
-								style={{ fontSize: 12, borderWidth: 0.5, borderColor: "#e4e4e7", paddingVertical: 3, paddingHorizontal: 10, backgroundColor: "#fafafa", color: "#3f3f46" }}
-							/>
+								<TextInput value={searchService} onChangeText={handleSearchService} style={{ ...style.inputTextStyle }} />
+
+								{
+									searchService && suggestion.length > 0
+										? suggestion.map((val, idx) => <Text
+											key={idx}
+											style={{ width: "100%", paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#f4f4f5" }}
+											onPress={() => {
+												setTotalAmount((prev) => prev + val.price)
+												setDentalServices((prev) => [...prev, val])
+												setSearchService("");
+											}}
+										>
+											{val.name}
+										</Text>)
+										: searchService && suggestion.length < 1 ? <Text style={{ color: "red", backgroundColor: "#ffe6e6", padding: 4 }}>No existing services</Text>
+											: <></>
+								}
+							</View>
+
+
+							{/* Teeth */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Teeth</Text>
+								<Pressable style={{ ...style.subDropdownStyle }} onPress={(prev) => setToothToggle(!toothToggle)}>
+									<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingHorizontal: 18, paddingVertical: 8, }}>
+										<Text style={{ fontSize: 14, color: "#2b2b2b" }}>{selectedTeeth.length > 0 ? `${selectedTeeth.length} tooth selected` : "None"}</Text>
+										<AntDesign name={toothToggle ? "down" : "up"} color="#2b2b2b" />
+									</View>
+								</Pressable>
+
+								{
+									toothToggle && (
+										<View style={{ width: "100%", flexWrap: 'wrap', flexDirection: "row", justifyContent: "space-between" }}>
+											{
+												toothChart.map((val, idx) => (
+													<View style={{ backgroundColor: val.isClick ? "#cef6fd" : "#fff", borderRadius: 5, borderWidth: 1, padding: 10, width: "20%", margin: 4, borderColor: val.isClick ? "#06b6d4" : "#e6e6e6", }} key={idx}>
+														<Text
+															style={{
+																color: val.isClick ? "#06b6d4" : "#52525b",
+
+																textAlign: "center",
+															}}
+															onPress={() => selectTeethHandler(idx)}
+														>{val.name}</Text>
+													</View>
+
+												))
+											}
+											<Text key={"none"}
+												style={{
+													padding: 10, backgroundColor: "#ff1a1a",
+													color: "#fff", borderRadius: 4,
+													textAlign: "center", width: "20%", margin: 4
+												}}
+												onPress={() => {
+													setSelectedTeeth([]);
+													setToothChart((prev) => {
+														return prev.map(val => ({ ...val, isClick: false }))
+													})
+													setToothToggle(false)
+												}}
+											>None</Text>
+										</View>
+									)
+								}
+								{selectedTeeth.length > 0 && toothToggle && <Text style={{ backgroundColor: "#06b6d4", paddingVertical: 6, textAlign: 'center', color: "#fff", borderRadius: 4 }} onPress={() => setToothToggle(false)}>Done</Text>}
+							</View>
 						</View>
-
 					</View>
 
-					<View style={{ width: "100%", height: "auto", display: "flex", flexDirection: 'row', columnGap: 10 }}>
-						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#ef4444", color: "#fff", borderRadius: 8 }} onPress={() => setModal(false)}>Cancel</Text>
-						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", borderRadius: 8 }} onPress={handleSubmitButton}>Submit</Text>
+
+					<View style={{ marginTop: 20, borderTopWidth: 1, paddingTop: 10, borderTopColor: "#ccc" }}>
+						{/* Treatment Info */}
+						<Text style={{ marginBottom: 10, fontWeight: "bold", color: "#595959", fontSize: 16 }}>Treatment Schedule</Text>
+
+						<View style={{ gap: 10, paddingHorizontal: 8 }}>
+							{/* DATE TYPE */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Treatment Date Type</Text>
+								<Pressable style={{ ...style.subDropdownStyle }} onPress={() => setTreatmentDateListToggle(!treatmentDateListToggle)}>
+									<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingHorizontal: 18, paddingVertical: 8, }}>
+										<Text style={{ fontSize: 14, color: "#2b2b2b" }}>{treatmentValue.treatmentDateType ? treatmentValue.treatmentDateType : "Select treatment type"}</Text>
+										<AntDesign name={treatmentDateListToggle ? "down" : "up"} color="#2b2b2b" />
+									</View>
+								</Pressable>
+
+								{
+									treatmentDateListToggle && (
+										<View style={{ width: "100%", borderWidth: 1, borderColor: "#e4e4e7" }}>
+											{
+												treatmentDateList.map((val, idx) => (
+													<Text key={idx} onPress={() => {
+														setTreatmentValue({ ...treatmentValue, treatmentDateType: val })
+														setTreatmentDateListToggle(false);
+													}} style={{ width: "100%", paddingVertical: 10, textAlign: 'center', fontSize: 14, textTransform: 'capitalize' }}>{val}</Text>
+												))
+											}
+										</View>
+									)
+								}
+							</View>
+
+							{/* NUMBER OF TREATMENT */}
+							{
+								treatmentValue.treatmentDateType && (
+									<View style={{ gap: 4, width: "100%" }}>
+										<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Number of treatment</Text>
+
+										<Pressable
+											value={treatmentValue.treatmentNumberOfDay}
+											onPress={() => setDaysToggle(true)}
+											keyboardType="numeric"
+											style={{ ...style.inputTextStyle, backgroundColor: "#fafafa" }}
+										>
+											<TextInput editable={false} style={{ fontSize: 14, color: "#2b2b2b" }}>{treatmentValue.treatmentNumberOfDay ? treatmentValue.treatmentNumberOfDay : "Number of day"}</TextInput>
+										</Pressable>
+										{daysToggle && (
+											<View>
+												{daysPerSelection
+													.filter((val) => val.type === treatmentValue.treatmentDateType)
+													.map((val, idx) => (
+														<React.Fragment key={idx}>
+															{[...Array(val.number)].map((_, idx) => (
+																<Text
+																	key={`${val.type}-${idx + 1}`}
+																	onPress={() => {
+																		setTreatmentValue({
+																			...treatmentValue,
+																			treatmentNumberOfDay: idx + 1,
+																		});
+																		setDaysToggle(false);
+																	}}
+																>
+																	{idx + 1}
+																</Text>
+															))}
+														</React.Fragment>
+													))}
+											</View>
+										)}
+									</View>
+								)
+							}
+
+							{/* Date start */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Select starting date</Text>
+
+								{
+									showPicker && (
+										<DateTimePicker
+											mode="date"
+											display='spinner'
+											value={date}
+											onChange={onChangeDate}
+											maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
+											minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
+											androidMode="calendar"
+											{...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
+											{...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
+											{...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
+											{...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
+											{...(Platform.OS === 'android' && { minDate: moment().toDate() })}
+										/>
+									)
+								}
+
+								{
+									!showPicker && (
+										<Pressable
+											style={{ width: '100%' }}
+											onPress={handleAppointmentStart}
+										>
+											<TextInput
+												value={dateRef.current}
+												editable={false}
+												style={{ ...style.inputTextStyle, paddingLeft: 20, backgroundColor: "#fafafa" }}
+												onChangeText={onChangeText}
+												placeholder={"Select Appointment Date"}
+											/>
+										</Pressable>
+									)
+								}
+							</View>
+						</View>
 					</View>
-					<View style={{ width: "100%", height: 20 }}></View>
+
+
+					{/* Payment Info */}
+					<View style={{ marginTop: 20, borderTopWidth: 1, paddingTop: 10, borderTopColor: "#ccc" }}>
+						<Text style={{ marginVertical: 10, fontWeight: "bold", color: "#3f3f46" }}>Payment Information</Text>
+
+						<View style={{ gap: 10, paddingHorizontal: 8 }}>
+
+							{/* Payment Type */}
+							<View style={{ gap: 4, width: "100%" }}>
+
+								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Payment Type</Text>
+
+								<Pressable style={{ ...style.subDropdownStyle }} onPress={() => setPaymentToggle(!paymentToggle)}>
+									<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingHorizontal: 18, paddingVertical: 8, }}>
+										<Text style={{ fontSize: 14, color: "#2b2b2b" }}>{paymentType ? paymentType : "Select payment type"}</Text>
+										<AntDesign name={paymentToggle ? "down" : "up"} color="#2b2b2b" />
+									</View>
+								</Pressable>
+
+								{
+									paymentToggle && (
+										<View style={{ width: "100%", borderWidth: 1, borderColor: "#e4e4e7" }}>
+											<Text onPress={() => {
+												setPaymentType("full-payment");
+												setPatientHMO({ ...patientHMO, hmoId: "", hmoName: "", isShow: false })
+												setPaymentToggle(false);
+											}}
+												style={{ width: "100%", paddingVertical: 10, textAlign: 'center', fontSize: 14, textTransform: 'capitalize' }}
+											>
+												Full-Payment
+											</Text>
+											{
+												totalAmount > 7000 && installment.length < 1 && (
+													<Text onPress={() => {
+														setPaymentType("installment");
+														setPatientHMO({ ...patientHMO, hmoId: "", hmoName: "", isShow: false })
+														setPaymentToggle(false);
+													}}
+														style={{ width: "100%", paddingVertical: 10, textAlign: 'center', fontSize: 14, textTransform: 'capitalize' }}
+													>
+														Installment
+													</Text>
+												)
+											}
+											{
+												hmoList.length > 0 && (
+													<Text onPress={() => {
+														setPaymentType("hmo");
+														setPaymentToggle(false);
+													}}
+														style={{ width: "100%", paddingVertical: 10, textAlign: 'center', fontSize: 14, textTransform: 'capitalize' }}
+													>
+														HMO
+													</Text>
+												)
+											}
+										</View>
+									)
+								}
+							</View>
+							{/* HMO */}
+							{
+								paymentType === "hmo" && (
+									<View style={{ gap: 4, width: "100%" }}>
+										<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Select HMO</Text>
+
+										<Pressable style={{ ...style.subDropdownStyle }} onPress={() => setPatientHMO(prev => ({ ...patientHMO, isShow: !prev.isShow }))}>
+											<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingHorizontal: 18, paddingVertical: 8, }}>
+												<Text style={{ fontSize: 14, color: "#2b2b2b" }}>{patientHMO.hmoName ? patientHMO.hmoName : "Select payment type"}</Text>
+												<AntDesign name={patientHMO.isShow ? "down" : "up"} color="#2b2b2b" />
+											</View>
+										</Pressable>
+
+										{
+											patientHMO.isShow && (
+												<View style={{ width: "100%", height: "auto", borderWidth: 1, borderColor: "#e4e4e7" }}>
+													{
+														hmoList.map((val, idx) => (
+															<Text key={idx} onPress={() => {
+																setPatientHMO({ ...patientHMO, hmoName: val.card, hmoId: val.insuranceId, isShow: false })
+															}}
+																style={{ width: "100%", paddingVertical: 8, textAlign: 'center', fontSize: 12, textTransform: 'capitalize' }}
+															>
+																{val.card}
+															</Text>
+														))
+													}
+												</View>
+											)
+										}
+									</View>
+								)
+							}
+
+							{/* PAYMENT AMOUNT */}
+							<View style={{ gap: 4, width: "100%" }}>
+								<Text style={{ fontSize: 10, fontWeight: "bold", color: "#3f3f46", marginBottom: 5 }}>Total Amount</Text>
+								<TextInput
+									value={`Php. ${totalAmount.toLocaleString()}`}
+									editable={false}
+									style={{ ...style.inputTextStyle, backgroundColor: "#fafafa", paddingLeft: 20 }}
+								/>
+							</View>
+
+						</View>
+					</View>
+
+
+					<View style={{ width: "100%", display: "flex", flexDirection: 'row', gap: 10 , paddingTop: 15}}>
+						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#ef4444", color: "#fff", borderRadius: 6 }} onPress={() => setModal(false)}>Cancel</Text>
+						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", borderRadius: 6 }} onPress={handleSubmitButton}>Confirm</Text>
+					</View>
 				</ScrollView>
 
-			</View>
-		</View>
+			</View >
+		</View >
 	);
 }
 
 export default TreatmentModal;
+
+const style = {
+	inputTextStyle: {
+		borderColor: "#e6e6e6",
+		borderWidth: 1, padding: 4,
+		borderRadius: 4, paddingLeft: 10
+	},
+	subDropdownStyle: {
+		width: '100%',
+		backgroundColor: "#fff",
+		justifyContent: "space-between",
+		flexDirection: "row", width: "100%", alignItems: "center",
+		borderWidth: 1,
+		borderColor: "#e6e6e6"
+	},
+}

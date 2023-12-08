@@ -9,7 +9,6 @@ import nopatient from "../assets/images/todayspatients.png";
 function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentId, navigation }) {
 	const [dropToggle, setDropToggle] = useState(false);
 	const dispatch = useDispatch();
-	// console.log(...data);
 	return (
 		<View style={{ width: "100%", padding: 15, height: "auto" }}>
 
