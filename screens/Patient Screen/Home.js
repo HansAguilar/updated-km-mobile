@@ -207,7 +207,12 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
             <View style={{ marginLeft: 10, display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center' }}>
               <View style={{ gap: 2, flexDirection: 'row' }}>
                 <Text style={{ color: '#fff', fontSize: 15 }}>Hello, </Text>
-                <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>{patient.firstname.charAt(0).toUpperCase() + patient.firstname.substring(1)}</Text>
+                {
+                  patient.firstname.length > 15 ?
+                    <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>{patient.firstname.charAt(0).toUpperCase() + patient.firstname.substring(0, 15) + "..."}</Text>
+                    :
+                    <Text style={{ color: '#fff', fontWeight: '500', fontSize: 15 }}>{patient.firstname.charAt(0).toUpperCase() + patient.firstname.substring(1)}</Text>
+                }
               </View>
             </View>
           </View>

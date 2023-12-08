@@ -7,7 +7,7 @@ export const fetchAdmin= () =>{
     return async dispatch=>{
         try {
             const response = await axios.get(`${ADMIN_LINK}/`);
-            const filteredData = response?.data.filter((val)=>val.role === "STAFF")
+            const filteredData = response?.data?.filter((val)=>val.role === "STAFF")
             dispatch({
                 type: FETCH_ADMIN_SUCCESS,
                 payload:filteredData

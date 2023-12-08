@@ -8,6 +8,7 @@ export const MessageBox = React.memo(({ item }) => {
       style={{
         width: '100%',
         padding: 5,
+        display:"flex",
         flexDirection: 'column',
         alignItems: 'flex-end',
         gap: 3,

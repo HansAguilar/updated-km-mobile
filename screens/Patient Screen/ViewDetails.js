@@ -62,19 +62,19 @@ function ViewDetails({ navigation }) {
 
 	const submitButton = () => {
 		if (!data.firstname || !data.lastname || !data.address || !data.contactNumber || !data.email) {
-			return ToastFunction("error","Fill empty field!");
+			return ToastFunction("error", "Fill empty field!");
 		}
 		if (/[^\w\s]/.test(data.fullname)) {
-			return ToastFunction("error","Invalid characters for fullname!");
+			return ToastFunction("error", "Invalid characters for fullname!");
 		}
 		if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(data.email)) {
-			return ToastFunction("error","Invalid email!");
+			return ToastFunction("error", "Invalid email!");
 		}
 		const regex = /^09\d{9}$/;
 		if (!regex.test(data.contactNumber)) {
-			return ToastFunction("error","Contact number must be 11-digit and must start with 09");
+			return ToastFunction("error", "Contact number must be 11-digit and must start with 09");
 		}
-		dispatch(updatePatientInfo(patient.patientId, data,ToastFunction, navigation));
+		dispatch(updatePatientInfo(patient.patientId, data, ToastFunction, navigation));
 	}
 
 	const cancelButton = () => {
@@ -188,42 +188,46 @@ function ViewDetails({ navigation }) {
 
 
 					<View style={{ backgroundColor: "#fff", width: "90%", padding: 20, borderRadius: 8, gap: 14, marginVertical: 20, elevation: 1 }}>
-						<View style={{ borderColor: "#06a9c6", borderWidth: 1, width: 100, alignItems: "center", paddingVertical: 4, paddingHorizontal: 8, marginLeft: "auto", borderRadius: 4 }}>
-							<Text style={{ color: "#06b6d4", fontWeight: 'bold', textAlign: "right" }} onPress={() => navigation.navigate("HMO")}>Add HMO</Text>
+						<View style={{ justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
+							<Text style={{ fontSize: 18, color: "#2b2b2b", fontWeight: "500" }}>Update Profile</Text>
+							<View style={{ borderColor: "#06a9c6", borderWidth: 1, width: 100, alignItems: "center", paddingVertical: 4, paddingHorizontal: 8, marginLeft: "auto", borderRadius: 4 }}>
+								<Text style={{ color: "#06b6d4", fontWeight: 'bold', textAlign: "right" }} onPress={() => navigation.navigate("HMO")}>Add HMO</Text>
+							</View>
 						</View>
+
 
 						{/* Firstname */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>First Name</Text>
-							<TextInput  name="firstname" value={data.firstname} onChangeText={(value)=>onChangeText("firstname", value)} style={{ ...style.inputTextStyle }} />
+							<TextInput name="firstname" value={data.firstname} onChangeText={(value) => onChangeText("firstname", value)} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Middle Name</Text>
-							<TextInput onChangeText={(value)=>onChangeText("middlename", value)} name="middlename" value={data.middlename} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value) => onChangeText("middlename", value)} name="middlename" value={data.middlename} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Last Name</Text>
-							<TextInput onChangeText={(value)=>onChangeText("lastname", value)} name="lastname" value={data.lastname} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value) => onChangeText("lastname", value)} name="lastname" value={data.lastname} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Address */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Address</Text>
-							<TextInput onChangeText={(value)=>onChangeText("address", value)} name="address" value={data.address} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value) => onChangeText("address", value)} name="address" value={data.address} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Contact Number */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Contact Number</Text>
-							<TextInput onChangeText={(value)=>onChangeText("contactNumber", value)} name="contactNumber" value={data.contactNumber} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value) => onChangeText("contactNumber", value)} name="contactNumber" value={data.contactNumber} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{/* Email */}
 						<View style={{ width: "100%", gap: 4 }}>
 							<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Email</Text>
-							<TextInput onChangeText={(value)=>onChangeText("email", value)} name="email" value={data.email} style={{ ...style.inputTextStyle }} />
+							<TextInput onChangeText={(value) => onChangeText("email", value)} name="email" value={data.email} style={{ ...style.inputTextStyle }} />
 						</View>
 
 						{

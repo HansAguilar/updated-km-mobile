@@ -250,19 +250,19 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
           {
             showPicker && (
               <DateTimePicker
-              mode="date"
-              display='spinner'
-              value={appointmentDetails.date}
-              onChange={onChangeDate}
-              maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
-              minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
-              androidMode="calendar"
-              {...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
-              {...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
-              {...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
-              {...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
-              {...(Platform.OS === 'android' && { minDate: moment().toDate() })}
-            />
+                mode="date"
+                display='spinner'
+                value={appointmentDetails.date}
+                onChange={onChangeDate}
+                maximumDate={moment().add(5, 'months').endOf('month').toDate()} // Set maximumDate to 5 months from now
+                minimumDate={currentDate.toDate()} // Set the minimumDate to the previous day
+                androidMode="calendar"
+                {...(Platform.OS === 'ios' && { datePickerModeAndroid: 'spinner' })}
+                {...(Platform.OS === 'ios' && { maximumDate: moment().add(5, 'months').endOf('month').toDate() })}
+                {...(Platform.OS === 'android' && { minDate: moment().startOf('month').toDate() })}
+                {...(Platform.OS === 'android' && { maxDate: moment().add(5, 'months').endOf('month').toDate() })}
+                {...(Platform.OS === 'android' && { minDate: moment().toDate() })}
+              />
             )
           }
           {
@@ -294,8 +294,8 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
                   .map((val, idx) => (
                     <Pressable onPress={() => {
                       setSelectedTime(val.timeStart)
-                    }} key={idx} style={{ borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#ccc', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
-                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2b2b2b', fontWeight: "500" }}>{val.timeValue}</Text>
+                    }} key={idx} style={{ backgroundColor: "#fff", borderWidth: 1, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#D0D3D4', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
+                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2C3E50', fontWeight: "500" }}>{val.timeValue}</Text>
                     </Pressable>
                   ))
               }
@@ -317,8 +317,8 @@ const Schedule = ({ navigation, appointmentDetails, setAppointmentDetails }) => 
                   .map((val, idx) => (
                     <Pressable onPress={() => {
                       setSelectedTime(val.timeStart)
-                    }} key={idx} style={{ borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#ccc', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
-                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2b2b2b', fontWeight: "500" }}>{val.timeValue}</Text>
+                    }} key={idx} style={{ backgroundColor: "#fff", borderWidth: 1.2, borderColor: selectedTime === val.timeStart ? '#06b6d4' : '#D0D3D4', paddingHorizontal: 22, paddingVertical: 10, borderRadius: 4 }}>
+                      <Text style={{ color: selectedTime === val.timeStart ? '#06b6d4' : '#2C3E50', fontWeight: "500" }}>{val.timeValue}</Text>
                     </Pressable>
                   ))
               }
