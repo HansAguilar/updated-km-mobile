@@ -28,7 +28,7 @@ const History = ({ navigation }) => {
 								<ScrollView style={{ width: "100%", height: 100, gap: 6 }}>
 									{
 										appointment.map((val, idx) => (
-											<View key={idx} style={{ borderBottomWidth: 1, borderBottomColor: "#ccc", padding: 8 }}>
+											<View key={idx} style={{ borderBottomWidth: 1, borderBottomColor: "#ccc", padding: 8, backgroundColor: "#fff" }}>
 												<View style={{ padding: 8 }}>
 													<View style={{ gap: 6, flexDirection: "row", alignItems: "center" }}>
 														<Text style={{ fontSize: 12, fontWeight: "500", color: "#595959" }}>{moment(val.appointmentDate).format("MMM DD, YYYY")}</Text>
@@ -39,7 +39,7 @@ const History = ({ navigation }) => {
 															borderColor: val.status === "DONE" ? "#10b981" : "#fbd0d0"
 														}}>{val.status}</Text>
 													</View>
-													<Text style={{ fontSize: 16, fontWeight: "400", color: "#2b2b2b" }}>{val.status === "DONE" ? `Appointment was successful` : `${val.reasonOfCancellation}`}</Text>
+													<Text style={{ fontSize: 16, fontWeight: "500", color: "#2b2b2b" }}>{val.status === "DONE" ? `Appointment was successful` : `${val.reasonOfCancellation}`}</Text>
 												</View>
 											</View>
 										))

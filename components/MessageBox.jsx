@@ -10,27 +10,25 @@ export const MessageBox = React.memo(({ item }) => {
         padding: 5,
         display:"flex",
         flexDirection: 'column',
-        alignItems: 'flex-end',
+        alignItems: item.type === 'ADMIN' ? 'flex-start' : 'flex-end',
         gap: 3,
-        justifyContent: item.type === 'ADMIN' ? 'flex-start' : 'flex-end',
       }}
     >
       <Text
         style={{
           fontSize: 10,
           width: '100%',
-          color: item.type === 'ADMIN' ? '#fff' : '#27272a',
+          color: item.type === 'ADMIN' ? '#27272a' : '#27272a',
           textAlign: item.type === 'ADMIN' ? 'left' : 'right',
         }}
       >
-        {moment(item.createdDateAndTime).format('LLL')}
+        {moment(item.createdDateAndTime).format('L')}
       </Text>
       <View
         style={{
           maxWidth: 250,
-          paddingHorizontal: 20,
-          paddingVertical: 15,
           borderRadius: 15,
+          padding: 10,
           backgroundColor: item.type === 'ADMIN' ? '#06b6d4' : '#fff',
           borderBottomLeftRadius: item.type !== 'ADMIN' ? 15 : 0,
           borderBottomRightRadius: item.type === 'ADMIN' ? 15 : 0,
@@ -38,8 +36,8 @@ export const MessageBox = React.memo(({ item }) => {
         }}
       >
 
-        <Text style={{ marginLeft: "auto", color: item.type === 'ADMIN' ? '#fff' : '#27272a' }}>
-          {item.messageContent}
+        <Text style={{ color: item.type === 'ADMIN' ? '#fff' : '#27272a' }}>
+          {item.messageContent.trim()}
         </Text>
       </View>
     </View>

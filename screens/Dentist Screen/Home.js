@@ -9,10 +9,17 @@ import moment from 'moment';
 import { useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
+import stackbg from "../../assets/images/stackprofile.png";
 
 function Home({ navigation, setSideNavShow, setAppointmentId }) {
   const { activeDentist } = useSelector((state) => { return state.dentist; });
   const appointment = useSelector(state => state?.appointment?.dentistAppointment);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showPopUp, setShowPopUp] = useState(false);
+  const handleShowPopUp = (item) => {
+    setSelectedItem(item);
+    setShowPopUp(prev => !prev);
+  }
 
   const patient = useMemo(()=>{
     const listOfPatient = [];
@@ -66,11 +73,13 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
           <EntypoIcon name='menu' size={30} color={'#fff'} />
         </Pressable>
 
+        <Image source={stackbg} style={{ width: "100%", position: "absolute", zIndex: 0, borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }} />
+
         <View style={{ width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 60, rowGap: 10 }}>
           <Image source={{ uri: activeDentist.profile }} style={{ width: 115, height: 115, borderRadius: 100 }} alt='Dentist Profile' />
           <View style={{ display: 'flex', justifyContent: 'center', alignItems: "center" }}>
-            <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>Dr. {activeDentist.fullname}</Text>
-            <Text style={{ color: "#fff", fontSize: 12 }}>Dentist</Text>
+            <Text style={{ color: "#fff", fontWeight: "400", fontSize: 24, borderBottomColor: "#06b6d4", borderBottomWidth: 1 }}>Hello <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 24 }}>Dr. {activeDentist.fullname}</Text></Text>
+            <Text style={{ color: "#fff", fontSize: 16 }}>Dentist</Text>
           </View>
         </View>
         {/* <Pressable style={{ position: 'absolute', top: 40, right: 10, zIndex: 20 }}>
@@ -79,7 +88,7 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
         </Pressable> */}
       </SafeAreaView>
 
-      <View style={{ padding: 15, rowGap: 10, }}>
+      <View style={{ padding: 15, rowGap: 10 }}>
         <View style={{ flexDirection: 'row', columnGap: 10 }}>
           <View style={{ width: '48%', backgroundColor: '#06b6d4', borderRadius: 6, height: 100, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: '#fff', fontSize: 20 }}>{patient.length}</Text>
@@ -106,7 +115,16 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
 
       </View>
 
-      <DentistCard header="Today's Patients" data={currentPatient} setModal={setModal} setTreatmentData={setTreatmentData} setAppointmentId={setAppointmentId} navigation={navigation} />
+      <DentistCard header="Today's Patients"
+        data={currentPatient}
+        showPopUp={showPopUp}
+        setShowPopUp={setShowPopUp}
+        setModal={setModal}
+        setTreatmentData={setTreatmentData}
+        setAppointmentId={setAppointmentId}
+        navigation={navigation}
+        selectedItem={selectedItem}
+        GhandleShowPopUp={handleShowPopUp} />
 
     </SafeAreaView >
   )
