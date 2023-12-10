@@ -1,5 +1,5 @@
 import axios from "axios"
-import { APPROVED_APPOINTMENT_SUCCESS, CREATE_APPOINTMENT_FAILED, CREATE_APPOINTMENT_REQUEST, CREATE_APPOINTMENT_SUCCESS, DELETE_APPOINTMENT_FAILED, DELETE_APPOINTMENT_SUCCESS, FETCH_APPOINTMENT_FAILED, FETCH_APPOINTMENT_REQUEST, FETCH_APPOINTMENT_SUCCESS, RESPONSE_APPOINTMENT_SUCCESS, UPDATE_APPOINTMENT_SUCCESS } from "../ActionType"
+import { APPROVED_APPOINTMENT_SUCCESS, APPROVED_DENTIST_APPOINTMENT_FAILED, APPROVED_DENTIST_APPOINTMENT_SUCCESS, CREATE_APPOINTMENT_FAILED, CREATE_APPOINTMENT_REQUEST, CREATE_APPOINTMENT_SUCCESS, DELETE_APPOINTMENT_FAILED, DELETE_APPOINTMENT_SUCCESS, FETCH_APPOINTMENT_FAILED, FETCH_APPOINTMENT_REQUEST, FETCH_APPOINTMENT_SUCCESS, FETCH_DENTIST_APPOINTMENT_FAILED, FETCH_DENTIST_APPOINTMENT_SUCCESS, RESPONSE_APPOINTMENT_SUCCESS, UPDATE_APPOINTMENT_SUCCESS } from "../ActionType"
 import { APPOINTMENT_URL, SOCKET_LINK } from "../../config/APIRoutes"
 import { fetchAdminPayment,fetchPaymentAppointment,adminDeletePayment } from "../action/PaymentAction";
 import moment from "moment";
@@ -18,6 +18,23 @@ export const fetchAppointment = (id) =>{
         } catch (error) {
             dispatch({
                 type: FETCH_APPOINTMENT_FAILED,
+                error: error.response && error.response.data.message
+            })
+        }
+    }
+}
+
+export const fetchAllDentistAppointment = (dentistId)=>{
+    return async (dispatch)=>{
+        try {
+            const response = await axios.get(`${APPOINTMENT_URL}/fetchAllDentistAppointment/${dentistId}`);
+            dispatch({
+                type:FETCH_DENTIST_APPOINTMENT_SUCCESS,
+                payload: response.data.sort((a, b) => moment(a.appointmentDate).isAfter(b.appointmentDate) ? 1 : -1)
+            });
+        } catch (error) {
+            dispatch({
+                type: FETCH_DENTIST_APPOINTMENT_FAILED,
                 error: error.response && error.response.data.message
             })
         }
@@ -100,7 +117,6 @@ export const createTreatment = (data) =>{
                 type: UPDATE_APPOINTMENT_SUCCESS,
                 payload: response.data
             });
-            socket.emit("appointment_changes",{value:response.data})
         } catch (error) {
             
         }
@@ -113,6 +129,35 @@ export const approvedAppointment = (id) =>{
             const response = await axios.put(`${APPOINTMENT_URL}/status/done/${id}`);
             dispatch({
                 type: APPROVED_APPOINTMENT_SUCCESS,
+                payload: response.data
+            });
+            socket.emit("appointment_changes",{value:id});
+        } catch (error) {
+            
+        }
+    }
+}
+
+export const createDentistTreatment = (data) =>{
+    return async dispatch=>{
+        try {
+            const response = await axios.post(`${APPOINTMENT_URL}/treatment`,data);
+            dispatch({
+                type: APPROVED_DENTIST_APPOINTMENT_SUCCESS,
+                payload: response.data
+            });
+        } catch (error) {
+            
+        }
+    }
+}
+
+export const approvedDentistAppointment = (id) =>{
+    return async dispatch=>{
+        try {
+            const response = await axios.put(`${APPOINTMENT_URL}/status/done/${id}`);
+            dispatch({
+                type: APPROVED_DENTIST_APPOINTMENT_SUCCESS,
                 payload: response.data
             });
             socket.emit("appointment_changes",{value:id});

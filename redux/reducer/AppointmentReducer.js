@@ -1,4 +1,4 @@
-import { APPROVED_APPOINTMENT_SUCCESS, CREATE_APPOINTMENT_FAILED, CREATE_APPOINTMENT_REQUEST, CREATE_APPOINTMENT_SUCCESS, DELETE_APPOINTMENT_FAILED, DELETE_APPOINTMENT_SUCCESS, FETCH_APPOINTMENT_FAILED, FETCH_APPOINTMENT_REQUEST, FETCH_APPOINTMENT_SUCCESS, RESPONSE_APPOINTMENT_SUCCESS, UPDATE_APPOINTMENT_SUCCESS } from "../ActionType";
+import { APPROVED_APPOINTMENT_SUCCESS, APPROVED_DENTIST_APPOINTMENT_SUCCESS, CREATE_APPOINTMENT_FAILED, CREATE_APPOINTMENT_REQUEST, CREATE_APPOINTMENT_SUCCESS, DELETE_APPOINTMENT_FAILED, DELETE_APPOINTMENT_SUCCESS, FETCH_APPOINTMENT_FAILED, FETCH_APPOINTMENT_REQUEST, FETCH_APPOINTMENT_SUCCESS, FETCH_DENTIST_APPOINTMENT_SUCCESS, RESPONSE_APPOINTMENT_SUCCESS, UPDATE_APPOINTMENT_SUCCESS } from "../ActionType";
 
 const initialState = {
     loading: false,
@@ -19,6 +19,12 @@ const reducer = (state = initialState, action) => {
                 appointment: action.payload,
                 loading: false
             };
+        case FETCH_DENTIST_APPOINTMENT_SUCCESS:
+            return {
+                ...state,
+                dentistAppointment: action.payload,
+                loading: false
+            };
         case CREATE_APPOINTMENT_SUCCESS:
             return {
                 ...state,
@@ -36,6 +42,12 @@ const reducer = (state = initialState, action) => {
                     appointment: state.appointment.map((val)=>val.appointmentId === action.payload.appointmentId ? action.payload: val),
                     loading:false,
                 }
+        case APPROVED_DENTIST_APPOINTMENT_SUCCESS:
+            return{
+                ...state,
+                    dentistAppointment: state.dentistAppointment.map((val)=>val.appointmentId === action.payload.appointmentId ? action.payload: val),
+                    loading:false,
+            }
         case DELETE_APPOINTMENT_SUCCESS:
             return{
                 ...state,

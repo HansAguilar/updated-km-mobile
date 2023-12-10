@@ -14,6 +14,7 @@ import ToastFunction from "../../config/toastConfig";
 import * as io from "socket.io-client";
 import { SOCKET_LINK } from '../../config/APIRoutes';
 import nopayment from "../../assets/images/nopayment.png";
+import Loader from "../../components/Loader";
 import { useEffect } from 'react';
 
 const socket = io.connect(SOCKET_LINK);
@@ -234,11 +235,13 @@ const Payment = ({navigation}) =>{
 
 	const totalAmount = installment?.filter((_,idx)=>idx===installment?.length-1).map((val)=>{return { balance:val.balance, totalAmount:val.amountCharge}});
 
-	return payment && (
+	return(
 		<>
-			{selectedPayment.isActive && <Modal />}
-			<View style={{ ...styles.containerGray, position: 'relative' }}>
-
+			{
+				!payment ? (<Loader loading={true} />)
+				: (
+					<View style={{ ...styles.containerGray, position: 'relative' }}>
+					{selectedPayment.isActive && <Modal />}
 				<View style={{ width: "100%", padding: 20, display: "flex", flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
 					<TouchableHighlight style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, flex: 1, paddingVertical: 7, borderColor: "#0ab1db", borderWidth: 1, backgroundColor: page === "cash" ? "#0ab1db" : "#fff" }} onPress={() => setPage("cash")}>
 						<Text style={{ color: page === "cash" ? "#fff" : "#0ab1db", textAlign: 'center' }}>Cash</Text>
@@ -370,6 +373,9 @@ const Payment = ({navigation}) =>{
 					}
 				</ScrollView >
 			</View >
+			
+				)
+			}
 		</>
 	);
 }

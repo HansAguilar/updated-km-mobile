@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Pressable, ScrollView } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { approvedAppointment } from "../redux/action/AppointmentAction";
+import { approvedDentistAppointment } from "../redux/action/AppointmentAction";
 import Octicons from "react-native-vector-icons/Octicons";
 import { useDispatch } from 'react-redux';
 import nopatient from "../assets/images/todayspatients.png";
@@ -45,7 +45,7 @@ function DentistCard({ header, data, setModal, setTreatmentData, setAppointmentI
 												}
 
 
-												<Pressable style={{ padding: 10, backgroundColor: "#06b6d4", borderRadius: 100 }} onPress={() => dispatch(approvedAppointment(val.appointmentId))}>
+												<Pressable style={{ padding: 10, backgroundColor: "#06b6d4", borderRadius: 100 }} onPress={()=>dispatch(approvedDentistAppointment(val.appointmentId))}>
 													<MaterialIcons name='done' size={20} color={"#fff"} />
 												</Pressable>
 

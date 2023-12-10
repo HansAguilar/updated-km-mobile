@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AntIcon from "react-native-vector-icons/AntDesign";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import { createTreatment } from "../redux/action/AppointmentAction";
+import { createDentistTreatment, createTreatment } from "../redux/action/AppointmentAction";
 import { fetchPayment } from "../redux/action/PaymentAction";
 import toastFunction from "../config/toastConfig";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
@@ -44,7 +44,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 		treatmentNumberOfDay: "",
 		treatmentDateType: "",
 	});
-	const treatmentDateList = ["Day", "Week", "Month"];
+	const treatmentDateList = ["day", "week", "month"];
 	const [treatmentDateListToggle, setTreatmentDateListToggle] = useState(false);
 	const [showPicker, setShowPicker] = useState(false);
 
@@ -125,6 +125,9 @@ function TreatmentModal({ setModal, treatmentData }) {
 		if (patientHMO.isShow && !patientHMO.hmoId) {
 			return Alert.alert("Fill hmo field!")
 		}
+		if (dentalServices.length < 0 || !date || !treatmentValue.treatmentNumberOfDay || treatmentValue.treatmentDateType|| !paymentType) {
+			toastFunction("error", "Fill up empty field");
+		}
 		const data = {
 			appointmentId: treatmentData.appointmentId,
 			dentalServices: dentalServices.map((val) => val.serviceId),
@@ -138,10 +141,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 			amount: totalAmount,
 			insuranceId: patientHMO.hmoId
 		}
-		if (data.dentalServices.length < 0 || !data.startOfTreatment || data.treatmentNumber || data.treatmentType || !data.paymentType) {
-			toastFunction("error", "Fill up empty field");
-		}
-		dispatch(createTreatment(data));
+		dispatch(createDentistTreatment(data));
 		setModal(false);
 	}
 
@@ -173,6 +173,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 
 	const currentDate = moment();
 	currentDate.add(1, 'day');
+
 	return (
 		<View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 			<View style={{ width: "100%", height: 600, maxHeight: 600, backgroundColor: "white", padding: 20, borderRadius: 10, zIndex: -10 }}>
@@ -302,7 +303,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 								<Text style={{ fontSize: 12, color: "#4d4d4d", fontWeight: "500" }}>Treatment Date Type</Text>
 								<Pressable style={{ ...style.subDropdownStyle }} onPress={() => setTreatmentDateListToggle(!treatmentDateListToggle)}>
 									<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingHorizontal: 18, paddingVertical: 8, }}>
-										<Text style={{ fontSize: 14, color: "#2b2b2b" }}>{treatmentValue.treatmentDateType ? treatmentValue.treatmentDateType : "Select treatment type"}</Text>
+										<Text style={{ fontSize: 14, color: "#2b2b2b",textTransform:'capitalize' }}>{treatmentValue.treatmentDateType ? treatmentValue.treatmentDateType : "Select treatment type"}</Text>
 										<AntDesign name={treatmentDateListToggle ? "down" : "up"} color="#2b2b2b" />
 									</View>
 								</Pressable>
@@ -313,7 +314,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 											{
 												treatmentDateList.map((val, idx) => (
 													<Text key={idx} onPress={() => {
-														setTreatmentValue({ ...treatmentValue, treatmentDateType: val })
+														setTreatmentValue({ ...treatmentValue, treatmentDateType: val, treatmentNumberOfDay:"" })
 														setTreatmentDateListToggle(false);
 													}} style={{ width: "100%", paddingVertical: 10, textAlign: 'center', fontSize: 14, textTransform: 'capitalize' }}>{val}</Text>
 												))
@@ -331,7 +332,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 
 										<Pressable
 											value={treatmentValue.treatmentNumberOfDay}
-											onPress={() => setDaysToggle(true)}
+											onPress={() =>setDaysToggle(true)}
 											keyboardType="numeric"
 											style={{ ...style.inputTextStyle, backgroundColor: "#fafafa" }}
 										>
@@ -339,9 +340,8 @@ function TreatmentModal({ setModal, treatmentData }) {
 										</Pressable>
 										{daysToggle && (
 											<View>
-												{daysPerSelection
-													.filter((val) => val.type === treatmentValue.treatmentDateType)
-													.map((val, idx) => (
+												{
+												daysPerSelection.filter((val) => val.type === treatmentValue.treatmentDateType).map((val, idx) => (
 														<React.Fragment key={idx}>
 															{[...Array(val.number)].map((_, idx) => (
 																<Text
@@ -422,7 +422,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 
 								<Pressable style={{ ...style.subDropdownStyle }} onPress={() => setPaymentToggle(!paymentToggle)}>
 									<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingHorizontal: 18, paddingVertical: 8, }}>
-										<Text style={{ fontSize: 14, color: "#2b2b2b" }}>{paymentType ? paymentType : "Select payment type"}</Text>
+										<Text style={{ fontSize: 14, color: "#2b2b2b",textTransform:'capitalize' }}>{paymentType ? paymentType : "Select payment type"}</Text>
 										<AntDesign name={paymentToggle ? "down" : "up"} color="#2b2b2b" />
 									</View>
 								</Pressable>
@@ -520,6 +520,7 @@ function TreatmentModal({ setModal, treatmentData }) {
 						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#ef4444", color: "#fff", borderRadius: 6 }} onPress={() => setModal(false)}>Cancel</Text>
 						<Text style={{ flex: 1, textAlign: 'center', paddingVertical: 10, backgroundColor: "#06b6d4", color: "#fff", borderRadius: 6 }} onPress={handleSubmitButton}>Confirm</Text>
 					</View>
+					<Toast />
 				</ScrollView>
 
 			</View >

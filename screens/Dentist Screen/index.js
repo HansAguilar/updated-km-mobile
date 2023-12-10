@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchActiveDentist } from "../../redux/action/DentistAction";
-import { fetchAppointment } from "../../redux/action/AppointmentAction";
+import { fetchAllDentistAppointment, fetchAppointment } from "../../redux/action/AppointmentAction";
 import { fetchAllPatient } from "../../redux/action/PatientAction";
 import { fetchServices } from "../../redux/action/ServicesAction";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,28 +19,34 @@ import { fetchPayment } from '../../redux/action/PaymentAction';
 function Index({ navigation }) {
   const dispatch = useDispatch();
   const Stack = createNativeStackNavigator();
-  const dentist = useSelector((state)=>{ return state.dentist; });
-  const patient = useSelector((state)=>{ return state.patient; });
-  const appointment = useSelector((state=>{ return state.appointment }));
+  const dentist = useSelector((state)=>{ return state?.dentist; });
+  const appointment = useSelector((state=>{ return state?.appointment }));
+  const services = useSelector((state=>{ return state?.services }));
+  const insurance = useSelector((state=>{ return state?.insurance }));
   const [isSideNavShow, setSideNavShow]= useState(false);
   const [appointmentId, setAppointmentId] = useState(null);
 
 
   const navigateToLink = (link) => navigation.navigate(`${link}`);
   const fetchData = async () => {
-    const token = await AsyncStorage.getItem("token");
-    dispatch(fetchAppointment());
-    dispatch(fetchAllPatient());
+    const dentistId = await AsyncStorage.getItem("dentistId");
+    dispatch(fetchAllDentistAppointment(dentistId));
     dispatch(fetchServices());
     dispatch(fetchAllInsurance());
-    dispatch(fetchActiveDentist(token));
   }
-  useEffect(()=>{fetchData();},[]);
-  return dentist && patient && appointment && (
+  useEffect(()=>{
+   const fetchDentist = async() =>{
+    const token = await AsyncStorage.getItem("token");
+    dispatch(fetchActiveDentist(token))
+   }
+   fetchDentist();
+  },[]);
+  
+  useEffect(()=>{fetchData();},[dentist?.activeDentist]);
+    return(
    <>
-    { (dentist.loading || appointment.loading ) && (<Loader loading={dentist.loading} />) }
-    {
-      (!dentist.loading  && !appointment.loading &&dentist &&patient ) && (
+    { (!dentist?.activeDentist || !appointment?.dentistAppointment || !insurance?.allInsurance || !services?.services ) ? (<Loader loading={true} />) 
+    : (
         <>
         <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
         

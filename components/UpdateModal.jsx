@@ -11,11 +11,11 @@ import toastFunction from "../config/toastConfig";
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import Button from './Button';
 
-function UpdateModal({ data, setData }) {
+function UpdateModal({ data, setData,setShowPopUp }) {
   const dispatch = useDispatch();
-  const dentist = useSelector((state) => state.dentist.dentists);
-  const appointment = useSelector((state) => { return state.appointment.appointment.filter((val) => val.status === "PENDING" || val.status === "APPROVED" || val.status === "TREATMENT") });
-  const schedule = useSelector((state) => state.schedule.schedule);
+  // const dentist = useSelector((state) => state.dentist.dentists);
+  const appointment = useSelector((state) => { return state?.appointment?.appointment.filter((val) => val.status === "PENDING" || val.status === "APPROVED" || val.status === "TREATMENT") });
+  // const schedule = useSelector((state) => state.schedule.schedule);
   const [showPicker, setShowPicker] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [inputDetails, setInputDetails] = useState({
@@ -53,10 +53,10 @@ function UpdateModal({ data, setData }) {
   };
 
   const handleOnChange = (name, value) => {
-    if (name === "dentistId") {
-      const searchDentist = dentist.filter((val) => (val.fullname).toLowerCase().includes(value.toLowerCase()))
-      setSuggestion([...searchDentist]);
-    }
+    // if (name === "dentistId") {
+    //   const searchDentist = dentist.filter((val) => (val.fullname).toLowerCase().includes(value.toLowerCase()))
+    //   setSuggestion([...searchDentist]);
+    // }
 
     setInputDetails({ ...inputDetails, [name]: value })
   }
@@ -108,28 +108,28 @@ function UpdateModal({ data, setData }) {
     setTimeStartList([...newTimeList]);
 
     // const removeCurrentTime = newTimeList.filter((val)=>val.timeStart!==appointment.timeStart && val.timeStart!==appointment.timeEnd)
-    setTimeStartList(newTimeList);
+    // setTimeStartList(newTimeList);
 
-    setTimeStartList((prev) => {
-      let updatedSchedList = [...prev];
-      const filteredSchedule = schedule.filter((val) => moment(inputDetails.date, "YYYY-MM-DD").startOf('day').isSame(moment(schedule[0].dateSchedule, "YYYY-MM-DD").startOf('day')) && val.dentist.dentistId === inputDetails.dentistId);
+    // setTimeStartList((prev) => {
+    //   let updatedSchedList = [...prev];
+    //   const filteredSchedule = schedule.filter((val) => moment(inputDetails.date, "YYYY-MM-DD").startOf('day').isSame(moment(schedule[0].dateSchedule, "YYYY-MM-DD").startOf('day')) && val.dentist.dentistId === inputDetails.dentistId);
 
-      if (filteredSchedule.length > 0) {
-        const indicesScheduleToRemain = [];
-        for (let x = 0; x < filteredSchedule.length; x++) {
-          let start = timeStartList.findIndex((val) => val.timeStart === filteredSchedule[x].timeStart);
-          let end = timeStartList.findIndex((val) => val.timeStart === filteredSchedule[x].timeEnd);
+    //   if (filteredSchedule.length > 0) {
+    //     const indicesScheduleToRemain = [];
+    //     for (let x = 0; x < filteredSchedule.length; x++) {
+    //       let start = timeStartList.findIndex((val) => val.timeStart === filteredSchedule[x].timeStart);
+    //       let end = timeStartList.findIndex((val) => val.timeStart === filteredSchedule[x].timeEnd);
 
-          for (let i = start; i < end; i++) {
-            indicesScheduleToRemain.push(i);
-          }
-        }
+    //       for (let i = start; i < end; i++) {
+    //         indicesScheduleToRemain.push(i);
+    //       }
+    //     }
 
-        updatedSchedList = updatedSchedList.filter((_, idx) => { return indicesScheduleToRemain.includes(idx) });
+    //     updatedSchedList = updatedSchedList.filter((_, idx) => { return indicesScheduleToRemain.includes(idx) });
 
-      }
-      return updatedSchedList;
-    });
+    //   }
+    //   return updatedSchedList;
+    // });
 
     const filteredTime = newTimeList.filter((val) =>
       moment(inputDetails.date, 'YYYY-MM-DD').isSame(moment(), 'day') &&
@@ -231,6 +231,7 @@ function UpdateModal({ data, setData }) {
     dispatch(updateAppointment(data.data.appointmentId, inputDetails));
     dispatch(fetchAdminPayment(data.data.appointmentId));
     setData({ ...data, isShow: false });
+    setShowPopUp(false)
   }
 
   const calculateTotalTime = (value) => {
@@ -245,7 +246,7 @@ function UpdateModal({ data, setData }) {
     checkAllAppointment();
   }, [inputDetails.date, inputDetails.timeStart]);
 
-  return (
+  return appointment && (
     <View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Toast />
       <View style={{ width: "100%", height: "auto", maxHeight: 600, backgroundColor: "white", padding: 20, borderRadius: 6, zIndex: -10 }}>

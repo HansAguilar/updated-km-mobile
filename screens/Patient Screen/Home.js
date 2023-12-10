@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Dimensions,
@@ -48,33 +48,36 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
   // console.log(appointment)
   const currentDate = moment(new Date()).format('LL');
-  const filteredTodaysAppointment = appointment.slice();
-
-  const todaysAppointment = filteredTodaysAppointment.filter((val) => {
-    return (
-      moment(val.appointmentDate, 'YYYY-MM-DD').isSame(moment(), 'day') &&
-      (val.status === 'APPROVED' ||
-        val.status === 'PROCESSING' ||
-        val.status === 'TREATMENT') &&
-      val.patient.patientId === patient?.patientId
-    );
-  });
-
-  const upcomingFilteredList = appointment.slice();
-  const upcomingAppointment = upcomingFilteredList
-    .filter((val) => {
+  
+  const todaysAppointment = useMemo(()=>{
+    const tempAppointment = appointment.slice();
+    const result = tempAppointment.filter((val) => {
       return (
+        moment(val.appointmentDate, 'YYYY-MM-DD').isSame(moment(), 'day') &&
+        (val.status === 'APPROVED' ||
+          val.status === 'PROCESSING' ||
+          val.status === 'TREATMENT') &&
+        val.patient.patientId === patient?.patientId
+      );
+    });
+    return result;
+  },[appointment])
+
+
+  const upcomingAppointment = useMemo(() => {
+    const tempAppointment = appointment.slice();
+    const result = tempAppointment
+      .filter((val) => (
         !moment(val.appointmentDate, 'YYYY-MM-DD').isSame(moment(), 'day') &&
         val.patient.patientId === patient?.patientId &&
-        (val.status === 'PENDING' || val.status === 'TREATMENT' || val.status === 'APPROVED')
-      );
-    })
-    .map((val) => {
-      return {
-        ...val,
-        typeAppointment: 'upcoming',
-      };
-    });
+        (val.status === "PENDING" || val.status === "TREATMENT" || val.status === "APPROVED")
+      ))
+      .map((val) => {
+        return { ...val, typeAppointment: 'upcoming' };
+      });
+    return result;
+  }, [appointment]);
+
 
   const viewHandleButton = (value) => {
     setAppointmentId(value);
@@ -190,7 +193,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
   return patient && (
     <>
       {modal.isShow && <Modal />}
-      {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} />}
+      {updateSchedule.isShow && <UpdateModal data={updateSchedule} setData={setUpdateSchedule} setShowPopUp={setShowPopUp} />}
       <SafeAreaView style={{ ...styles.containerGray, height: height, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', paddingTop: statusbarHeight }}>
 
         {/* //~ Header */}
@@ -301,6 +304,7 @@ const Home = React.memo(({ navigation, setAppointmentId, setSideNavShow }) => {
 
             <View style={{ height: 'auto', width: width, display: 'flex', gap: 10, }}>
               <AppointmentCard title="Today's Appointment" dataList={todaysAppointment} bgColor="#fff" borderColor="#e6e6e6" fontColor="#10b981" subColor="#bfbfbf" showDate={true} viewEvent={viewHandleButton} />
+              
               <AppointmentCard title="Upcoming Appointment" dataList={upcomingAppointment} bgColor="#fff" borderColor="#e6e6e6" fontColor="#10b981" subColor="#bfbfbf" showDate={true} viewEvent={viewHandleButton} setModal={setModalShow} modal={modal} navigate={navigation} update={updateSchedule} setUpdateSchedule={setUpdateSchedule} showPopUp={showPopUp} handleShowPopUp={handleShowPopUp} selectedItem={selectedItem} />
               {/* <AppointmentCard title="Pending Appointment" dataList={pendingAppointment} borderColor="#f59e0b" bgColor="#fff" fontColor="#10b981" subColor="#06b6d4" showDate={true} viewEvent={viewHandleButton} setModal={setModalShow} modal={modal} /> */}
               <View style={{ height: 150 }}></View>

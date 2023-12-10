@@ -106,6 +106,7 @@ const Main = React.memo(({ navigation }) => {
     socket.on("response_changes", (data) => {
       try {
         const parseData = JSON.parse(data);
+        // console.log(parseData);
         dispatch(adminChanges(parseData.value));
         dispatch(fetchAdminPayment(parseData.value));
       } catch (error) {
@@ -114,7 +115,11 @@ const Main = React.memo(({ navigation }) => {
     })
     // ADMIN CREATION APPOINTMENT
     socket.on("response_admin_appointment_create", (data) => {
-      dispatch(createAppointmentByAdmin(data.value));
+      try {
+        dispatch(createAppointmentByAdmin(data.value));
+      } catch (error) {
+        console.log("response_admin_appointment_create", error);
+      }
     })
     socket.on("receive_notification_by_admin", (data) => {
       try {
@@ -123,13 +128,17 @@ const Main = React.memo(({ navigation }) => {
           dispatch(storeNotification(parseData.notification));
         }
       } catch (error) {
-        console.log("response changes", error);
+        console.log("receive_notification_by_admin", error);
       }
     })
     // FOR CANCEL APPOINTMENT
     socket.on("response_cancel_by_admin", (data) => {
-      dispatch(adminChanges(data.value));
-      dispatch(adminCancelledPayment(data.value));
+      try {
+        dispatch(adminChanges(data.value));
+        dispatch(adminCancelledPayment(data.value));
+      } catch (error) {
+        console.log("response_cancel_by_admin ",error);
+      }
     })
     // FOR UPDATE APPOINTMENT
     socket.on("response_admin_changes", (data) => {
@@ -138,7 +147,7 @@ const Main = React.memo(({ navigation }) => {
         dispatch(adminChanges(parseData.value));
         dispatch(fetchAdminPayment(parseData.value));
       } catch (error) {
-        console.log("response changes", error);
+        console.log("response_admin_changes", error);
       }
       
     })
@@ -149,25 +158,35 @@ const Main = React.memo(({ navigation }) => {
         dispatch(deleteByAdmin(parseData.value));
         dispatch(adminDeletePayment(parseData.value));
       } catch (error) {
-        console.log("response changes", error);
+        console.log("response_delete", error);
       }
       
     })
 
     socket.on("admin_response_payment_changes", (data) => {
-      dispatch(adminUpdatePayment(data.value));
+      try {
+        dispatch(adminUpdatePayment(data.value));
+      } catch (error) {
+        console.log("admin_response_payment_changes ",error);
+      }
     })
 
     socket.on("create_received_by_patient", (data) => {
-      const socketData = `${data.patient}`
-      if (patientLogin === socketData) {
-        const roomKey = `${data.key}`;
-        dispatch(fetchNewPatientMessage(roomKey));
+      try {
+        const socketData = `${data.patient}`
+        if (patientLogin === socketData) {
+          const roomKey = `${data.key}`;
+          dispatch(fetchNewPatientMessage(roomKey));
+        }
+      } catch (error) {
+        console.log("create_received_by_patient ",error);
       }
     });
+
     socket.on("received_by_patient", (data) => {
       dispatch(sendByAdminMessage(data.key, data.value))
     });
+    
     socket.on("response_appointment_fee", (data) => {
       try {
         const parseData = JSON.parse(data)
@@ -191,12 +210,10 @@ const Main = React.memo(({ navigation }) => {
 
   return  (
     <>
-     {!patient?.loading || !appointment?.loading || !services?.loading || !notificationCounter?.loading || !fee?.paymentFee || !announcement?.announcement && (
+     {(!patient?.patient || !appointment?.appointment || !services?.services || !notificationCounter?.notification || !fee?.paymentFee || !announcement?.announcement) ? (
      <View style={{width:"100%", height:"100%", display:'flex', justifyContent:'center', alignItems:'center'}}>
         <Loader loading={true}/>
-     </View>)}
-    {
-      (patient?.patient && appointment?.appointment && services?.services && notificationCounter?.notification && fee?.paymentFee && announcement?.announcement ) && (
+     </View>) : (
         <>
           <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
           <Stack.Navigator initialRouteName='Dashboard'>
