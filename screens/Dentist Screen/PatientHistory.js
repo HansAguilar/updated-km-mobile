@@ -26,17 +26,16 @@ function History({ route }) {
   const dispatch = useDispatch();
   const { patientId } = route.params;
   const payment = useSelector((state) => state?.payment?.payment);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(dentistFetchPayment(patientId, setLoading));
+    dispatch(dentistFetchPayment(patientId));
   }, [patientId]);
 
 
   return (
     <ScrollView style={{ ...styles.containerGray, maxHeight: height, width: width, position: 'relative', padding: 20, marginBottom: 40 }}>
       {
-        loading &&
+        !payment &&
         <View style={{ flexDirection: 'column', height: 350, gap: 10 }}>
           <SkeletonLoading />
           <SkeletonLoading />
@@ -44,8 +43,8 @@ function History({ route }) {
         </View>
       }
       {
-        !payment && (
-          payment.map((val, idx) => (
+        payment && (
+          payment?.map((val, idx) => (
             <View key={idx} style={{ width: "100%", marginBottom: 10, }}>
 
               <View style={{ backgroundColor: "#fff", padding: 10, flexDirection: "column", gap: 12, elevation: 1 }}>
@@ -65,7 +64,7 @@ function History({ route }) {
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                   <View style={{ flexDirection: "column", alignItems: "flex-start", flex: 1 }}>
                     <Text style={{ fontSize: 16, fontWeight: "400", color: "#595959" }}>Dentist</Text>
-                    <Text style={{ fontSize: 14, fontWeight: "500", color: "#3f3f3f" }}>Dr. Jack</Text>
+                    <Text style={{ fontSize: 14, fontWeight: "500", color: "#3f3f3f" }}>Dr. {val.appointment.dentist.fullname}</Text>
                   </View>
 
                   <View style={{ flexDirection: "column", alignItems: "flex-start", flex: 1 }}>
@@ -94,7 +93,7 @@ function History({ route }) {
                   </View>
                 </View>
 
-                {/* <Text>Status: {val.appointment.status}</Text> */}
+                <Text style={{backgroundColor:val.appointment.status==="DONE" || val.appointment.status==="TREATMENT_DONE" ? "#2dd4bf" : "#fb923c", paddingVertical:6, textAlign:'center', color:"white", textTransform:'capitalize'}}>{val.appointment.status === "TREATMENT_DONE" ? "Done" : val.appointment.status === "TREATMENT" ? "UNDER TREATMENT" :  val.appointment.status }</Text>
               </View>
             </View>
           ))
