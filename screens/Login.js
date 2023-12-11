@@ -81,20 +81,17 @@ const Login = React.memo(({ navigation }) => {
                 />
               </View>
 
-              <Text style={{ textAlign: 'right', fontSize: 14, color: '#CCCCCC', marginTop: 5 }} onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={{ textAlign: 'right', fontSize: 14, color: '#CCCCCC', marginTop: 5 }} onPress={() => navigation.navigate('Forgot Password')}>
                 Forgot password?
               </Text>
 
             </View>
-            {
-              loading ? <Text style={{width:"100%", paddingVertical:10, backgroundColor:"#06b6d4",color:"white", textAlign:"center"}}>Checking...</Text>
-              : <Button
-              title="Login"
-              bgColor="#06b6d4"
+            <Button
+              title={loading ? "Login" : "Verifying"}
+              bgColor={loading ? "#06b6d4" : "#117C8E"}
               textColor="#fff"
               onPress={loginButtonHandler}
             />
-            }
 
             <Text style={{ textAlign: 'center', fontSize: 14, marginTop: 10 }}>
               Don't have an account?{' '}

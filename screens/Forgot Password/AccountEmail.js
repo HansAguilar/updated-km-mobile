@@ -40,10 +40,10 @@ const ForgotPassword = ({ pin, setPin, recoveryData, setRecoveryData, navigation
 	}, [emailSent, emailSentError]);
 
 	return (
-		<SafeAreaView style={{ ...styles.container, backgroundColor: 'white' }}>
-			<ScrollView>
-				<View style={{ ...styles.containerWhite }}>
-					<Text style={{ fontWeight: '500', fontSize: 25, color: '#2b2b2b' }}>Forgot Password</Text>
+		<SafeAreaView style={{ ...styles.container, backgroundColor: 'white', height: "100%" }}>
+			<ScrollView contentContainerStyle={{ height: "100%" }}>
+				<View style={{ padding: 20, gap: 16, width: "100%", height: "100%", alignItems: "center", justifyContent: "center" }}>
+					{/* <Text style={{ fontWeight: '500', fontSize: 25, color: '#2b2b2b' }}>Forgot Password</Text> */}
 					<Toast />
 					<Image source={require('../../assets/images/undraw_subscribe_vspl.png')} style={{ width: 300, height: 250, zIndex: -50 }} />
 
@@ -57,9 +57,7 @@ const ForgotPassword = ({ pin, setPin, recoveryData, setRecoveryData, navigation
 						<InputText name="email" onChangeText={onChangeHandler} value={recoveryData.email} placeholder="Enter email address" />
 					</View>
 
-					{
-						!emailLoading ? <Button title="Send" bgColor="#06b6d4" textColor="#fff" onPress={submitEmail} /> : <Text>Checking...</Text>
-					}
+					<Button title={!emailLoading ? "Send" : "Checking..."} bgColor={!emailLoading ? "#06b6d4" : "#117C8E"} textColor="#fff" onPress={submitEmail} />
 				</View>
 			</ScrollView>
 		</SafeAreaView>
