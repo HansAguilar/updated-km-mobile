@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useMemo, useEffect } from 'react';
 import { View, Text, Image, Dimensions, Pressable, SafeAreaView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { styles } from "../../style/styles";
@@ -13,7 +13,7 @@ import stackbg from "../../assets/images/stackprofile.png";
 
 function Home({ navigation, setSideNavShow, setAppointmentId }) {
   const { activeDentist } = useSelector((state) => { return state.dentist; });
-
+  const appointment = useSelector(state => state?.appointment?.dentistAppointment);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showPopUp, setShowPopUp] = useState(false);
   const handleShowPopUp = (item) => {
@@ -21,39 +21,48 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
     setShowPopUp(prev => !prev);
   }
 
-  const appointment = useSelector(state => state?.appointment?.appointment?.filter((val) => val.dentist.dentistId === activeDentist?.dentistId));
-  const patient = useSelector((state) => {
-    return state?.appointment?.appointment?.filter((val) =>
-      (val.status !== "DONE" && val.status !== "CANCELLED" && val.status !== "TREATMENT_DONE")
-      && val.dentist.dentistId === activeDentist?.dentistId
-    );
-  });
-  const consultation = useSelector((state) => {
-    return state?.appointment?.appointment?.filter((val) =>
-      (val.status === "APPROVED" || val.status === "PROCESS")
-      && val.dentist.dentistId === activeDentist?.dentistId
-    );
-  });
-  const treatment = useSelector((state) => {
-    return state?.appointment?.appointment?.filter((val) =>
-      val.status === "TREATMENT" && val.dentist.dentistId === activeDentist?.dentistId
-    );
-  });
-  const processing = useSelector((state) => {
-    return state?.appointment?.appointment?.filter((val) =>
-      (val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING") && val.dentist.dentistId === activeDentist?.dentistId
-    );
-  });
+  const patient = useMemo(()=>{
+    const listOfPatient = [];
+    const filteredPatient = appointment.filter((val)=>(val.status !== "DONE" && val.status !== "CANCELLED"&& val.status !== "TREATMENT_DONE"));
+    for(let x=0; x<filteredPatient.length;x++){
+      if(listOfPatient.length === 0){
+        listOfPatient.push(filteredPatient[x].patient.patientId);
+      }else if(!listOfPatient.includes(filteredPatient[x].patient.patientId)){
+        listOfPatient.push(filteredPatient[x].patient.patientId);
+      }
+    }
+    return listOfPatient;
+  },[appointment]);
+
+
+  const consultation = useMemo(()=>{
+    return appointment.filter((val)=>(val.status === "APPROVED" || val.status === "PROCESS"))
+  }, [appointment]);
+
+  const treatment = useMemo(()=>{
+    return appointment.filter((val)=>val.status === "TREATMENT")
+  },[appointment]);
+
+  const processing = useMemo(()=>{
+    return appointment.filter((val)=>(val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING"))
+  },[appointment]);
+
   const { width, height } = Dimensions.get("screen");
   const [modal, setModal] = useState(false);
   const [treatmentData, setTreatmentData] = useState(null);
 
 
-  const currentPatient = appointment.filter((val) => val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING");
-  // THIS IS THE CORRECT
-  // const currentPatient = appointment.filter((val)=>val.status==="PROCESSING"&&val.status==="TREATMENT_PROCESSING" && moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day'));
+  // const currentPatient = useMemo(()=>{
+  //   return appointment.filter((val) => ((val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING")&& moment(val.appointmentDate,"YYYY-MM-DD").isSame(moment(), 'day')))
+  // }, [appointment]);
+  const currentPatient = useMemo(()=>{
+    const result = appointment.filter((val)=>{
+      return val.status === "PROCESSING" || val.status === "TREATMENT_PROCESSING"
+    });
+    return result;
+  }, [appointment]);
 
-  return activeDentist && (
+  return(
     <SafeAreaView style={{ ...styles.containerGray, height: height, width: width, position: 'relative' }}>
 
       {modal && (<Modal setModal={setModal} treatmentData={treatmentData} />)}
@@ -121,4 +130,4 @@ function Home({ navigation, setSideNavShow, setAppointmentId }) {
   )
 }
 
-export default Home
+export default React.memo(Home)

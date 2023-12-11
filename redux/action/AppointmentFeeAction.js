@@ -6,7 +6,6 @@ import { FEE_LINK } from "../../config/APIRoutes";
 export const fetchAppointmentFee = () =>{
     return async dispatch=>{
         try {
-            dispatch({type: FETCH_FEE_REQUEST});
             const response = await axios.get(`${FEE_LINK}/`);
             dispatch({
                 type: FETCH_FEE_SUCCESS,

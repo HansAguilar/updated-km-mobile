@@ -92,4 +92,4 @@ function MessageRoom({ route, navigation, }) {
     );
 }
 
-export default MessageRoom;
+export default React.memo(MessageRoom);

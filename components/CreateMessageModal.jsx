@@ -8,10 +8,14 @@ import { fetchAdmin } from '../redux/action/AdminAction';
 import Loader from './Loader';
 
 function CreateMessageModal({ modal, setModal }) {
-	const dispatch = useDispatch();
-	const admin = useSelector((state) => state?.admin?.admin);
-	const patientLogin = useSelector((state) => state.patient.patient);
-	const messages = useSelector((state) => { return state?.messages?.message });
+    const dispatch = useDispatch();
+    const admin = useSelector((state) => state?.admin?.admin);
+    const patientLogin = useSelector((state) => state.patient.patient);
+    const messages = useSelector((state) => state.messages.message);
+
+    useEffect(() => {
+        dispatch(fetchAdmin());
+    }, [dispatch, admin])
 
 	const [messageData, setMessageData] = useState({
 		adminId: "",
@@ -56,18 +60,12 @@ function CreateMessageModal({ modal, setModal }) {
 		setModal(false);
 	}
 
-	useEffect(() => {
-		dispatch(fetchAdmin());
-		setSuggestion(admin?.filter((val) => (val.firstname).toLowerCase().includes(messageData.adminName.toLowerCase())))
-	}, [])
-
-	return (
-		<>
-			{admin?.loading && <Loader loading={admin?.loading} />}
-			{
-				!admin?.loading && (
-					<View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-						<View style={{ backgroundColor: "white", padding: 10, height: "auto", width: "100%", borderRadius: 6, elevation: 1 }}>
+    return (
+        <>
+            {!admin ? (<Loader loading={true} />)
+            :(
+                    <View style={{ height: "100%", width: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", position: 'absolute', zIndex: 10, padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ backgroundColor: "white", padding: 10, height: "auto", width: "100%" }}>
 
 							<View style={{ gap: 6 }}>
 								<Text style={{ fontSize: 14, color: "#4d4d4d", fontWeight: "500" }}>Search Admin</Text>
@@ -126,4 +124,4 @@ function CreateMessageModal({ modal, setModal }) {
 	);
 }
 
-export default CreateMessageModal;
+export default React.memo(CreateMessageModal);

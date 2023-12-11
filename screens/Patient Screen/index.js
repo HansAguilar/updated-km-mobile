@@ -70,21 +70,24 @@ const Main = React.memo(({ navigation }) => {
   const appointment = useSelector((state) => { return state?.appointment});
   const services = useSelector((state) => state?.services);
   const notificationCounter = useSelector((state) => state?.notification);
-  const patientLogin = useRef("");
+  const fee = useSelector((state) => { return state?.fee });
+  const announcement = useSelector((state)=>state?.announcement);
 
   const fetchPatientData = async () => {
     const token = await AsyncStorage.getItem('token');
-    dispatch(fetchPatient(token, patientLogin));
+    dispatch(fetchPatient(token));
   };
 
-  const fetchAppointmentData = () => {
+  const fetchAppointmentData = async() => {
     try {
-      dispatch(fetchAppointment(patientLogin.current));
-      dispatch(fetchAllNotification(patientLogin.current));
+      const patientLogin = await AsyncStorage.getItem("patientId");
+      dispatch(fetchAppointment(patientLogin));
+      dispatch(fetchAllNotification(patientLogin));
       dispatch(fetchServices());
-      dispatch(fetchSchedule());
+      // dispatch(fetchSchedule());
       dispatch(fetchAppointmentFee());
       dispatch(fetchAnnouncement());
+      dispatch(fetchAppointmentFee());
     } catch (error) {
       console.error("Error fetching appointment data:", error);
     }
@@ -96,13 +99,14 @@ const Main = React.memo(({ navigation }) => {
 
   useEffect(() => {
     fetchAppointmentData();
-  }, [patientLogin.current]);
+  }, [patient]);
 
-  useEffect(() => {
-    //FOR APPROVAL OF APPOINTMENT
+  const socketMethod = async() =>{
+    const patientLogin = await AsyncStorage.getItem("patientId");
     socket.on("response_changes", (data) => {
       try {
         const parseData = JSON.parse(data);
+        // console.log(parseData);
         dispatch(adminChanges(parseData.value));
         dispatch(fetchAdminPayment(parseData.value));
       } catch (error) {
@@ -111,22 +115,30 @@ const Main = React.memo(({ navigation }) => {
     })
     // ADMIN CREATION APPOINTMENT
     socket.on("response_admin_appointment_create", (data) => {
-      dispatch(createAppointmentByAdmin(data.value));
+      try {
+        dispatch(createAppointmentByAdmin(data.value));
+      } catch (error) {
+        console.log("response_admin_appointment_create", error);
+      }
     })
     socket.on("receive_notification_by_admin", (data) => {
       try {
         const parseData = JSON.parse(data);
-        if (parseData.patientId === patientLogin.current) {
+        if (parseData.patientId === patientLogin) {
           dispatch(storeNotification(parseData.notification));
         }
       } catch (error) {
-        console.log("response changes", error);
+        console.log("receive_notification_by_admin", error);
       }
     })
     // FOR CANCEL APPOINTMENT
     socket.on("response_cancel_by_admin", (data) => {
-      dispatch(adminChanges(data.value));
-      dispatch(adminCancelledPayment(data.value));
+      try {
+        dispatch(adminChanges(data.value));
+        dispatch(adminCancelledPayment(data.value));
+      } catch (error) {
+        console.log("response_cancel_by_admin ",error);
+      }
     })
     // FOR UPDATE APPOINTMENT
     socket.on("response_admin_changes", (data) => {
@@ -135,7 +147,7 @@ const Main = React.memo(({ navigation }) => {
         dispatch(adminChanges(parseData.value));
         dispatch(fetchAdminPayment(parseData.value));
       } catch (error) {
-        console.log("response changes", error);
+        console.log("response_admin_changes", error);
       }
       
     })
@@ -146,25 +158,35 @@ const Main = React.memo(({ navigation }) => {
         dispatch(deleteByAdmin(parseData.value));
         dispatch(adminDeletePayment(parseData.value));
       } catch (error) {
-        console.log("response changes", error);
+        console.log("response_delete", error);
       }
       
     })
 
     socket.on("admin_response_payment_changes", (data) => {
-      dispatch(adminUpdatePayment(data.value));
+      try {
+        dispatch(adminUpdatePayment(data.value));
+      } catch (error) {
+        console.log("admin_response_payment_changes ",error);
+      }
     })
 
     socket.on("create_received_by_patient", (data) => {
-      const socketData = `${data.patient}`
-      if (patientLogin.current === socketData) {
-        const roomKey = `${data.key}`;
-        dispatch(fetchNewPatientMessage(roomKey));
+      try {
+        const socketData = `${data.patient}`
+        if (patientLogin === socketData) {
+          const roomKey = `${data.key}`;
+          dispatch(fetchNewPatientMessage(roomKey));
+        }
+      } catch (error) {
+        console.log("create_received_by_patient ",error);
       }
     });
+
     socket.on("received_by_patient", (data) => {
       dispatch(sendByAdminMessage(data.key, data.value))
     });
+    
     socket.on("response_appointment_fee", (data) => {
       try {
         const parseData = JSON.parse(data)
@@ -173,77 +195,86 @@ const Main = React.memo(({ navigation }) => {
         console.log("appointment fee: ",error);
       }
     });
+    
+  }
+
+  useEffect(() => {
+    //FOR APPROVAL OF APPOINTMENT
+    socketMethod()
     return () => {
       socket.off();
     }
   }, [socket]);
 
   const navigateToLink = (link) => navigation.navigate(`${link}`);
-  return (
-    <>
-      {patient.loading || appointment.loading || services.loading || notificationCounter.loading && (<Text>Loading...</Text>)}
-      {
-        (!patient.loading && !appointment.loading && !services.loading && !notificationCounter.loading ) && (
-          <>
-            <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
-            <Stack.Navigator initialRouteName='Dashboard'>
-              <Stack.Screen name='Dashboard' options={{ headerShown: false }}>
-                {props => <Home setAppointmentId={setAppointmentId} setSideNavShow={setSideNavShow} {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Message' options={{ headerShown: false }}>
-                {props => <Message  {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Appointment' options={{ headerShown: false }}>
-                {props => <Appointment dispatch={dispatch}  {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Payment'>
-                {props => <Payment {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Summary' options={{ headerTitle: "Appointment Details" }}>
-                {props => <AppointmentDetails appointmentId={appointmentId} setAppointmentId={setAppointmentId} {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Profile'>
-                {props => <ViewDetails {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Notification'>
-                {props => <NotificationRoom {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='History'>
-                {props => <History {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Prescription' >
-                {props => <Prescription setPrescriptionDetails={setPrescriptionDetails} {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Prescription Details' >
-                {props => <PrescriptionDetails prescriptionDetails={prescriptionDetails} {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='Update Schedule' >
-                {props => <UpdateAppointment {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name='HMO' >
-                {props => <HealthInsurance {...props} />}
-              </Stack.Screen>
-            </Stack.Navigator>
 
-            <View style={{ width: '100%', height: 60, position: 'relative', bottom: 0, left: 0, paddingVertical: 10, paddingHorizontal: 30, backgroundColor: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', ...styles.shadow }}>
-              {
-                navLinks.map((val, idx) => (
-                  <Pressable style={{ width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} key={idx} onPress={() => navigateToLink(val.link)}>
-                    {
-                      val.icon === "message1" ? <AntDesign name={val.icon} size={20} color={'#71717a'} />
-                        : <IonicsIcon name={val.icon} size={20} color={'#71717a'} />
-                    }
-                    <Text style={{ fontSize: 10, color: '#71717a', fontWeight: 'bold' }}>{val.link}</Text>
-                  </Pressable>
-                ))
-              }
-            </View>
-          </>
-        )
-      }
+  return  (
+    <>
+     {(!patient?.patient || !appointment?.appointment || !services?.services || !notificationCounter?.notification || !fee?.paymentFee || !announcement?.announcement) ? (
+     <View style={{width:"100%", height:"100%", display:'flex', justifyContent:'center', alignItems:'center'}}>
+        <Loader loading={true}/>
+     </View>) : (
+        <>
+          <Drawer navigation={navigateToLink} isSideNavShow={isSideNavShow} setSideNavShow={setSideNavShow} />
+          <Stack.Navigator initialRouteName='Dashboard'>
+            <Stack.Screen name='Dashboard' options={{ headerShown: false }}>
+              {props => <Home setAppointmentId={setAppointmentId} setSideNavShow={setSideNavShow} {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Message' options={{ headerShown: false }}>
+              {props => <Message  {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Appointment' options={{ headerShown: false }}>
+              {props => <Appointment dispatch={dispatch}  {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Payment'>
+              {props => <Payment {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Summary' options={{ headerTitle: "Appointment Details" }}>
+              {props => <AppointmentDetails appointmentId={appointmentId} setAppointmentId={setAppointmentId} {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Profile'>
+              {props => <ViewDetails {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Notification'>
+              {props => <NotificationRoom {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='History'>
+              {props => <History {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Prescription' >
+              {props => <Prescription setPrescriptionDetails={setPrescriptionDetails} {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Prescription Details' >
+              {props => <PrescriptionDetails prescriptionDetails={prescriptionDetails} {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='Update Schedule' >
+              {props => <UpdateAppointment {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name='HMO' >
+              {props => <HealthInsurance {...props} />}
+            </Stack.Screen>
+          </Stack.Navigator>
+
+           <View style={{ width: '100%', height: 60, position: 'relative', bottom: 0, left: 0, paddingVertical: 10, paddingHorizontal: 30, backgroundColor: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', ...styles.shadow }}>
+           {
+              navLinks.map((val, idx) => (
+                <Pressable style={{ width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} key={idx} onPress={() => navigateToLink(val.link)}>
+                  {
+                    val.icon === "message1" ? <AntDesign name={val.icon} size={20} color={'#71717a'} />
+                      : <IonicsIcon name={val.icon} size={20} color={'#71717a'} />
+                  }
+                  <Text style={{ fontSize: 10, color: '#71717a', fontWeight: 'bold' }}>{val.link}</Text>
+                </Pressable>
+              ))
+             }
+           </View>
+         </>
+      )
+    }
     </>
   )
 })
 
 
-export default Main
+export default React.memo(Main)
+

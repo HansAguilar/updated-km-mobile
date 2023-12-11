@@ -5,7 +5,6 @@ import { ANNOUNCEMENT_URL } from '../../config/APIRoutes';
 export const fetchAnnouncement = () =>{
     return async (dispatch)=>{
         try {
-            dispatch({type: FETCH_ANNOUNCEMENT_REQUEST});
             const response = await axios.get(`${ANNOUNCEMENT_URL}/`);
             dispatch({
                 type: FETCH_ANNOUNCEMENT_SUCCESS,

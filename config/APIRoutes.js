@@ -20,8 +20,8 @@
 
 // export const SOCKET_LINK = `${SOCKET_PORT}`;
 
-const PORT = "192.168.1.5";
-
+const PORT = "192.168.254.100";
+ 
 export const PATIENT_URL = `http://${PORT}:8080/api/v1/patient`; 
 export const LOGIN_URL = `http://${PORT}:8080/api/v1/login`; 
 export const SMS_URL = `http://${PORT}:8080/api/v1/sms`;
@@ -38,6 +38,5 @@ export const PRESCRIPTION_LINK = `http://${PORT}:8080/api/v1/prescription`;
 export const NOTIFICATION_LINK = `http://${PORT}:8080/api/v1/notification`;
 export const HMO_LINK = `http://${PORT}:8080/api/v1/insurance`;
 export const ADMIN_LINK = `http://${PORT}:8080/api/v1/admin`;
-
-
+ 
 export const SOCKET_LINK = `http://${PORT}:8081/`;

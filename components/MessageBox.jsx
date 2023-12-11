@@ -8,6 +8,7 @@ export const MessageBox = React.memo(({ item }) => {
       style={{
         width: '100%',
         padding: 5,
+        display:"flex",
         flexDirection: 'column',
         alignItems: item.type === 'ADMIN' ? 'flex-start' : 'flex-end',
         gap: 3,
@@ -21,7 +22,7 @@ export const MessageBox = React.memo(({ item }) => {
           textAlign: item.type === 'ADMIN' ? 'left' : 'right',
         }}
       >
-        {moment(item.createdDateAndTime).format('LLL')}
+        {moment(item.createdDateAndTime).format('L')}
       </Text>
       <View
         style={{

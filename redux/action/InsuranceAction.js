@@ -5,7 +5,6 @@ import { HMO_LINK } from "../../config/APIRoutes";
 export const fetchAllInsurance = () =>{
     return async dispatch=>{
         try {
-            dispatch({type: FETCH_ALL_INSURANCE_REQUEST});
             const response = await axios.get(`${HMO_LINK}/`);
             dispatch({
                 type: FETCH_ALL_INSURANCE_SUCCESS,
@@ -20,7 +19,6 @@ export const fetchAllInsurance = () =>{
 export const fetchInsurance = (patientId) =>{
     return async dispatch=>{
         try {
-            dispatch({type: FETCH_INSURANCE_REQUEST});
             const response = await axios.get(`${HMO_LINK}/patient/${patientId}`);
             dispatch({
                 type: FETCH_INSURANCE_SUCCESS,

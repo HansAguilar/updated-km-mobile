@@ -12,7 +12,6 @@ function Message({ setMessageHistory, navigation }) {
   const [createMessageModal, setCreateMessageModal] = useState(false);
 
   const selectMessage = (key, value) => {
-    setMessageHistory(value);
     navigation.navigate("Message Room", { roomId: key });
   }
 

@@ -10,7 +10,6 @@ const socket = io.connect(SOCKET_LINK);
 export const fetchPatientMessage = (patientId) => {
     return async dispatch => {
         try {
-            dispatch({ type: FETCH_MESSAGE_REQUEST });
             const response = await axios.get(`${MESSAGE_URL}/patient_login/${patientId}`);
             dispatch({
                 type: FETCH_MESSAGE_SUCCESS,

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginAdmin, logOutAccount } from '../redux/action/LoginAction';
 
 const Login = React.memo(({ navigation }) => {
-  const { account, error } = useSelector((state) => state.login)
+  const { loading, account, error } = useSelector((state) => state.login)
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     username: '',
@@ -86,12 +86,15 @@ const Login = React.memo(({ navigation }) => {
               </Text>
 
             </View>
-            <Button
+            {
+              loading ? <Text style={{width:"100%", paddingVertical:10, backgroundColor:"#06b6d4",color:"white", textAlign:"center"}}>Checking...</Text>
+              : <Button
               title="Login"
               bgColor="#06b6d4"
               textColor="#fff"
               onPress={loginButtonHandler}
             />
+            }
 
             <Text style={{ textAlign: 'center', fontSize: 14, marginTop: 10 }}>
               Don't have an account?{' '}
@@ -108,4 +111,4 @@ const Login = React.memo(({ navigation }) => {
   )
 })
 
-export default Login;
+export default React.memo(Login);

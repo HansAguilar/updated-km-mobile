@@ -9,7 +9,6 @@ const socket = io.connect(SOCKET_LINK);
 export const fetchPayment = (id) =>{
     return async dispatch =>{
         try {
-            dispatch({type: FETCH_PAYMENT_REQUEST})
             const response = await axios.get(`${PAYMENT_URL}/all/${id}`);
             const filteredAppointment = response.data.filter((val)=>val.status!=="CANCELLED"||val.status!=="FAILED");
             dispatch({type:FETCH_PAYMENT_SUCCESS, payload:filteredAppointment});
@@ -21,7 +20,6 @@ export const fetchPayment = (id) =>{
 export const dentistFetchPayment = (id,setLoading) =>{
     return async dispatch =>{
         try {
-            dispatch({type: FETCH_PAYMENT_REQUEST})
             const response = await axios.get(`${PAYMENT_URL}/all/${id}`);
             const filteredAppointment = response.data.filter((val)=>val.status!=="CANCELLED"||val.status!=="FAILED");
             dispatch({type:FETCH_PAYMENT_SUCCESS, payload:filteredAppointment});

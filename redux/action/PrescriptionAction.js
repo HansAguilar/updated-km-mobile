@@ -6,7 +6,6 @@ import { PRESCRIPTION_LINK } from "../../config/APIRoutes";
 export const fetchPrescription = (id) =>{
     return async dispatch=>{
         try {
-            dispatch({type:FETCH_PRESCRIPTION_REQUEST})
             const response = await axios.get(`${PRESCRIPTION_LINK}/${id}`);
             dispatch({
                 type: FETCH_PRESCRIPTION_SUCCESS,
